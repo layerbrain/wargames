@@ -6,8 +6,8 @@ they count. Agents still see only pixels and CUA tools; the profile runs inside
 the trusted environment after each action.
 
 Profiles live in `scenarios/<game>/profiles/*.yaml`. Tasks reference them by
-ID through `reward_profile`. Prime RL, Prime eval, OpenReward, and the local
-runner all use the same profile loader and evaluator.
+ID through `reward_profile`. Prime RL, Prime eval, and the local runner all use
+the same profile loader and evaluator.
 
 ## Full Profile Example
 
@@ -69,7 +69,7 @@ entries:
 
 | Field | Type | Required | Meaning |
 |---|---:|---:|---|
-| `id` | string | yes | Profile ID used by tasks, CLI, Prime configs, and OpenReward variants. Unique per game. |
+| `id` | string | yes | Profile ID used by tasks, CLI, and Prime configs. Unique per game. |
 | `game` | string | yes | Game namespace. Red Alert uses `redalert`. |
 | `description` | string | no | Human description shown in docs and profile listings. |
 | `step_reward_min` | float/null | no | Lower clamp for the total reward from `per_step` entries on one step. |
@@ -159,13 +159,6 @@ reward_profile = "terminal"
 recorder_mode = "summary_only"
 ```
 
-The same profile IDs are exposed as OpenReward variants where registered:
-
-```bash
-firehorse --env layerbrain/wargames --variant protective --split train ...
-firehorse --env layerbrain/wargames --variant standard --split test ...
-```
-
 ## Validate Before Training
 
 ```bash
@@ -175,4 +168,3 @@ python -m unittest tests.evaluation.test_profiles -v
 
 Validation catches duplicate entry IDs, bad `when` values, invalid dotted
 paths, invalid factory args, and invalid reward caps before a long rollout.
-

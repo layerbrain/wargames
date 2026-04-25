@@ -51,8 +51,8 @@ GOOGLE_API_KEY=
 GOOGLE_MODEL=
 ```
 
-`LAYERBRAIN_PRIME` and `LAYERBRAIN_OPENREWARD` are publish/admin keys only.
-WarGames does not use them for model inference.
+`LAYERBRAIN_PRIME` is a publish/admin key only. WarGames does not use it for
+model inference.
 
 ## Tasks
 
@@ -173,8 +173,7 @@ Profiles are the behavior dial. The same model can be evaluated under different
 profiles to measure whether reward design changes behavior.
 
 The full profile schema, every Red Alert reward field, built-in primitives, and
-Prime RL/OpenReward examples are documented in
-[`docs/reward_profiles.md`](docs/reward_profiles.md).
+Prime RL examples are documented in [`docs/reward_profiles.md`](docs/reward_profiles.md).
 
 ## Watching
 
@@ -192,31 +191,6 @@ wargames watch <run_id>
 
 Public event files never include hidden state. Private traces are only written
 when explicitly requested.
-
-## OpenReward
-
-The OpenReward implementation lives in `wargames.environments.openreward`.
-The public OpenReward environment is `layerbrain/wargames`.
-`environments/wargames-openreward` is only the thin publish wrapper.
-
-```bash
-uv pip install -e ./environments/wargames-openreward
-uvicorn wargames_openreward.app:app --port 8001
-```
-
-Smoke the OpenReward protocol locally:
-
-```bash
-curl http://127.0.0.1:8001/list_environments
-curl http://127.0.0.1:8001/wargames/tools
-curl http://127.0.0.1:8001/standard/splits
-curl -X POST http://127.0.0.1:8001/standard/tasks \
-  -H 'content-type: application/json' \
-  -d '{"split":"debug"}'
-```
-
-Firehorse can run Codex/Claude/Gemini against the environment. WarGames exposes
-only CUA tools. CUA-only is enforced by the environment and conformance tests.
 
 ## Prime Intellect
 
@@ -251,6 +225,5 @@ Use `dense` or `protective` on `train`/`curriculum`, then report against
 ```bash
 source venv/bin/activate
 python -m unittest tests.evaluation tests.harness
-python -m unittest discover -s environments/wargames-openreward/tests/conformance
 python -m unittest discover -s environments/prime/tests/conformance
 ```

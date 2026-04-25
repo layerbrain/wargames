@@ -1,2 +1,1 @@
-"""Publishable Prime and OpenReward environment implementations."""
-
+"""Publishable Prime environment implementation."""

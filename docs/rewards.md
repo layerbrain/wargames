@@ -7,5 +7,5 @@ receive only frames and action results; hidden state and reward attribution stay
 in trusted in-process harnesses.
 
 See [`docs/reward_profiles.md`](reward_profiles.md) for the full YAML schema,
-all Red Alert reward fields, built-in primitives, and Prime RL/OpenReward
-training examples.
+all Red Alert reward fields, built-in primitives, and Prime RL training
+examples.
