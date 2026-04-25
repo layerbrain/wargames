@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "layerbrain-wargames"
-version = "0.1.1"
+version = "0.1.2"
 description = "Defense-aligned RTS environment for Prime Intellect Verifiers."
 requires-python = ">=3.11"
 authors = [{ name = "Layerbrain", email = "brain@layerbrain.com" }]
