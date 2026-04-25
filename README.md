@@ -9,6 +9,15 @@ capture frames, apply tool calls, and compute rewards from private simulator
 state. Your agent or external harness owns model calls. Prime/prime-rl owns
 gradient updates.
 
+## Example Output
+
+This is a short Kimi K2.5 smoke run. The agent receives screenshots, chooses
+CUA actions, and WarGames applies them to the live OpenRA window.
+
+<video src="docs/assets/kimi-k2-redalert-smoke.mp4" controls muted playsinline width="720"></video>
+
+[Open the MP4](docs/assets/kimi-k2-redalert-smoke.mp4)
+
 ## Install
 
 ```bash
