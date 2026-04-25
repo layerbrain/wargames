@@ -1,0 +1,8 @@
+id: terminal
+game: redalert
+description: Sparse win/loss-only Red Alert profile.
+entries:
+  - id: terminal
+    fn: wargames.core.missions.rewards.terminal
+    weight: 1.0
+    when: terminal

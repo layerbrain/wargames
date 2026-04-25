@@ -1,0 +1,18 @@
+id: standard
+game: redalert
+description: "Default Red Alert profile: terminal outcome plus mild dense shaping."
+step_reward_min: -0.10
+step_reward_max: 0.10
+entries:
+  - id: terminal
+    fn: wargames.core.missions.rewards.terminal
+    weight: 1.0
+    when: terminal
+  - id: delta_units_killed
+    fn: wargames.games.redalert.rewards.delta_units_killed
+    weight: 0.02
+    when: per_step
+  - id: delta_buildings_lost
+    fn: wargames.games.redalert.rewards.delta_buildings_lost
+    weight: -0.03
+    when: per_step

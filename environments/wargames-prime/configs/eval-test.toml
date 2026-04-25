@@ -1,0 +1,3 @@
+split = "test"
+reward_profile = "terminal"
+recorder_mode = "summary_only"

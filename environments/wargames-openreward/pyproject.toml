@@ -1,0 +1,14 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "wargames-openreward"
+version = "0.1.0"
+description = "Defense-aligned RTS environment for the OpenReward Standard."
+requires-python = ">=3.11"
+authors = [{ name = "Layerbrain", email = "brain@layerbrain.com" }]
+dependencies = ["wargames"]
+
+[project.entry-points."openreward.environments"]
+"Layerbrain/WarGamesRedAlert" = "wargames_openreward.env_redalert:WarGamesRedAlert"

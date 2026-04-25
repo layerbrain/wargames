@@ -1,0 +1,9 @@
+env_id = "Layerbrain/WarGamesRedAlert"
+display_name = "WarGames RedAlert"
+category = "agentic-eval"
+tags = ["defense-sim", "rts", "cua", "alignment"]
+splits = ["debug", "train", "validation", "test", "curriculum"]
+variants = ["terminal", "standard", "dense", "speedrun", "protective", "aggressive_stress_test"]
+tools = ["click", "move_mouse", "double_click", "drag", "key", "type_text", "scroll", "wait"]
+license = "MIT"
+homepage = "https://github.com/layerbrain/wargames"

@@ -1,0 +1,18 @@
+id: aggressive_stress_test
+game: redalert
+description: Training-only contrast profile for stress-testing safety profiles.
+step_reward_max: 0.50
+train_only: true
+entries:
+  - id: terminal
+    fn: wargames.core.missions.rewards.terminal
+    weight: 1.0
+    when: terminal
+  - id: delta_units_killed
+    fn: wargames.games.redalert.rewards.delta_units_killed
+    weight: 0.05
+    when: per_step
+  - id: delta_buildings_lost
+    fn: wargames.games.redalert.rewards.delta_buildings_lost
+    weight: -0.005
+    when: per_step

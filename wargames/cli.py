@@ -16,12 +16,16 @@ from typing import Any
 
 from wargames import GameDescriptor, WarGames, WarGamesConfig
 from wargames.core.capture.frame import Frame
+from wargames.evaluation.profile import profile_registry
+from wargames.evaluation.splits import TaskCatalog
+from wargames.evaluation.task import RunConfig
+from wargames.harness.agent_loader import create_agent, list_agent_specs, load_agent_spec
 
 _LINUX_BOX_ENV = "LAYERBRAIN_WARGAMES_IN_LINUX_BOX"
 _LINUX_BOX_IMAGE = "wargames-linux"
 _LINUX_BOX_OPENRA_MOUNT = "/openra"
 _LINUX_BOX_DEFAULT_RESOLUTION = (1280, 720)
-_BOX_COMMANDS = {"boot", "control", "serve"}
+_BOX_COMMANDS = {"boot", "control", "run", "serve"}
 
 
 def _game(id: str) -> GameDescriptor:
@@ -88,6 +92,18 @@ def _repo_root() -> Path:
     return Path(__file__).resolve().parents[1]
 
 
+def _load_local_env() -> None:
+    path = _repo_root() / "local.env"
+    if not path.exists():
+        return
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
+
 def _should_run_in_linux_box(
     args: argparse.Namespace,
     *,
@@ -120,9 +136,17 @@ def _host_openra_support_dir(env: Mapping[str, str] = os.environ) -> Path:
 
 
 def _without_host_watch(argv: Sequence[str]) -> list[str]:
-    inner = [arg for arg in argv if arg != "--watch"]
+    inner = list(argv)
     if inner and inner[0] in {"boot", "control"} and "--no-watch" not in inner:
+        inner = [arg for arg in inner if arg != "--watch"]
         inner.append("--no-watch")
+    if inner and inner[0] == "run":
+        try:
+            index = inner.index("--watch")
+        except ValueError:
+            pass
+        else:
+            inner[index + 1] = "none"
     if inner and inner[0] == "serve":
         if "--host" in inner:
             inner[inner.index("--host") + 1] = "0.0.0.0"
@@ -289,7 +313,8 @@ def _run_in_linux_box(argv: Sequence[str], args: argparse.Namespace) -> int:
     stream_process: subprocess.Popen[bytes] | None = None
     stream_port: int | None = None
     resolution = _runtime_resolution()
-    if bool(getattr(args, "watch", False)):
+    watch = getattr(args, "watch", False)
+    if watch is True or (isinstance(watch, str) and watch != "none"):
         stream_port = _free_udp_port()
         stream_process = _start_host_stream_viewer(stream_port, resolution=resolution)
     try:
@@ -324,6 +349,207 @@ async def _missions(args: argparse.Namespace) -> int:
         for mission in missions:
             tags = ",".join(mission.tags)
             print(f"{mission.id}\t{mission.difficulty}\t{mission.source}\t{tags}\t{mission.title}")
+    return 0
+
+
+async def _tasks(args: argparse.Namespace) -> int:
+    _game(args.game)
+    catalog = TaskCatalog.load(args.scenarios)
+    tasks = catalog.tasks(game=args.game, split=args.split)
+    if args.json:
+        print(json.dumps([task.to_mapping() for task in tasks], indent=2, sort_keys=True))
+    else:
+        for task in tasks:
+            print(f"{task.id}\t{task.split}\t{task.mission_id}\tseed={task.seed}\tprofile={task.reward_profile}")
+    return 0
+
+
+async def _agents(args: argparse.Namespace) -> int:
+    dirs = tuple(Path(path) for path in args.agent_dir)
+    if args.agent_command == "list":
+        for spec in list_agent_specs(dirs):
+            print(f"{spec.id}\t{spec.driver}\t{spec.model or ''}\t{spec.description}")
+        return 0
+    if args.agent_command == "show":
+        spec = load_agent_spec(args.agent_id, dirs)
+        print(json.dumps(spec.__dict__, indent=2, sort_keys=True, default=str))
+        return 0
+    if args.agent_command == "validate":
+        from wargames.harness.agent_spec import AgentSpec
+
+        spec = AgentSpec.from_file(Path(args.path))
+        print(json.dumps({"ok": True, "id": spec.id, "driver": spec.driver}, sort_keys=True))
+        return 0
+    raise SystemExit(f"unknown agents command: {args.agent_command}")
+
+
+async def _profiles(args: argparse.Namespace) -> int:
+    _game(args.game)
+    if args.profile_command == "list":
+        for profile in profile_registry.list(args.game):
+            flag = "train_only" if profile.train_only else "eval"
+            print(f"{profile.id}\t{flag}\t{profile.description}")
+        return 0
+    if args.profile_command == "show":
+        profile = profile_registry.get(args.game, args.profile_id)
+        print(
+            json.dumps(
+                {
+                    "id": profile.id,
+                    "game": profile.game,
+                    "description": profile.description,
+                    "per_step_entries": profile.per_step_entries,
+                    "terminal_entries": profile.terminal_entries,
+                    "train_only": profile.train_only,
+                    "step_reward_min": profile.step_reward_min,
+                    "step_reward_max": profile.step_reward_max,
+                },
+                indent=2,
+                sort_keys=True,
+            )
+        )
+        return 0
+    if args.profile_command == "validate":
+        from wargames.evaluation.profile_loader import load_profile_yaml
+
+        profile = load_profile_yaml(Path(args.path))
+        print(json.dumps({"ok": True, "id": profile.id, "game": profile.game}, sort_keys=True))
+        return 0
+    if args.profile_command == "new":
+        path = Path(args.output or f"{args.profile_id}.yaml")
+        path.write_text(
+            "\n".join(
+                [
+                    f"id: {args.profile_id}",
+                    f"game: {args.game}",
+                    'description: "Custom reward profile."',
+                    "step_reward_min: -0.10",
+                    "step_reward_max: 0.10",
+                    "entries:",
+                    "  - id: terminal",
+                    "    fn: wargames.core.missions.rewards.terminal",
+                    "    weight: 1.0",
+                    "    when: terminal",
+                ]
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        print(json.dumps({"created": str(path)}, sort_keys=True))
+        return 0
+    if args.profile_command == "dry-run":
+        from wargames.evaluation.profile_loader import load_profile_yaml
+        from wargames.core.world.probe import HiddenStateSnapshot
+
+        profile = load_profile_yaml(Path(args.path))
+        total: dict[str, float] = {}
+        previous = None
+        for line in Path(args.trace).read_text(encoding="utf-8").splitlines():
+            data = json.loads(line)
+            curr_raw = data.get("hidden")
+            if curr_raw is None:
+                continue
+            curr = HiddenStateSnapshot(tick=int(curr_raw["tick"]), world=_object_tree(curr_raw["world"]))
+            prev_raw = data.get("prev_hidden")
+            prev = HiddenStateSnapshot(tick=int(prev_raw["tick"]), world=_object_tree(prev_raw["world"])) if prev_raw else previous
+            breakdown = await profile.score_step(prev, curr) if prev else None
+            if breakdown is not None:
+                for key, value in breakdown.entries.items():
+                    total[key] = total.get(key, 0.0) + value
+            previous = curr
+        print(json.dumps({"total": sum(total.values()), "breakdown": total}, indent=2, sort_keys=True))
+        return 0
+    raise SystemExit(f"unknown profile command: {args.profile_command}")
+
+
+def _object_tree(value: object) -> object:
+    from types import SimpleNamespace
+
+    if isinstance(value, dict):
+        return SimpleNamespace(**{key: _object_tree(item) for key, item in value.items()})
+    if isinstance(value, list):
+        return tuple(_object_tree(item) for item in value)
+    return value
+
+
+async def _run(args: argparse.Namespace) -> int:
+    game = _game(args.game)
+    catalog = TaskCatalog.load(args.scenarios)
+    task = catalog.get(args.task)
+    if args.profile:
+        task = task.with_reward_profile(args.profile)
+    profile = profile_registry.get(task.game, task.reward_profile)
+    if task.split == "test" and profile.train_only:
+        raise SystemExit(f"test task cannot use train-only profile: {profile.id}")
+    run_config = RunConfig(
+        recorder_mode=args.record,
+        video_mode=args.video,
+        frame_sample_rate=args.frame_sample_rate,
+        write_trace=args.write_trace,
+        out_dir=args.out,
+    )
+    spec = load_agent_spec(args.agent, tuple(Path(path) for path in args.agent_dir))
+    agent = create_agent(spec)
+    config = _config(game, capture_frames=args.video == "frames")
+    from wargames.harness.runner import run_task
+
+    async with WarGames.for_game(game, config) as wg:
+        summary = await run_task(task=task, run_config=run_config, wg=wg, agent=agent)
+    print(json.dumps(summary.__dict__, indent=2, sort_keys=True))
+    return 0
+
+
+async def _watch(args: argparse.Namespace) -> int:
+    root = Path(args.runs_dir) / args.run_id
+    events = root / "events.jsonl"
+    rewards = root / "rewards.jsonl"
+    if not events.exists() and not rewards.exists():
+        raise SystemExit(f"no replay events found for run: {args.run_id}")
+    for path in (events, rewards):
+        if not path.exists():
+            continue
+        for line in path.read_text(encoding="utf-8").splitlines():
+            print(line)
+    return 0
+
+
+async def _export(args: argparse.Namespace) -> int:
+    run_root = Path(args.runs_dir) / args.run_id
+    if not run_root.exists():
+        raise SystemExit(f"run not found: {args.run_id}")
+    out = Path(args.out) / args.run_id
+    out.mkdir(parents=True, exist_ok=True)
+    names = ["summary.json", "end_state.json", "events.jsonl", "rewards.jsonl"]
+    if args.include_trace:
+        names.append("trace.jsonl")
+    for name in names:
+        source = run_root / name
+        if source.exists():
+            (out / name).write_bytes(source.read_bytes())
+    frames = run_root / "frames"
+    if args.video == "mp4":
+        if not frames.exists():
+            raise SystemExit("cannot export mp4: run has no frames/")
+        ffmpeg = shutil.which("ffmpeg")
+        if ffmpeg is None:
+            raise SystemExit("ffmpeg is required for --video mp4")
+        subprocess.run(
+            [
+                ffmpeg,
+                "-y",
+                "-framerate",
+                str(args.framerate),
+                "-i",
+                str(frames / "%06d.png"),
+                "-c:v",
+                "libx264",
+                "-pix_fmt",
+                "yuv420p",
+                str(out / "video.mp4"),
+            ],
+            check=True,
+        )
+    print(json.dumps({"exported": str(out)}, sort_keys=True))
     return 0
 
 
@@ -414,6 +640,80 @@ def build_parser() -> argparse.ArgumentParser:
     missions.add_argument("--output")
     missions.set_defaults(handler=_missions)
 
+    tasks = subcommands.add_parser("tasks", help="list task catalog entries")
+    tasks.add_argument("--game", choices=("redalert",), default="redalert")
+    tasks.add_argument("--split", choices=("debug", "train", "validation", "test", "curriculum"))
+    tasks.add_argument("--scenarios", default="scenarios")
+    tasks.add_argument("--json", action="store_true")
+    tasks.set_defaults(handler=_tasks)
+
+    run = subcommands.add_parser("run", help="run a named agent against a task")
+    run.add_argument("--game", choices=("redalert",), default="redalert")
+    run.add_argument("--task", required=True)
+    run.add_argument("--agent", required=True)
+    run.add_argument("--agent-dir", action="append", default=[])
+    run.add_argument("--profile")
+    run.add_argument("--scenarios", default="scenarios")
+    run.add_argument("--watch", choices=("none", "window", "hud"), default="none")
+    run.add_argument("--record", choices=("none", "summary_only", "full"), default="summary_only")
+    run.add_argument("--video", choices=("none", "frames"), default="none")
+    run.add_argument("--frame-sample-rate", type=int, default=1)
+    run.add_argument("--write-trace", action="store_true")
+    run.add_argument("--out", default="runs")
+    run.set_defaults(handler=_run)
+
+    agents = subcommands.add_parser("agents", help="list, show, or validate named agent configs")
+    agent_subcommands = agents.add_subparsers(dest="agent_command", required=True)
+    agents_list = agent_subcommands.add_parser("list")
+    agents_list.add_argument("--agent-dir", action="append", default=[])
+    agents_list.set_defaults(handler=_agents)
+    agents_show = agent_subcommands.add_parser("show")
+    agents_show.add_argument("agent_id")
+    agents_show.add_argument("--agent-dir", action="append", default=[])
+    agents_show.set_defaults(handler=_agents)
+    agents_validate = agent_subcommands.add_parser("validate")
+    agents_validate.add_argument("path")
+    agents_validate.add_argument("--agent-dir", action="append", default=[])
+    agents_validate.set_defaults(handler=_agents)
+
+    profile = subcommands.add_parser("profile", help="list, show, or validate reward profiles")
+    profile_subcommands = profile.add_subparsers(dest="profile_command", required=True)
+    profile_list = profile_subcommands.add_parser("list")
+    profile_list.add_argument("--game", choices=("redalert",), default="redalert")
+    profile_list.set_defaults(handler=_profiles)
+    profile_show = profile_subcommands.add_parser("show")
+    profile_show.add_argument("profile_id")
+    profile_show.add_argument("--game", choices=("redalert",), default="redalert")
+    profile_show.set_defaults(handler=_profiles)
+    profile_validate = profile_subcommands.add_parser("validate")
+    profile_validate.add_argument("path")
+    profile_validate.add_argument("--game", choices=("redalert",), default="redalert")
+    profile_validate.set_defaults(handler=_profiles)
+    profile_new = profile_subcommands.add_parser("new")
+    profile_new.add_argument("profile_id")
+    profile_new.add_argument("--game", choices=("redalert",), default="redalert")
+    profile_new.add_argument("-o", "--output")
+    profile_new.set_defaults(handler=_profiles)
+    profile_dry_run = profile_subcommands.add_parser("dry-run")
+    profile_dry_run.add_argument("path")
+    profile_dry_run.add_argument("--trace", required=True)
+    profile_dry_run.add_argument("--game", choices=("redalert",), default="redalert")
+    profile_dry_run.set_defaults(handler=_profiles)
+
+    watch = subcommands.add_parser("watch", help="replay recorded public run events")
+    watch.add_argument("run_id")
+    watch.add_argument("--runs-dir", default="runs")
+    watch.set_defaults(handler=_watch)
+
+    export = subcommands.add_parser("export", help="export a recorded run")
+    export.add_argument("run_id")
+    export.add_argument("--runs-dir", default="runs")
+    export.add_argument("--out", required=True)
+    export.add_argument("--video", choices=("none", "mp4"), default="none")
+    export.add_argument("--include-trace", action="store_true")
+    export.add_argument("--framerate", type=int, default=30)
+    export.set_defaults(handler=_export)
+
     boot = subcommands.add_parser("boot", help="boot a mission and keep it running")
     boot.add_argument("--game", choices=("redalert",), default="redalert")
     boot.add_argument("--mission")
@@ -444,6 +744,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 async def async_main(argv: Sequence[str] | None = None) -> int:
+    _load_local_env()
     parser = build_parser()
     argv = list(sys.argv[1:] if argv is None else argv)
     args = parser.parse_args(argv)

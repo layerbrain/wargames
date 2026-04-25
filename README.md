@@ -1,15 +1,15 @@
 # WarGames
 
-WarGames runs games as computer-use environments. A client sees pixels and sends
-mouse, keyboard, text, scroll, and wait actions. The first game backend is
-OpenRA Red Alert.
+WarGames turns OpenRA Red Alert into a computer-use environment for agentic AI.
+An agent receives pixels and a small CUA tool set, then sends mouse/keyboard/wait
+actions back to the simulator.
 
-WarGames is for local Linux/Xvfb execution. On macOS, the CLI starts the Linux
-runtime box for Red Alert and opens a viewer so you can watch the game.
+The runtime never calls an LLM and never trains a model. It does three things:
+capture frames, apply tool calls, and compute rewards from private simulator
+state. Your agent or external harness owns model calls. Prime/prime-rl owns
+gradient updates.
 
 ## Install
-
-From the project root:
 
 ```bash
 python -m venv venv
@@ -17,164 +17,207 @@ source venv/bin/activate
 pip install -e ".[server]"
 ```
 
-Red Alert needs a working OpenRA source checkout with the WarGames probe
-installed. Point WarGames at it:
+Red Alert needs a working OpenRA checkout:
 
 ```bash
 export LAYERBRAIN_WARGAMES_REDALERT_OPENRA_ROOT=/path/to/openra-source
 export LAYERBRAIN_WARGAMES_REDALERT_OPENRA_BINARY=/path/to/openra-source/launch-game.sh
 ```
 
-On macOS, Docker must be running. WarGames hides the Docker invocation behind the
-CLI.
+## Local Secrets
 
-## List Missions
-
-```bash
-wargames missions --game redalert
-```
-
-Filter by normalized difficulty:
+Create `local.env` from the template. `local.env` is gitignored.
 
 ```bash
-wargames missions --game redalert --difficulty normal
+cp local.env.example local.env
 ```
 
-Extract a visible catalog into difficulty folders:
+Use provider-standard names for model keys:
 
 ```bash
-wargames missions --game redalert --extract --output scenarios/redalert/missions
+OPENAI_API_KEY=
+OPENAI_BASE_URL=
+OPENAI_MODEL=
+ANTHROPIC_API_KEY=
+ANTHROPIC_MODEL=
+GOOGLE_API_KEY=
+GOOGLE_MODEL=
 ```
 
-Difficulty folders are `easy`, `normal`, `hard`, and `extra_hard`. A game only
-places missions in difficulties it actually supports.
+`LAYERBRAIN_PRIME` and `LAYERBRAIN_OPENREWARD` are publish/admin keys only.
+WarGames does not use them for model inference.
 
-## Boot And Watch
+## Tasks
 
-Start Red Alert and keep the mission running:
+Tasks are mission + seed + split + reward profile.
 
 ```bash
-wargames boot --game redalert --mission redalert.soviet-01.normal --watch
+wargames tasks --game redalert --split debug
 ```
 
-Use `--no-watch` when you do not need a viewer:
+Splits:
+
+- `debug`: tiny smoke tasks
+- `train`: tasks agents may learn from
+- `validation`: tune prompts/profile weights/max steps
+- `test`: held-out reported benchmark tasks
+- `curriculum`: ordered train tasks
+
+The catalog rejects the same `(mission_id, seed)` appearing in multiple splits.
+It also rejects `train_only` reward profiles on `test`.
+
+## Agents
+
+Agents are named YAML configs under `agents/` or your own `--agent-dir`.
 
 ```bash
-wargames boot --game redalert --mission redalert.soviet-01.normal --no-watch
+wargames agents list
+wargames agents validate agents/scripted-wait.yaml
 ```
 
-## Send Actions
+Example:
 
-`wargames control` reads one JSON tool call per line and returns one JSON result
-per line. Coordinates are integer pixels in the 1280x720 game frame.
+```yaml
+id: my-agent
+driver: python
+factory: my_project.agent:create_agent
+provider: openai
+model: ${OPENAI_MODEL}
+api_key_env: OPENAI_API_KEY
+base_url: ${OPENAI_BASE_URL}
+config:
+  temperature: 0.2
+```
+
+The Python factory receives the `AgentSpec` and returns an object implementing:
+
+```python
+async def start(task): ...
+async def decide(obs): ...
+async def close(): ...
+```
+
+## Run Locally
 
 ```bash
-printf '%s\n' \
-  '{"name":"wait","arguments":{}}' \
-  '{"name":"click","arguments":{"x":1246,"y":31}}' \
-  '{"name":"click","arguments":{"x":202,"y":376}}' \
-| wargames control --game redalert --mission redalert.soviet-01.normal --actions -
+wargames run \
+  --task redalert.debug.smoke.seed-000000 \
+  --agent scripted-wait \
+  --watch none \
+  --record summary_only
 ```
 
-Supported tools:
-
-- `wait`
-- `move_mouse`
-- `click`
-- `double_click`
-- `drag`
-- `key`
-- `type_text`
-- `scroll`
-
-All coordinate arguments must be integers. Normalized floats are rejected.
-
-## WebSocket Server
-
-Start the local WebSocket transport:
+For demo/debug runs, record frames and export video later:
 
 ```bash
-wargames serve --game redalert --host 127.0.0.1 --port 8000
+wargames run \
+  --task redalert.debug.smoke.seed-000000 \
+  --agent scripted-wait \
+  --watch window \
+  --record full \
+  --video frames
+
+wargames export <run_id> --out exports --video mp4
 ```
 
-Connect to:
+MP4 is export-only. Runs write frames; export turns frames into a shareable
+video.
 
-```text
-ws://127.0.0.1:8000/ws
-```
+## Reward Profiles
 
-Create a session:
-
-```json
-{"op":"create_session","game":"redalert","mission":"redalert.soviet-01.normal","seed":42,"mode":"sampled"}
-```
-
-Observe the latest frame:
-
-```json
-{"op":"observe","session_id":"..."}
-```
-
-Send an action:
-
-```json
-{"op":"act","session_id":"...","tool_call":{"name":"click","arguments":{"x":640,"y":360}}}
-```
-
-Subscribe to realtime frame pushes:
-
-```json
-{"op":"subscribe_frames","session_id":"...","fps":10}
-```
-
-Stop frame pushes and delete the session:
-
-```json
-{"op":"unsubscribe_frames","session_id":"..."}
-{"op":"delete","session_id":"..."}
-```
-
-The WebSocket surface returns frames and action results only. Hidden world state
-is not serialized over the wire.
-
-## Configuration
-
-Common environment variables:
+List profiles:
 
 ```bash
-export LAYERBRAIN_WARGAMES_XVFB_RESOLUTION=1280x720
-export LAYERBRAIN_WARGAMES_REDALERT_OPENRA_WINDOW_SIZE=1280x720
-export LAYERBRAIN_WARGAMES_REDALERT_OPENRA_ROOT=/path/to/openra-source
-export LAYERBRAIN_WARGAMES_REDALERT_OPENRA_BINARY=/path/to/openra-source/launch-game.sh
-export LAYERBRAIN_WARGAMES_REDALERT_OPENRA_SUPPORT_DIR=/tmp/wargames/openra-support
+wargames profile list --game redalert
 ```
 
-The default input path uses `xdotool` inside the Linux/Xvfb runtime because it is
-the path verified against OpenRA. `xtest` remains available for environments that
-accept native XTEST events:
+Built-ins:
+
+- `terminal`: win/loss only
+- `standard`: terminal + mild dense shaping
+- `dense`: training-only dense profile
+- `protective`: defense-aligned profile that rewards friendly-force preservation
+- `aggressive_stress_test`: training-only contrast profile, blocked from test
+
+Validate a profile YAML:
 
 ```bash
-export LAYERBRAIN_WARGAMES_INJECTOR_TRANSPORT=xtest
+wargames profile validate scenarios/redalert/profiles/protective.yaml
 ```
 
-## Troubleshooting
+Profiles are the behavior dial. The same model can be evaluated under different
+profiles to measure whether reward design changes behavior.
 
-If the viewer is black, wait a few seconds for the mission to finish loading.
+## Watching
 
-If OpenRA cannot find Red Alert assets, run the Linux runtime once with network
-access. It installs the OpenRA quick-install content into the configured support
-directory.
-
-If clicks do not land, check that the frame size matches the coordinate space:
+Local:
 
 ```bash
-export LAYERBRAIN_WARGAMES_XVFB_RESOLUTION=1280x720
-export LAYERBRAIN_WARGAMES_REDALERT_OPENRA_WINDOW_SIZE=1280x720
+wargames run --task ... --agent ... --watch window
+```
+
+Replay public events from disk:
+
+```bash
+wargames watch <run_id>
+```
+
+Public event files never include hidden state. Private traces are only written
+when explicitly requested.
+
+## OpenReward
+
+The OpenReward package lives in `environments/wargames-openreward`.
+
+```bash
+uv pip install -e ./environments/wargames-openreward
+uvicorn wargames_openreward.app:app --port 8001
+```
+
+Firehorse can run Codex/Claude/Gemini against the environment. WarGames exposes
+only CUA tools. There is no verified public `--toolset cua-only` flag in the
+current OpenReward docs, so CUA-only is enforced by the environment and
+conformance tests.
+
+OpenReward publishing is manual through the OpenReward web UI with GitHub
+deployment. Run prepublish checks first:
+
+```bash
+cd environments/wargames-openreward
+make prepublish
+```
+
+## Prime Intellect
+
+The Prime package lives in `environments/wargames-prime`.
+
+```bash
+uv pip install -e ./environments/wargames-prime
+prime eval run wargames-prime --config environments/wargames-prime/configs/eval-debug.toml -n 1 -r 1
+```
+
+Prime RL uses the shipped TOML configs. WarGames supplies the environment and
+reward signal; Prime/prime-rl owns rollouts, batching, GPUs, and gradient
+updates.
+
+Publish under the Layerbrain team:
+
+```bash
+cd environments/wargames-prime
+make publish
+```
+
+The publish target uses:
+
+```bash
+prime env push --team layerbrain --visibility PUBLIC
 ```
 
 ## Tests
 
 ```bash
 source venv/bin/activate
-python -m unittest discover -v
+python -m unittest tests.evaluation tests.harness
+python -m unittest discover -s environments/wargames-openreward/tests/conformance
+python -m unittest discover -s environments/wargames-prime/tests/conformance
 ```

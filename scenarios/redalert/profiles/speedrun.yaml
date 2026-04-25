@@ -1,0 +1,18 @@
+id: speedrun
+game: redalert
+description: Fast decisive play profile using existing dense primitives.
+step_reward_min: -0.10
+step_reward_max: 0.20
+entries:
+  - id: terminal
+    fn: wargames.core.missions.rewards.terminal
+    weight: 1.0
+    when: terminal
+  - id: delta_units_killed
+    fn: wargames.games.redalert.rewards.delta_units_killed
+    weight: 0.03
+    when: per_step
+  - id: scout_distance
+    fn: wargames.games.redalert.rewards.scout_distance
+    weight: 0.0002
+    when: per_step

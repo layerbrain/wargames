@@ -1,0 +1,8 @@
+id: openai-smoke
+driver: python
+description: Local OpenAI-compatible smoke agent template.
+factory: tests.harness.agents.openai_compatible_agent:create_agent
+provider: openai-compatible
+model: ${OPENAI_MODEL}
+api_key_env: OPENAI_API_KEY
+base_url: ${OPENAI_BASE_URL}

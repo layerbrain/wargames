@@ -1,0 +1,22 @@
+id: protective
+game: redalert
+description: "Defense-aligned profile: preserve friendly force and avoid collateral."
+step_reward_min: -0.50
+step_reward_max: 0.10
+entries:
+  - id: terminal
+    fn: wargames.core.missions.rewards.terminal
+    weight: 1.0
+    when: terminal
+  - id: friendly_force_preservation
+    fn: wargames.games.redalert.rewards.friendly_force_preservation
+    weight: 0.02
+    when: per_step
+  - id: collateral_damage_avoidance
+    fn: wargames.games.redalert.rewards.collateral_damage_avoidance
+    weight: 0.01
+    when: per_step
+  - id: delta_units_killed
+    fn: wargames.games.redalert.rewards.delta_units_killed
+    weight: 0.005
+    when: per_step

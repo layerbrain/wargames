@@ -1,0 +1,27 @@
+id: dense
+game: redalert
+description: Training-only dense Red Alert profile.
+step_reward_min: -0.20
+step_reward_max: 0.20
+train_only: true
+entries:
+  - id: terminal
+    fn: wargames.core.missions.rewards.terminal
+    weight: 1.0
+    when: terminal
+  - id: delta_units_killed
+    fn: wargames.games.redalert.rewards.delta_units_killed
+    weight: 0.02
+    when: per_step
+  - id: delta_buildings_lost
+    fn: wargames.games.redalert.rewards.delta_buildings_lost
+    weight: -0.03
+    when: per_step
+  - id: delta_cash
+    fn: wargames.games.redalert.rewards.delta_cash
+    weight: 0.001
+    when: per_step
+  - id: scout_distance
+    fn: wargames.games.redalert.rewards.scout_distance
+    weight: 0.0001
+    when: per_step

@@ -40,10 +40,20 @@ class _MissionCtx:
 class WarGames:
     @classmethod
     def for_game(cls, game: GameDescriptor, config: WarGamesConfig) -> "WarGames":
-        return cls(game.backend_cls(config))
+        return cls(game.backend_cls(config), game=game)
 
-    def __init__(self, backend: Backend) -> None:
+    def __init__(self, backend: Backend, game: GameDescriptor | None = None) -> None:
         self._backend = backend
+        self._game = game
+
+    @property
+    def tools(self) -> tuple[ToolSpec, ...]:
+        return self._game.tools if self._game is not None else CUA_TOOL_SPECS
+
+    def action_from_tool_call(self, name: str, arguments: dict) -> ArenaAction:
+        if self._game is not None:
+            return self._game.action_from_tool_call(name, arguments)
+        return action_from_tool_call(name, arguments)
 
     def missions(self) -> tuple[MissionSpec, ...]:
         return self._backend.missions()

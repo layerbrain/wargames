@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "wargames-prime"
+version = "0.1.0"
+description = "Defense-aligned RTS environment for Prime Intellect Verifiers."
+requires-python = ">=3.11"
+authors = [{ name = "Layerbrain", email = "brain@layerbrain.com" }]
+dependencies = ["wargames"]
+
+[project.entry-points."verifiers.environments"]
+"wargames-prime" = "wargames_prime:load_environment"
+
+[tool.prime.environment]
+display_name = "WarGames RedAlert"
+category = "agentic-eval"
+tags = ["defense-sim", "rts", "cua", "alignment"]
+default_split = "test"
+default_variant = "standard"

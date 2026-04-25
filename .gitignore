@@ -28,6 +28,12 @@ htmlcov/
 /tmp/
 /frames/
 /probe/
+runs/
+exports/
+checkpoints/
+.openra-cache/
+local.env
+*.mp4
 *.log
 
 # OS and editor files
