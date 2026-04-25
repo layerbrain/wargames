@@ -1,0 +1,66 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "wargames"
+version = "0.1.0"
+description = "Universal CUA game-benchmarking backends with OpenRA Red Alert support."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+  { name = "Layerbrain" },
+]
+keywords = ["benchmark", "cua", "games", "openra", "red-alert", "reinforcement-learning"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Games/Entertainment",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Typing :: Typed",
+]
+dependencies = [
+  "msgpack>=1.0.0",
+  "python-xlib>=0.33",
+]
+
+[project.optional-dependencies]
+server = [
+  "fastapi>=0.115.0",
+  "httpx>=0.28.0",
+  "uvicorn>=0.30.0",
+  "websockets>=14.0",
+]
+dev = [
+  "mypy>=1.13.0",
+  "ruff>=0.8.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/layerbrain/wargames"
+Repository = "https://github.com/layerbrain/wargames"
+Issues = "https://github.com/layerbrain/wargames/issues"
+
+[project.scripts]
+wargames = "wargames.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["wargames"]
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/.DS_Store",
+  "/.idea",
+  "/dist",
+  "/venv",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.mypy]
+python_version = "3.11"
+strict = true

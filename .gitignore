@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+site/
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+
+# Test, type-check, and coverage output
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+
+# Local runtime artifacts
+/tmp/
+/frames/
+/probe/
+*.log
+
+# OS and editor files
+.DS_Store
+.idea/
+.vscode/
+
+# Docker / local generated files
+docker-compose.override.yml
