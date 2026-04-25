@@ -31,15 +31,3 @@ rollouts_per_example = 8
 
 The full YAML schema and Red Alert reward fields are in
 [`../../docs/reward_profiles.md`](../../docs/reward_profiles.md).
-
-Publish under the Layerbrain team:
-
-```bash
-make publish
-```
-
-The publish target runs:
-
-```bash
-prime env push --name wargames --team layerbrain --visibility PUBLIC
-```

@@ -211,16 +211,6 @@ curl -X POST http://127.0.0.1:8001/standard/tasks \
 Firehorse can run Codex/Claude/Gemini against the environment. WarGames exposes
 only CUA tools. CUA-only is enforced by the environment and conformance tests.
 
-OpenReward publishing uses the `orwd` CLI and the `layerbrain/wargames`
-environment. It creates/updates the GitHub deployment against `layerbrain/wargames`, subdirectory
-`environments/wargames-openreward`.
-
-```bash
-cd environments/wargames-openreward
-make prepublish
-make publish
-```
-
 ## Prime Intellect
 
 The Prime implementation lives in `wargames.environments.prime`.
@@ -248,19 +238,6 @@ rollouts_per_example = 8
 
 Use `dense` or `protective` on `train`/`curriculum`, then report against
 `terminal` or `standard` on `test`.
-
-Publish under the Layerbrain team:
-
-```bash
-cd environments/prime
-make publish
-```
-
-The publish target uses:
-
-```bash
-prime env push --name wargames --team layerbrain --visibility PUBLIC
-```
 
 ## Tests
 
