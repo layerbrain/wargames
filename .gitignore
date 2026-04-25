@@ -28,10 +28,10 @@ htmlcov/
 /tmp/
 /frames/
 /probe/
-runs/
-exports/
-checkpoints/
-.openra-cache/
+/runs/
+/exports/
+/checkpoints/
+/.openra-cache/
 environments/*/.prime/
 local.env
 *.mp4

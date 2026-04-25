@@ -3,9 +3,9 @@ ifneq (,$(wildcard ../../local.env))
 	export
 endif
 
-.PHONY: prepublish conformance parity smoke-local publish
+.PHONY: prepublish conformance parity smoke-local docker-build publish
 
-prepublish: parity conformance smoke-local
+prepublish: parity conformance smoke-local docker-build
 
 parity:
 	cd ../.. && source venv/bin/activate && python -m unittest tests.harness tests.evaluation
@@ -15,6 +15,9 @@ conformance:
 
 smoke-local:
 	cd ../.. && source venv/bin/activate && python -m wargames tasks --game redalert --split debug
+
+docker-build:
+	docker build --platform linux/amd64 -t wargames-openreward:local .
 
 publish: prepublish
 	@test -n "$$LAYERBRAIN_OPENREWARD" || (echo "ERROR: LAYERBRAIN_OPENREWARD not set" && exit 1)

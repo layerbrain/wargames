@@ -165,6 +165,10 @@ wargames profile validate scenarios/redalert/profiles/protective.yaml
 Profiles are the behavior dial. The same model can be evaluated under different
 profiles to measure whether reward design changes behavior.
 
+The full profile schema, every Red Alert reward field, built-in primitives, and
+Prime RL/OpenReward examples are documented in
+[`docs/reward_profiles.md`](docs/reward_profiles.md).
+
 ## Watching
 
 Local:
@@ -231,6 +235,19 @@ prime eval run wargames --config environments/prime/configs/eval-debug.toml -n 1
 Prime RL uses the shipped TOML configs. WarGames supplies the environment and
 reward signal; Prime/prime-rl owns rollouts, batching, GPUs, and gradient
 updates.
+
+RL training changes behavior by changing `reward_profile` in the Prime config:
+
+```toml
+split = "train"
+reward_profile = "protective"
+recorder_mode = "none"
+max_steps = 500
+rollouts_per_example = 8
+```
+
+Use `dense` or `protective` on `train`/`curriculum`, then report against
+`terminal` or `standard` on `test`.
 
 Publish under the Layerbrain team:
 

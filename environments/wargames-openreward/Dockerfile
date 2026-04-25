@@ -37,8 +37,13 @@ ARG OPENRA_COMMIT=2af02e131f4810ac411b7d67c0319488dbf402fe
 RUN git clone --filter=blob:none https://github.com/OpenRA/OpenRA.git /openra \
     && git -C /openra checkout "$OPENRA_COMMIT"
 
+ARG WARGAMES_REPO=https://github.com/layerbrain/wargames.git
+ARG WARGAMES_REF=main
+RUN git clone --filter=blob:none "$WARGAMES_REPO" /workspace/wargames \
+    && git -C /workspace/wargames checkout "$WARGAMES_REF"
+
 WORKDIR /workspace/wargames
-COPY . .
+COPY . environments/wargames-openreward
 
 RUN bash wargames/games/redalert/openra/build.sh /openra \
     && python3 -m venv venv \
