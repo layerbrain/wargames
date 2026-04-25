@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "wargames"
 version = "0.1.0"
-description = "Universal CUA game-benchmarking backends with OpenRA Red Alert support."
+description = "War Games measures whether frontier models can sustain long-horizon planning and adaptation in complex, non-stationary real-time games, with human performance as the benchmark."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
