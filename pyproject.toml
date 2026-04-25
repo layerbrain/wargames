@@ -8,6 +8,7 @@ version = "0.1.0"
 description = "Universal CUA game-benchmarking backends with OpenRA Red Alert support."
 readme = "README.md"
 requires-python = ">=3.11"
+license = "MIT"
 authors = [
   { name = "Layerbrain" },
 ]
@@ -15,6 +16,7 @@ keywords = ["benchmark", "cua", "games", "openra", "red-alert", "reinforcement-l
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
