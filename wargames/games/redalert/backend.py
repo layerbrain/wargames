@@ -30,7 +30,12 @@ from wargames.core.runtime.observation import Observation
 from wargames.core.runtime.result import MissionSummary, StepResult
 from wargames.core.world.probe import HiddenStateSnapshot
 from wargames.games.redalert.config import RedAlertConfig
-from wargames.games.redalert.missions import RedAlertMissionSpec, discover, fallback_missions
+from wargames.games.redalert.missions import (
+    RedAlertMissionSpec,
+    discover,
+    fallback_missions,
+    load_mission_catalog,
+)
 from wargames.games.redalert.probe import SocketStateProbe
 from wargames.games.redalert.process import (
     bootstrap_openra,
@@ -146,6 +151,9 @@ class RedAlertBackend(Backend):
             found = discover(self.config.openra_root)
             if found:
                 return found
+        catalog = load_mission_catalog(self.config.extracted_missions_dir)
+        if catalog:
+            return catalog
         return fallback_missions()
 
     def missions(self) -> tuple[MissionSpec, ...]:

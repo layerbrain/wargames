@@ -1,0 +1,16 @@
+{
+  "difficulty": "normal",
+  "game": "redalert",
+  "id": "redalert.sarin-gas-1-crackdown.normal",
+  "launch_mode": "direct",
+  "map": "sarin-gas-1-crackdown",
+  "min_players": 1,
+  "native_difficulty": "normal",
+  "player_slots": 1,
+  "source": "builtin",
+  "tags": [
+    "campaign"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Sarin Gas 1 Crackdown (Normal)"
+}

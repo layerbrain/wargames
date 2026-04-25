@@ -1,0 +1,17 @@
+{
+  "difficulty": "easy",
+  "game": "redalert",
+  "id": "redalert.soviet-07.easy",
+  "launch_mode": "direct",
+  "map": "soviet-07",
+  "min_players": 1,
+  "native_difficulty": "easy",
+  "player_slots": 1,
+  "source": "builtin",
+  "tags": [
+    "campaign",
+    "soviet"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Soviet 07 (Easy)"
+}

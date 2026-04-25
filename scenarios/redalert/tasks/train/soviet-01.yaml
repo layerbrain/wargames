@@ -3,7 +3,7 @@ game: redalert
 mission_id: redalert.soviet-01.normal
 seed: 42
 max_steps: 512
-max_wall_seconds: 900
+max_wall_seconds: 600
 reward_profile: dense
 prompt: Complete the mission while preserving useful combat power.
 tags: [soviet, train]

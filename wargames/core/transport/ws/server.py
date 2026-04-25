@@ -328,7 +328,9 @@ class WSApplication:
         await websocket.send_json({"event": "error", "op": op, "code": code, "message": message})
 
     def _mission(self, mission_id: str) -> MissionSpec:
-        for mission in self.game.backend_cls(self.game.config_cls.from_env()).missions():
+        config = self.game.config_cls.from_env()
+        backend = self.backend_factory(config) if self.backend_factory else self.game.backend_cls(config)
+        for mission in backend.missions():
             if mission.id == mission_id:
                 return mission
         raise KeyError(f"unknown mission: {mission_id}")

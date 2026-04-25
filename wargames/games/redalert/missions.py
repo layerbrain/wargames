@@ -185,6 +185,32 @@ def discover(openra_root: str | Path) -> tuple[RedAlertMissionSpec, ...]:
     return tuple(discovered)
 
 
+def load_mission_catalog(path: str | Path) -> tuple[RedAlertMissionSpec, ...]:
+    root = Path(path)
+    if not root.exists():
+        return ()
+    missions: list[RedAlertMissionSpec] = []
+    for file in sorted(root.glob("*/*.json")):
+        data = json.loads(file.read_text(encoding="utf-8"))
+        missions.append(
+            RedAlertMissionSpec(
+                id=str(data["id"]),
+                title=str(data["title"]),
+                game=str(data["game"]),
+                source=data.get("source", "builtin"),
+                map=str(data["map"]),
+                difficulty=data.get("difficulty", "normal"),
+                native_difficulty=str(data.get("native_difficulty", "normal")),
+                tags=tuple(str(tag) for tag in data.get("tags", ())),
+                player_slots=int(data.get("player_slots", 1)),
+                min_players=int(data.get("min_players", 1)),
+                launch_mode=str(data.get("launch_mode", "direct")),
+                time_limit_ticks=int(data.get("time_limit_ticks", 36_000)),
+            )
+        )
+    return tuple(missions)
+
+
 def fallback_missions() -> tuple[RedAlertMissionSpec, ...]:
     return (
         RedAlertMissionSpec(

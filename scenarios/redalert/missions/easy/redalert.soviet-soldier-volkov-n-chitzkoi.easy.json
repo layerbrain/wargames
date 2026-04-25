@@ -1,0 +1,17 @@
+{
+  "difficulty": "easy",
+  "game": "redalert",
+  "id": "redalert.soviet-soldier-volkov-n-chitzkoi.easy",
+  "launch_mode": "direct",
+  "map": "soviet-soldier-volkov-n-chitzkoi",
+  "min_players": 1,
+  "native_difficulty": "easy",
+  "player_slots": 1,
+  "source": "builtin",
+  "tags": [
+    "campaign",
+    "soviet"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Soviet Soldier Volkov N Chitzkoi (Easy)"
+}

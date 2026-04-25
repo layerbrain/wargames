@@ -11,6 +11,16 @@ src_dir="$openra_root/OpenRA.Mods.Common/Traits/World/WarGames"
 mkdir -p "$src_dir"
 cp "$(dirname "$0")/WarGamesStateExport.cs" "$src_dir/WarGamesStateExport.cs"
 
+python3 - "$openra_root/OpenRA.Game/Map/Map.cs" <<'PY'
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+text = path.read_text()
+text = text.replace("CryptoUtil.SHA1Hash([])", "CryptoUtil.SHA1Hash(Array.Empty<byte>())")
+path.write_text(text)
+PY
+
 if [[ -f "$(dirname "$0")/rules_patch.yaml" ]]; then
 	mkdir -p "$openra_root/mods/ra/rules"
 	cp "$(dirname "$0")/rules_patch.yaml" "$openra_root/mods/ra/rules/wargames-state-export.yaml"

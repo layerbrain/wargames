@@ -1,8 +1,15 @@
 id: openai-smoke
 driver: python
 description: Local OpenAI-compatible smoke agent template.
-factory: tests.harness.agents.openai_compatible_agent:create_agent
+factory: wargames.harness.openai_agent:create_agent
 provider: openai-compatible
 model: ${OPENAI_MODEL}
 api_key_env: OPENAI_API_KEY
 base_url: ${OPENAI_BASE_URL}
+config:
+  max_steps: 3
+  timeout_seconds: 12
+  max_retries: 0
+  max_tokens: 64
+  disable_reasoning: true
+  reject_reasoning_models: true

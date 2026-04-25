@@ -1,0 +1,16 @@
+{
+  "difficulty": "normal",
+  "game": "redalert",
+  "id": "redalert.production-disruption.normal",
+  "launch_mode": "direct",
+  "map": "production-disruption",
+  "min_players": 1,
+  "native_difficulty": "normal",
+  "player_slots": 1,
+  "source": "builtin",
+  "tags": [
+    "campaign"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Production Disruption (Normal)"
+}

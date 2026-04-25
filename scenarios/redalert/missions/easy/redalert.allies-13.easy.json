@@ -1,0 +1,17 @@
+{
+  "difficulty": "easy",
+  "game": "redalert",
+  "id": "redalert.allies-13.easy",
+  "launch_mode": "direct",
+  "map": "allies-13",
+  "min_players": 1,
+  "native_difficulty": "easy",
+  "player_slots": 1,
+  "source": "builtin",
+  "tags": [
+    "campaign",
+    "allies"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Allies 13 (Easy)"
+}

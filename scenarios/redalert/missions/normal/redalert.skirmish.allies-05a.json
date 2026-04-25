@@ -1,0 +1,16 @@
+{
+  "difficulty": "normal",
+  "game": "redalert",
+  "id": "redalert.skirmish.allies-05a",
+  "launch_mode": "direct",
+  "map": "/Users/aaronkazah/Documents/Codex/2026-04-24/yo/openra-source/mods/ra/maps/allies-05a",
+  "min_players": 2,
+  "native_difficulty": "normal",
+  "player_slots": 8,
+  "source": "skirmish",
+  "tags": [
+    "skirmish"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "05a: Tanya's Tale"
+}

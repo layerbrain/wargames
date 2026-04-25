@@ -105,7 +105,7 @@ class WarGamesRedAlert(Environment):
             raise ValueError(f"test split cannot use train-only profile: {profile.id}")
 
         config_factory = getattr(self.config_cls, "from_env", self.config_cls)
-        config = config_factory()
+        config = replace(config_factory(), capture_frames=True)
         self.wg = await WarGames.for_game(self.game_descriptor, config).__aenter__()
         self.task = task
         self.ctrl = EpisodeController(

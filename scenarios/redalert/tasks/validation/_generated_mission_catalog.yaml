@@ -1,0 +1,353 @@
+tasks:
+- id: redalert.evacuation.normal.validation.seed-200000
+  mission_id: redalert.evacuation.normal
+  seed: 200000
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Evacuation (Normal) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - validation
+  - normal
+  - builtin
+- id: redalert.intervention.easy.validation.seed-200001
+  mission_id: redalert.intervention.easy
+  seed: 200001
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Intervention (Easy) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - validation
+  - easy
+  - builtin
+- id: redalert.mousetrap.hard.validation.seed-200002
+  mission_id: redalert.mousetrap.hard
+  seed: 200002
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Mousetrap (Hard) through the visible Red Alert
+    interface.'
+  tags:
+  - campaign
+  - validation
+  - hard
+  - builtin
+- id: redalert.proving-grounds.easy.validation.seed-200003
+  mission_id: redalert.proving-grounds.easy
+  seed: 200003
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Proving Grounds (Easy) through the visible
+    Red Alert interface.'
+  tags:
+  - campaign
+  - validation
+  - easy
+  - builtin
+- id: redalert.allies-03a.hard.validation.seed-200004
+  mission_id: redalert.allies-03a.hard
+  seed: 200004
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Allies 03A (Hard) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - allies
+  - validation
+  - hard
+  - builtin
+- id: redalert.allies-03a.normal.validation.seed-200005
+  mission_id: redalert.allies-03a.normal
+  seed: 200005
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Allies 03A (Normal) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - allies
+  - validation
+  - normal
+  - builtin
+- id: redalert.allies-03b.hard.validation.seed-200006
+  mission_id: redalert.allies-03b.hard
+  seed: 200006
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Allies 03B (Hard) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - allies
+  - validation
+  - hard
+  - builtin
+- id: redalert.allies-04.easy.validation.seed-200007
+  mission_id: redalert.allies-04.easy
+  seed: 200007
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Allies 04 (Easy) through the visible Red Alert
+    interface.'
+  tags:
+  - campaign
+  - allies
+  - validation
+  - easy
+  - builtin
+- id: redalert.allies-05b.hard.validation.seed-200008
+  mission_id: redalert.allies-05b.hard
+  seed: 200008
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Allies 05B (Hard) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - allies
+  - validation
+  - hard
+  - builtin
+- id: redalert.allies-07.hard.validation.seed-200009
+  mission_id: redalert.allies-07.hard
+  seed: 200009
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Allies 07 (Hard) through the visible Red Alert
+    interface.'
+  tags:
+  - campaign
+  - allies
+  - validation
+  - hard
+  - builtin
+- id: redalert.allies-09a.normal.validation.seed-200010
+  mission_id: redalert.allies-09a.normal
+  seed: 200010
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Allies 09A (Normal) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - allies
+  - validation
+  - normal
+  - builtin
+- id: redalert.allies-13.hard.validation.seed-200011
+  mission_id: redalert.allies-13.hard
+  seed: 200011
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Allies 13 (Hard) through the visible Red Alert
+    interface.'
+  tags:
+  - campaign
+  - allies
+  - validation
+  - hard
+  - builtin
+- id: redalert.soviet-10.easy.validation.seed-200012
+  mission_id: redalert.soviet-10.easy
+  seed: 200012
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Soviet 10 (Easy) through the visible Red Alert
+    interface.'
+  tags:
+  - campaign
+  - soviet
+  - validation
+  - easy
+  - builtin
+- id: redalert.skirmish.allies-04.validation.seed-200013
+  mission_id: redalert.skirmish.allies-04
+  seed: 200013
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete 04:   Ten to One through the visible Red Alert
+    interface.'
+  tags:
+  - skirmish
+  - validation
+  - normal
+- id: redalert.skirmish.allies-06b.validation.seed-200014
+  mission_id: redalert.skirmish.allies-06b
+  seed: 200014
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete 06b: Cripple Iron Curtain Research through
+    the visible Red Alert interface.'
+  tags:
+  - skirmish
+  - validation
+  - normal
+- id: redalert.skirmish.altercation.validation.seed-200015
+  mission_id: redalert.skirmish.altercation
+  seed: 200015
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Altercation through the visible Red Alert
+    interface.'
+  tags:
+  - skirmish
+  - validation
+  - normal
+- id: redalert.skirmish.code-19.validation.seed-200016
+  mission_id: redalert.skirmish.code-19
+  seed: 200016
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Code 19 through the visible Red Alert interface.'
+  tags:
+  - skirmish
+  - validation
+  - normal
+- id: redalert.skirmish.doubles.validation.seed-200017
+  mission_id: redalert.skirmish.doubles
+  seed: 200017
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Doubles through the visible Red Alert interface.'
+  tags:
+  - skirmish
+  - validation
+  - normal
+- id: redalert.skirmish.exodus.validation.seed-200018
+  mission_id: redalert.skirmish.exodus
+  seed: 200018
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Exodus through the visible Red Alert interface.'
+  tags:
+  - skirmish
+  - validation
+  - normal
+- id: redalert.skirmish.forgotten-plains.validation.seed-200019
+  mission_id: redalert.skirmish.forgotten-plains
+  seed: 200019
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Forgotten Plains through the visible Red Alert
+    interface.'
+  tags:
+  - skirmish
+  - validation
+  - normal
+- id: redalert.skirmish.fortified.validation.seed-200020
+  mission_id: redalert.skirmish.fortified
+  seed: 200020
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Fortified through the visible Red Alert interface.'
+  tags:
+  - skirmish
+  - validation
+  - normal
+- id: redalert.skirmish.pitfight.validation.seed-200021
+  mission_id: redalert.skirmish.pitfight
+  seed: 200021
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Pitfight through the visible Red Alert interface.'
+  tags:
+  - skirmish
+  - validation
+  - normal
+- id: redalert.skirmish.soviet-01.validation.seed-200022
+  mission_id: redalert.skirmish.soviet-01
+  seed: 200022
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete 01:   Lesson in Blood through the visible
+    Red Alert interface.'
+  tags:
+  - skirmish
+  - validation
+  - normal
+- id: redalert.skirmish.soviet-04b.validation.seed-200023
+  mission_id: redalert.skirmish.soviet-04b
+  seed: 200023
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete 04b: Behind the Lines through the visible
+    Red Alert interface.'
+  tags:
+  - skirmish
+  - validation
+  - normal
+- id: redalert.skirmish.soviet-06a.validation.seed-200024
+  mission_id: redalert.skirmish.soviet-06a
+  seed: 200024
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete 06a: Bridge over the River Grotzny through
+    the visible Red Alert interface.'
+  tags:
+  - skirmish
+  - validation
+  - normal
+- id: redalert.skirmish.soviet-13a.validation.seed-200025
+  mission_id: redalert.skirmish.soviet-13a
+  seed: 200025
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete 13a: Capture the Chronosphere through the
+    visible Red Alert interface.'
+  tags:
+  - skirmish
+  - validation
+  - normal
+- id: redalert.skirmish.tournament-island.validation.seed-200026
+  mission_id: redalert.skirmish.tournament-island
+  seed: 200026
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Tournament Island through the visible Red
+    Alert interface.'
+  tags:
+  - skirmish
+  - validation
+  - normal
+- id: redalert.skirmish.vegetation.validation.seed-200027
+  mission_id: redalert.skirmish.vegetation
+  seed: 200027
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: standard
+  prompt: 'Validation mission: complete Vegetation through the visible Red Alert interface.'
+  tags:
+  - skirmish
+  - validation
+  - normal

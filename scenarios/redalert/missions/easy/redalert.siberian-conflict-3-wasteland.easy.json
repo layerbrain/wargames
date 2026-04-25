@@ -1,0 +1,16 @@
+{
+  "difficulty": "easy",
+  "game": "redalert",
+  "id": "redalert.siberian-conflict-3-wasteland.easy",
+  "launch_mode": "direct",
+  "map": "siberian-conflict-3-wasteland",
+  "min_players": 1,
+  "native_difficulty": "easy",
+  "player_slots": 1,
+  "source": "builtin",
+  "tags": [
+    "campaign"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Siberian Conflict 3 Wasteland (Easy)"
+}

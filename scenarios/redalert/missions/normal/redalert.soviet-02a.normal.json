@@ -1,0 +1,17 @@
+{
+  "difficulty": "normal",
+  "game": "redalert",
+  "id": "redalert.soviet-02a.normal",
+  "launch_mode": "direct",
+  "map": "soviet-02a",
+  "min_players": 1,
+  "native_difficulty": "normal",
+  "player_slots": 1,
+  "source": "builtin",
+  "tags": [
+    "campaign",
+    "soviet"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Soviet 02A (Normal)"
+}

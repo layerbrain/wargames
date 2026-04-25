@@ -1,0 +1,16 @@
+{
+  "difficulty": "easy",
+  "game": "redalert",
+  "id": "redalert.siberian-conflict-1-fresh-tracks.easy",
+  "launch_mode": "direct",
+  "map": "siberian-conflict-1-fresh-tracks",
+  "min_players": 1,
+  "native_difficulty": "easy",
+  "player_slots": 1,
+  "source": "builtin",
+  "tags": [
+    "campaign"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Siberian Conflict 1 Fresh Tracks (Easy)"
+}

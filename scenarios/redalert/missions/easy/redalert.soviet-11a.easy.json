@@ -1,0 +1,17 @@
+{
+  "difficulty": "easy",
+  "game": "redalert",
+  "id": "redalert.soviet-11a.easy",
+  "launch_mode": "direct",
+  "map": "soviet-11a",
+  "min_players": 1,
+  "native_difficulty": "easy",
+  "player_slots": 1,
+  "source": "builtin",
+  "tags": [
+    "campaign",
+    "soviet"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Soviet 11A (Easy)"
+}

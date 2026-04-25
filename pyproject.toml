@@ -26,6 +26,7 @@ classifiers = [
 ]
 dependencies = [
   "msgpack>=1.0.0",
+  "openai>=2.32.0",
   "pyyaml>=6.0.0",
   "python-xlib>=0.33",
 ]

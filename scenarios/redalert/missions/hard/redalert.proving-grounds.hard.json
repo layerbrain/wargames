@@ -1,0 +1,16 @@
+{
+  "difficulty": "hard",
+  "game": "redalert",
+  "id": "redalert.proving-grounds.hard",
+  "launch_mode": "direct",
+  "map": "proving-grounds",
+  "min_players": 1,
+  "native_difficulty": "hard",
+  "player_slots": 1,
+  "source": "builtin",
+  "tags": [
+    "campaign"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Proving Grounds (Hard)"
+}

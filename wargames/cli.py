@@ -490,7 +490,7 @@ async def _run(args: argparse.Namespace) -> int:
     )
     spec = load_agent_spec(args.agent, tuple(Path(path) for path in args.agent_dir))
     agent = create_agent(spec)
-    config = _config(game, capture_frames=args.video == "frames")
+    config = _config(game, capture_frames=True)
     from wargames.harness.runner import run_task
 
     async with WarGames.for_game(game, config) as wg:

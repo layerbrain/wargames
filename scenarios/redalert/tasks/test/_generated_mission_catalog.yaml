@@ -1,0 +1,767 @@
+tasks:
+- id: redalert.ant-01.normal.test.seed-300000
+  mission_id: redalert.ant-01.normal
+  seed: 300000
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Ant 01 (Normal) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - test
+  - normal
+  - builtin
+- id: redalert.evacuation.easy.test.seed-300001
+  mission_id: redalert.evacuation.easy
+  seed: 300001
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Evacuation (Easy) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - test
+  - easy
+  - builtin
+- id: redalert.exodus.easy.test.seed-300002
+  mission_id: redalert.exodus.easy
+  seed: 300002
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Exodus (Easy) through the visible Red Alert
+    interface.'
+  tags:
+  - campaign
+  - test
+  - easy
+  - builtin
+- id: redalert.exodus.hard.test.seed-300003
+  mission_id: redalert.exodus.hard
+  seed: 300003
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Exodus (Hard) through the visible Red Alert
+    interface.'
+  tags:
+  - campaign
+  - test
+  - hard
+  - builtin
+- id: redalert.fall-of-greece-1-personal-war.normal.test.seed-300004
+  mission_id: redalert.fall-of-greece-1-personal-war.normal
+  seed: 300004
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Fall Of Greece 1 Personal War (Normal)
+    through the visible Red Alert interface.'
+  tags:
+  - campaign
+  - test
+  - normal
+  - builtin
+- id: redalert.fall-of-greece-2-evacuation.easy.test.seed-300005
+  mission_id: redalert.fall-of-greece-2-evacuation.easy
+  seed: 300005
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Fall Of Greece 2 Evacuation (Easy) through
+    the visible Red Alert interface.'
+  tags:
+  - campaign
+  - test
+  - easy
+  - builtin
+- id: redalert.infiltration.normal.test.seed-300006
+  mission_id: redalert.infiltration.normal
+  seed: 300006
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Infiltration (Normal) through the visible
+    Red Alert interface.'
+  tags:
+  - campaign
+  - test
+  - normal
+  - builtin
+- id: redalert.production-disruption.easy.test.seed-300007
+  mission_id: redalert.production-disruption.easy
+  seed: 300007
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Production Disruption (Easy) through the
+    visible Red Alert interface.'
+  tags:
+  - campaign
+  - test
+  - easy
+  - builtin
+- id: redalert.proving-grounds.hard.test.seed-300008
+  mission_id: redalert.proving-grounds.hard
+  seed: 300008
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Proving Grounds (Hard) through the visible
+    Red Alert interface.'
+  tags:
+  - campaign
+  - test
+  - hard
+  - builtin
+- id: redalert.sarin-gas-3-controlled-burn.hard.test.seed-300009
+  mission_id: redalert.sarin-gas-3-controlled-burn.hard
+  seed: 300009
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Sarin Gas 3 Controlled Burn (Hard) through
+    the visible Red Alert interface.'
+  tags:
+  - campaign
+  - test
+  - hard
+  - builtin
+- id: redalert.sarin-gas-3-controlled-burn.normal.test.seed-300010
+  mission_id: redalert.sarin-gas-3-controlled-burn.normal
+  seed: 300010
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Sarin Gas 3 Controlled Burn (Normal) through
+    the visible Red Alert interface.'
+  tags:
+  - campaign
+  - test
+  - normal
+  - builtin
+- id: redalert.siberian-conflict-3-wasteland.easy.test.seed-300011
+  mission_id: redalert.siberian-conflict-3-wasteland.easy
+  seed: 300011
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Siberian Conflict 3 Wasteland (Easy) through
+    the visible Red Alert interface.'
+  tags:
+  - campaign
+  - test
+  - easy
+  - builtin
+- id: redalert.allies-03a.easy.test.seed-300012
+  mission_id: redalert.allies-03a.easy
+  seed: 300012
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Allies 03A (Easy) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - allies
+  - test
+  - easy
+  - builtin
+- id: redalert.allies-05c.easy.test.seed-300013
+  mission_id: redalert.allies-05c.easy
+  seed: 300013
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Allies 05C (Easy) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - allies
+  - test
+  - easy
+  - builtin
+- id: redalert.allies-07.easy.test.seed-300014
+  mission_id: redalert.allies-07.easy
+  seed: 300014
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Allies 07 (Easy) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - allies
+  - test
+  - easy
+  - builtin
+- id: redalert.allies-08b.hard.test.seed-300015
+  mission_id: redalert.allies-08b.hard
+  seed: 300015
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Allies 08B (Hard) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - allies
+  - test
+  - hard
+  - builtin
+- id: redalert.allies-09a.easy.test.seed-300016
+  mission_id: redalert.allies-09a.easy
+  seed: 300016
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Allies 09A (Easy) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - allies
+  - test
+  - easy
+  - builtin
+- id: redalert.allies-10a.easy.test.seed-300017
+  mission_id: redalert.allies-10a.easy
+  seed: 300017
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Allies 10A (Easy) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - allies
+  - test
+  - easy
+  - builtin
+- id: redalert.allies-10a.normal.test.seed-300018
+  mission_id: redalert.allies-10a.normal
+  seed: 300018
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Allies 10A (Normal) through the visible
+    Red Alert interface.'
+  tags:
+  - campaign
+  - allies
+  - test
+  - normal
+  - builtin
+- id: redalert.soviet-02b.normal.test.seed-300019
+  mission_id: redalert.soviet-02b.normal
+  seed: 300019
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Soviet 02B (Normal) through the visible
+    Red Alert interface.'
+  tags:
+  - campaign
+  - soviet
+  - test
+  - normal
+  - builtin
+- id: redalert.soviet-04a.hard.test.seed-300020
+  mission_id: redalert.soviet-04a.hard
+  seed: 300020
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Soviet 04A (Hard) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - soviet
+  - test
+  - hard
+  - builtin
+- id: redalert.soviet-04b.easy.test.seed-300021
+  mission_id: redalert.soviet-04b.easy
+  seed: 300021
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Soviet 04B (Easy) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - soviet
+  - test
+  - easy
+  - builtin
+- id: redalert.soviet-08a.normal.test.seed-300022
+  mission_id: redalert.soviet-08a.normal
+  seed: 300022
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Soviet 08A (Normal) through the visible
+    Red Alert interface.'
+  tags:
+  - campaign
+  - soviet
+  - test
+  - normal
+  - builtin
+- id: redalert.soviet-09.normal.test.seed-300023
+  mission_id: redalert.soviet-09.normal
+  seed: 300023
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Soviet 09 (Normal) through the visible
+    Red Alert interface.'
+  tags:
+  - campaign
+  - soviet
+  - test
+  - normal
+  - builtin
+- id: redalert.soviet-10.normal.test.seed-300024
+  mission_id: redalert.soviet-10.normal
+  seed: 300024
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Soviet 10 (Normal) through the visible
+    Red Alert interface.'
+  tags:
+  - campaign
+  - soviet
+  - test
+  - normal
+  - builtin
+- id: redalert.soviet-11b.easy.test.seed-300025
+  mission_id: redalert.soviet-11b.easy
+  seed: 300025
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Soviet 11B (Easy) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - soviet
+  - test
+  - easy
+  - builtin
+- id: redalert.soviet-11b.hard.test.seed-300026
+  mission_id: redalert.soviet-11b.hard
+  seed: 300026
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Soviet 11B (Hard) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - soviet
+  - test
+  - hard
+  - builtin
+- id: redalert.soviet-13a.easy.test.seed-300027
+  mission_id: redalert.soviet-13a.easy
+  seed: 300027
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Soviet 13A (Easy) through the visible Red
+    Alert interface.'
+  tags:
+  - campaign
+  - soviet
+  - test
+  - easy
+  - builtin
+- id: redalert.soviet-soldier-volkov-n-chitzkoi.easy.test.seed-300028
+  mission_id: redalert.soviet-soldier-volkov-n-chitzkoi.easy
+  seed: 300028
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Soviet Soldier Volkov N Chitzkoi (Easy)
+    through the visible Red Alert interface.'
+  tags:
+  - campaign
+  - soviet
+  - test
+  - easy
+  - builtin
+- id: redalert.soviet-soldier-volkov-n-chitzkoi.hard.test.seed-300029
+  mission_id: redalert.soviet-soldier-volkov-n-chitzkoi.hard
+  seed: 300029
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Soviet Soldier Volkov N Chitzkoi (Hard)
+    through the visible Red Alert interface.'
+  tags:
+  - campaign
+  - soviet
+  - test
+  - hard
+  - builtin
+- id: redalert.skirmish.allies-09a.test.seed-300030
+  mission_id: redalert.skirmish.allies-09a
+  seed: 300030
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete 09a: Evacuate Kosygin through the visible
+    Red Alert interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.ant-01.test.seed-300031
+  mission_id: redalert.skirmish.ant-01
+  seed: 300031
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete 01: Discovery through the visible Red Alert
+    interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.ant-03.test.seed-300032
+  mission_id: redalert.skirmish.ant-03
+  seed: 300032
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete 03: Hunt! through the visible Red Alert
+    interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.ardennes.test.seed-300033
+  mission_id: redalert.skirmish.ardennes
+  seed: 300033
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Ardennes through the visible Red Alert
+    interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.blitz.test.seed-300034
+  mission_id: redalert.skirmish.blitz
+  seed: 300034
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Blitz through the visible Red Alert interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.bombardment-islands.test.seed-300035
+  mission_id: redalert.skirmish.bombardment-islands
+  seed: 300035
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Bombardment Islands through the visible
+    Red Alert interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.chernobyl.test.seed-300036
+  mission_id: redalert.skirmish.chernobyl
+  seed: 300036
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Chernobyl through the visible Red Alert
+    interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.desert-shellmap.test.seed-300037
+  mission_id: redalert.skirmish.desert-shellmap
+  seed: 300037
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Desert Shellmap through the visible Red
+    Alert interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.drop-zone-battle-of-tikiaki.test.seed-300038
+  mission_id: redalert.skirmish.drop-zone-battle-of-tikiaki
+  seed: 300038
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Drop Zone - Battle of Tikiaki through the
+    visible Red Alert interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.dual-cold-front.test.seed-300039
+  mission_id: redalert.skirmish.dual-cold-front
+  seed: 300039
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Dual Cold Front through the visible Red
+    Alert interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.europe.test.seed-300040
+  mission_id: redalert.skirmish.europe
+  seed: 300040
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Europe through the visible Red Alert interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.fall-of-greece-2-evacuation.test.seed-300041
+  mission_id: redalert.skirmish.fall-of-greece-2-evacuation
+  seed: 300041
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Fall of Greece 2: Evacuation through the
+    visible Red Alert interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.fort-lonestar.test.seed-300042
+  mission_id: redalert.skirmish.fort-lonestar
+  seed: 300042
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Fort Lonestar through the visible Red Alert
+    interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.hypothermia.test.seed-300043
+  mission_id: redalert.skirmish.hypothermia
+  seed: 300043
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Hypothermia through the visible Red Alert
+    interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.maelstrom.test.seed-300044
+  mission_id: redalert.skirmish.maelstrom
+  seed: 300044
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Maelstrom through the visible Red Alert
+    interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.mousetrap.test.seed-300045
+  mission_id: redalert.skirmish.mousetrap
+  seed: 300045
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Mousetrap through the visible Red Alert
+    interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.nine-lives.test.seed-300046
+  mission_id: redalert.skirmish.nine-lives
+  seed: 300046
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Nine Lives through the visible Red Alert
+    interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.oil-spill.test.seed-300047
+  mission_id: redalert.skirmish.oil-spill
+  seed: 300047
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Oil Spill through the visible Red Alert
+    interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.operation-goldmine.test.seed-300048
+  mission_id: redalert.skirmish.operation-goldmine
+  seed: 300048
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Operation: Goldmine through the visible
+    Red Alert interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.ore-gardens.test.seed-300049
+  mission_id: redalert.skirmish.ore-gardens
+  seed: 300049
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Ore Gardens through the visible Red Alert
+    interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.polar-disorder.test.seed-300050
+  mission_id: redalert.skirmish.polar-disorder
+  seed: 300050
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Polar Disorder through the visible Red
+    Alert interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.proving-grounds.test.seed-300051
+  mission_id: redalert.skirmish.proving-grounds
+  seed: 300051
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Proving Grounds through the visible Red
+    Alert interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.shattered-mountain.test.seed-300052
+  mission_id: redalert.skirmish.shattered-mountain
+  seed: 300052
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Shattered Mountain through the visible
+    Red Alert interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.sidestep.test.seed-300053
+  mission_id: redalert.skirmish.sidestep
+  seed: 300053
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Sidestep through the visible Red Alert
+    interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.soviet-03.test.seed-300054
+  mission_id: redalert.skirmish.soviet-03
+  seed: 300054
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete 03:   Covert cleanup through the visible
+    Red Alert interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.soviet-07.test.seed-300055
+  mission_id: redalert.skirmish.soviet-07
+  seed: 300055
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete 07:   Core of the Matter through the visible
+    Red Alert interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.soviet-08a.test.seed-300056
+  mission_id: redalert.skirmish.soviet-08a
+  seed: 300056
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete 08a: Investigate Elba Island through the
+    visible Red Alert interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.soviet-11a.test.seed-300057
+  mission_id: redalert.skirmish.soviet-11a
+  seed: 300057
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete 11a: Sunk Costs through the visible Red
+    Alert interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.soviet-11b.test.seed-300058
+  mission_id: redalert.skirmish.soviet-11b
+  seed: 300058
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete 11b: Sunk Costs through the visible Red
+    Alert interface.'
+  tags:
+  - skirmish
+  - test
+  - normal
+- id: redalert.skirmish.survival01.test.seed-300059
+  mission_id: redalert.skirmish.survival01
+  seed: 300059
+  max_steps: 512
+  max_wall_seconds: 600
+  reward_profile: terminal
+  prompt: 'Held-out test mission: complete Survival 01 through the visible Red Alert
+    interface.'
+  tags:
+  - skirmish
+  - test
+  - normal

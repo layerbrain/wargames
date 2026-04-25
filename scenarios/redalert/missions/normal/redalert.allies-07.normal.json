@@ -1,0 +1,17 @@
+{
+  "difficulty": "normal",
+  "game": "redalert",
+  "id": "redalert.allies-07.normal",
+  "launch_mode": "direct",
+  "map": "allies-07",
+  "min_players": 1,
+  "native_difficulty": "normal",
+  "player_slots": 1,
+  "source": "builtin",
+  "tags": [
+    "campaign",
+    "allies"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Allies 07 (Normal)"
+}

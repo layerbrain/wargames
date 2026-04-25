@@ -55,7 +55,7 @@ class WarGamesPrimeEnv(vf.MultiTurnEnv):
             rubric=build_prime_rubric(split=split),
             tool_defs=_tool_defs(),
             max_turns=max_turns,
-            env_id="layerbrain/wargames-redalert",
+            env_id="layerbrain/wargames",
         )
 
     async def setup_state(self, state: vf.State) -> vf.State:
@@ -65,7 +65,10 @@ class WarGamesPrimeEnv(vf.MultiTurnEnv):
         if task.split == "test" and profile.train_only:
             raise ValueError(f"test split cannot use train-only profile: {profile.id}")
 
-        wg = await WarGames.for_game(self.game_descriptor, self.config_factory()).__aenter__()
+        wg = await WarGames.for_game(
+            self.game_descriptor,
+            replace(self.config_factory(), capture_frames=True),
+        ).__aenter__()
         ctrl = EpisodeController(task=task, run_config=self.run_config, wg=wg)
         first_frame = await ctrl.start(agent_id="prime")
 
