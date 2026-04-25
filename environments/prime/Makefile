@@ -7,10 +7,10 @@ endif
 
 publish: parity conformance
 	@test -n "$$LAYERBRAIN_PRIME" || (echo "ERROR: LAYERBRAIN_PRIME not set" && exit 1)
-	PRIME_API_KEY="$$LAYERBRAIN_PRIME" prime env push --team layerbrain --visibility PUBLIC
+	PRIME_API_KEY="$$LAYERBRAIN_PRIME" prime env push --name wargames --team layerbrain --visibility PUBLIC
 
 parity:
 	cd ../.. && source venv/bin/activate && python -m unittest tests.harness tests.evaluation
 
 conformance:
-	cd ../.. && source venv/bin/activate && python -m unittest discover -s environments/wargames-prime/tests/conformance
+	cd ../.. && source venv/bin/activate && python -m unittest discover -s environments/prime/tests/conformance

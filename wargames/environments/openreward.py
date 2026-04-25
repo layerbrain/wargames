@@ -60,7 +60,7 @@ class ScrollParams(BaseModel):
 
 
 class WarGamesRedAlert(Environment):
-    env_id = "Layerbrain/WarGamesRedAlert"
+    env_id = "layerbrain/wargames"
     reward_profile: ClassVar[str] = "standard"
     game_descriptor: ClassVar[GameDescriptor] = GAME
     config_cls: ClassVar[type[WarGamesConfig]] = RedAlertConfig
@@ -78,7 +78,7 @@ class WarGamesRedAlert(Environment):
 
     @classmethod
     def name(cls) -> str:
-        return "wargamesredalert" if cls is WarGamesRedAlert else cls.reward_profile
+        return "wargames" if cls is WarGamesRedAlert else cls.reward_profile
 
     @classmethod
     def list_splits(cls) -> list[Split]:

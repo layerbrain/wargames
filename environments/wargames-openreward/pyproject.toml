@@ -14,4 +14,4 @@ dependencies = [
 ]
 
 [project.entry-points."openreward.environments"]
-"Layerbrain/WarGamesRedAlert" = "wargames_openreward.env_redalert:WarGamesRedAlert"
+"layerbrain/wargames" = "wargames_openreward.env_redalert:WarGamesRedAlert"

@@ -27,6 +27,7 @@ class TestableWarGamesRedAlert(WarGamesRedAlert):
 class OpenRewardConformanceTests(unittest.IsolatedAsyncioTestCase):
     def test_environment_is_real_openreward_environment(self) -> None:
         self.assertTrue(issubclass(WarGamesRedAlert, Environment))
+        self.assertEqual("wargames", WarGamesRedAlert.name())
         self.assertEqual(
             {"click", "move_mouse", "double_click", "drag", "key", "type_text", "scroll", "wait"},
             {tool.name for tool in WarGamesRedAlert.list_tools().tools},

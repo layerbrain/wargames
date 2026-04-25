@@ -1,7 +1,8 @@
-# WarGames OpenReward
+# WarGames For OpenReward
 
-OpenReward surface for WarGames Red Alert. The implementation is
-`wargames.environments.openreward`; this folder is the hub package wrapper.
+OpenReward surface for WarGames Red Alert. The public OpenReward environment is
+`layerbrain/wargames`. The implementation lives in
+`wargames.environments.openreward`; this folder is only the publish wrapper.
 
 ```bash
 uv pip install -e .
@@ -12,7 +13,7 @@ Smoke the OpenReward protocol:
 
 ```bash
 curl http://127.0.0.1:8001/list_environments
-curl http://127.0.0.1:8001/wargamesredalert/tools
+curl http://127.0.0.1:8001/wargames/tools
 curl http://127.0.0.1:8001/standard/splits
 curl -X POST http://127.0.0.1:8001/standard/tasks \
   -H 'content-type: application/json' \
@@ -30,7 +31,7 @@ The environment exposes only WarGames CUA tools:
 - `scroll`
 - `wait`
 
-Publish to the `layerbrain` OpenReward namespace:
+Publish to the `layerbrain/wargames` OpenReward environment:
 
 ```bash
 make prepublish

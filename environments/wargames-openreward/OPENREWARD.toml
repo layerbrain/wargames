@@ -1,4 +1,4 @@
-env_id = "Layerbrain/WarGamesRedAlert"
+env_id = "layerbrain/wargames"
 display_name = "WarGames RedAlert"
 category = "agentic-eval"
 tags = ["defense-sim", "rts", "cua", "alignment"]

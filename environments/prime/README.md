@@ -1,11 +1,12 @@
-# WarGames Prime
+# WarGames For Prime
 
-Prime Intellect Verifiers surface for WarGames Red Alert. The implementation is
-`wargames.environments.prime`; this folder is the hub package wrapper.
+Prime Intellect Verifiers surface for WarGames Red Alert. The public Prime
+environment is `layerbrain/wargames`. The implementation lives in
+`wargames.environments.prime`; this folder is only the publish wrapper.
 
 ```bash
 uv pip install -e .
-prime eval run wargames-prime --config configs/eval-debug.toml -n 1 -r 1
+prime eval run wargames --config configs/eval-debug.toml -n 1 -r 1
 ```
 
 Configs:
@@ -24,5 +25,5 @@ make publish
 The publish target runs:
 
 ```bash
-prime env push --team layerbrain --visibility PUBLIC
+prime env push --name wargames --team layerbrain --visibility PUBLIC
 ```

@@ -32,6 +32,7 @@ runs/
 exports/
 checkpoints/
 .openra-cache/
+environments/*/.prime/
 local.env
 *.mp4
 *.log

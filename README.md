@@ -168,8 +168,8 @@ when explicitly requested.
 ## OpenReward
 
 The OpenReward implementation lives in `wargames.environments.openreward`.
-`environments/wargames-openreward` is the thin package OpenReward installs
-from the hub.
+The public OpenReward environment is `layerbrain/wargames`.
+`environments/wargames-openreward` is only the thin publish wrapper.
 
 ```bash
 uv pip install -e ./environments/wargames-openreward
@@ -180,7 +180,7 @@ Smoke the OpenReward protocol locally:
 
 ```bash
 curl http://127.0.0.1:8001/list_environments
-curl http://127.0.0.1:8001/wargamesredalert/tools
+curl http://127.0.0.1:8001/wargames/tools
 curl http://127.0.0.1:8001/standard/splits
 curl -X POST http://127.0.0.1:8001/standard/tasks \
   -H 'content-type: application/json' \
@@ -190,8 +190,8 @@ curl -X POST http://127.0.0.1:8001/standard/tasks \
 Firehorse can run Codex/Claude/Gemini against the environment. WarGames exposes
 only CUA tools. CUA-only is enforced by the environment and conformance tests.
 
-OpenReward publishing uses the `orwd` CLI and the `layerbrain` namespace. It
-creates/updates the GitHub deployment against `layerbrain/wargames`, subdirectory
+OpenReward publishing uses the `orwd` CLI and the `layerbrain/wargames`
+environment. It creates/updates the GitHub deployment against `layerbrain/wargames`, subdirectory
 `environments/wargames-openreward`.
 
 ```bash
@@ -203,11 +203,12 @@ make publish
 ## Prime Intellect
 
 The Prime implementation lives in `wargames.environments.prime`.
-`environments/wargames-prime` is the thin package Prime installs from the hub.
+The public Prime environment is `layerbrain/wargames`.
+`environments/prime` is only the thin publish wrapper.
 
 ```bash
-uv pip install -e ./environments/wargames-prime
-prime eval run wargames-prime --config environments/wargames-prime/configs/eval-debug.toml -n 1 -r 1
+uv pip install -e ./environments/prime
+prime eval run wargames --config environments/prime/configs/eval-debug.toml -n 1 -r 1
 ```
 
 Prime RL uses the shipped TOML configs. WarGames supplies the environment and
@@ -217,14 +218,14 @@ updates.
 Publish under the Layerbrain team:
 
 ```bash
-cd environments/wargames-prime
+cd environments/prime
 make publish
 ```
 
 The publish target uses:
 
 ```bash
-prime env push --team layerbrain --visibility PUBLIC
+prime env push --name wargames --team layerbrain --visibility PUBLIC
 ```
 
 ## Tests
@@ -233,5 +234,5 @@ prime env push --team layerbrain --visibility PUBLIC
 source venv/bin/activate
 python -m unittest tests.evaluation tests.harness
 python -m unittest discover -s environments/wargames-openreward/tests/conformance
-python -m unittest discover -s environments/wargames-prime/tests/conformance
+python -m unittest discover -s environments/prime/tests/conformance
 ```

@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "wargames-prime"
+name = "layerbrain-wargames"
 version = "0.1.0"
 description = "Defense-aligned RTS environment for Prime Intellect Verifiers."
 requires-python = ">=3.11"
@@ -15,7 +15,13 @@ dependencies = [
 ]
 
 [project.entry-points."verifiers.environments"]
-"wargames-prime" = "wargames_prime:load_environment"
+"wargames" = "wargames_prime:load_environment"
+
+[tool.hatch.build.targets.wheel]
+only-include = ["wargames_prime.py", "configs"]
+
+[tool.hatch.build.targets.editable]
+only-include = ["wargames_prime.py", "configs"]
 
 [tool.prime.environment]
 display_name = "WarGames RedAlert"
