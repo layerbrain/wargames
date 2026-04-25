@@ -11,7 +11,7 @@ authors = [{ name = "Layerbrain", email = "brain@layerbrain.com" }]
 dependencies = [
   "datasets>=4.6.1",
   "verifiers>=0.1.12",
-  "wargames",
+  "wargames @ git+https://github.com/layerbrain/wargames.git@main",
 ]
 
 [project.entry-points."verifiers.environments"]
@@ -22,6 +22,9 @@ only-include = ["wargames_prime.py", "configs"]
 
 [tool.hatch.build.targets.editable]
 only-include = ["wargames_prime.py", "configs"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [tool.prime.environment]
 display_name = "WarGames RedAlert"

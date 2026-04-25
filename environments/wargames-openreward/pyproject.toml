@@ -10,8 +10,11 @@ requires-python = ">=3.11"
 authors = [{ name = "Layerbrain", email = "brain@layerbrain.com" }]
 dependencies = [
   "openreward>=0.1.106",
-  "wargames",
+  "wargames @ git+https://github.com/layerbrain/wargames.git@main",
 ]
 
 [project.entry-points."openreward.environments"]
 "layerbrain/wargames" = "wargames_openreward.env_redalert:WarGamesRedAlert"
+
+[tool.hatch.metadata]
+allow-direct-references = true

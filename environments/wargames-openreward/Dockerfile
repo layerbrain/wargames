@@ -45,7 +45,8 @@ RUN bash wargames/games/redalert/openra/build.sh /openra \
     && . venv/bin/activate \
     && pip install --upgrade pip \
     && pip install -e ".[server]" \
-    && pip install -e environments/wargames-openreward
+    && pip install "openreward>=0.1.106" \
+    && pip install -e environments/wargames-openreward --no-deps
 
 ENTRYPOINT ["scripts/linux_box.sh"]
 CMD ["bash", "-lc", "uvicorn wargames_openreward.app:app --host 0.0.0.0 --port ${PORT:-8000}"]

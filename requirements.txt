@@ -1,4 +1,5 @@
 -e .
+openai>=2.32.0
 openreward>=0.1.106
 verifiers>=0.1.12
 datasets>=4.6.1
