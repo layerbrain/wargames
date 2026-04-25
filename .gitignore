@@ -35,7 +35,6 @@ htmlcov/
 environments/*/.prime/
 local.env
 *.mp4
-!docs/assets/kimi-k2-redalert-smoke.mp4
 *.log
 
 # OS and editor files
