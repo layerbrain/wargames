@@ -12,8 +12,7 @@ gradient updates.
 ## Example Output
 
 This is a short Kimi K2.5 smoke run. The agent receives screenshots, chooses
-CUA actions, and WarGames applies them to the live OpenRA window. It is an
-auto-playing GIF so it renders directly in the GitHub README.
+CUA actions, and WarGames applies them to the live OpenRA window.
 
 ![Kimi K2.5 Red Alert smoke run](docs/assets/kimi-k2-redalert-smoke.gif)
 
