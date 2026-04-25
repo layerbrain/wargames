@@ -14,7 +14,7 @@ gradient updates.
 ```bash
 python -m venv venv
 source venv/bin/activate
-pip install -e ".[server]"
+pip install -r requirements.txt
 ```
 
 Red Alert needs a working OpenRA checkout:
@@ -167,29 +167,43 @@ when explicitly requested.
 
 ## OpenReward
 
-The OpenReward package lives in `environments/wargames-openreward`.
+The OpenReward implementation lives in `wargames.environments.openreward`.
+`environments/wargames-openreward` is the thin package OpenReward installs
+from the hub.
 
 ```bash
 uv pip install -e ./environments/wargames-openreward
 uvicorn wargames_openreward.app:app --port 8001
 ```
 
-Firehorse can run Codex/Claude/Gemini against the environment. WarGames exposes
-only CUA tools. There is no verified public `--toolset cua-only` flag in the
-current OpenReward docs, so CUA-only is enforced by the environment and
-conformance tests.
+Smoke the OpenReward protocol locally:
 
-OpenReward publishing is manual through the OpenReward web UI with GitHub
-deployment. Run prepublish checks first:
+```bash
+curl http://127.0.0.1:8001/list_environments
+curl http://127.0.0.1:8001/wargamesredalert/tools
+curl http://127.0.0.1:8001/standard/splits
+curl -X POST http://127.0.0.1:8001/standard/tasks \
+  -H 'content-type: application/json' \
+  -d '{"split":"debug"}'
+```
+
+Firehorse can run Codex/Claude/Gemini against the environment. WarGames exposes
+only CUA tools. CUA-only is enforced by the environment and conformance tests.
+
+OpenReward publishing uses the `orwd` CLI and the `layerbrain` namespace. It
+creates/updates the GitHub deployment against `layerbrain/wargames`, subdirectory
+`environments/wargames-openreward`.
 
 ```bash
 cd environments/wargames-openreward
 make prepublish
+make publish
 ```
 
 ## Prime Intellect
 
-The Prime package lives in `environments/wargames-prime`.
+The Prime implementation lives in `wargames.environments.prime`.
+`environments/wargames-prime` is the thin package Prime installs from the hub.
 
 ```bash
 uv pip install -e ./environments/wargames-prime

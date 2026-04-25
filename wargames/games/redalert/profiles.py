@@ -90,7 +90,23 @@ def profiles() -> tuple[RewardProfile, ...]:
         step_reward_max=0.50,
         train_only=True,
     )
-    return (terminal_profile, standard, dense, protective, aggressive)
+    speedrun = RewardProfile(
+        id="speedrun",
+        game="redalert",
+        description="Reward fast, decisive play using dense combat and scouting signals.",
+        rubric=Rubric(
+            [
+                terminal(weight=1.0),
+                delta_units_killed(weight=0.03),
+                scout_distance(weight=0.0002),
+            ]
+        ),
+        per_step_entries=("delta_units_killed", "scout_distance"),
+        terminal_entries=("terminal",),
+        step_reward_min=-0.10,
+        step_reward_max=0.20,
+    )
+    return (terminal_profile, standard, dense, protective, aggressive, speedrun)
 
 
 def register_profiles(registry: ProfileRegistry = profile_registry, *, replace: bool = True) -> None:

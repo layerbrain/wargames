@@ -1,6 +1,7 @@
 # WarGames Prime
 
-Prime Intellect Verifiers surface for WarGames Red Alert.
+Prime Intellect Verifiers surface for WarGames Red Alert. The implementation is
+`wargames.environments.prime`; this folder is the hub package wrapper.
 
 ```bash
 uv pip install -e .

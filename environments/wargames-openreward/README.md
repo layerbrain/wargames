@@ -1,18 +1,22 @@
 # WarGames OpenReward
 
-OpenReward surface for WarGames Red Alert.
+OpenReward surface for WarGames Red Alert. The implementation is
+`wargames.environments.openreward`; this folder is the hub package wrapper.
 
 ```bash
 uv pip install -e .
 uvicorn wargames_openreward.app:app --port 8001
 ```
 
-Smoke:
+Smoke the OpenReward protocol:
 
 ```bash
-curl http://127.0.0.1:8001/splits
-curl http://127.0.0.1:8001/tasks/debug
-curl http://127.0.0.1:8001/tools
+curl http://127.0.0.1:8001/list_environments
+curl http://127.0.0.1:8001/wargamesredalert/tools
+curl http://127.0.0.1:8001/standard/splits
+curl -X POST http://127.0.0.1:8001/standard/tasks \
+  -H 'content-type: application/json' \
+  -d '{"split":"debug"}'
 ```
 
 The environment exposes only WarGames CUA tools:
@@ -26,9 +30,9 @@ The environment exposes only WarGames CUA tools:
 - `scroll`
 - `wait`
 
-OpenReward publishing is through the OpenReward web UI and GitHub deployment.
-Run local gates first:
+Publish to the `layerbrain` OpenReward namespace:
 
 ```bash
 make prepublish
+make publish
 ```

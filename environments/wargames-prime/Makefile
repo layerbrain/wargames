@@ -13,4 +13,4 @@ parity:
 	cd ../.. && source venv/bin/activate && python -m unittest tests.harness tests.evaluation
 
 conformance:
-	cd ../.. && source venv/bin/activate && python -m unittest environments/wargames-prime/tests/conformance
+	cd ../.. && source venv/bin/activate && python -m unittest discover -s environments/wargames-prime/tests/conformance

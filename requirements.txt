@@ -1,0 +1,4 @@
+-e .
+openreward>=0.1.106
+verifiers>=0.1.12
+datasets>=4.6.1
