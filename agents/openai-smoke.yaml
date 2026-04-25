@@ -11,5 +11,12 @@ config:
   timeout_seconds: 2
   max_retries: 0
   max_tokens: 32
+  temperature: 0.1
   disable_reasoning: true
   reject_reasoning_models: true
+  # Provider-specific controls can be set here without code changes.
+  # Example for Kimi-style endpoints:
+  # extra_body:
+  #   enable_thinking: false
+  #   chat_template_kwargs:
+  #     enable_thinking: false

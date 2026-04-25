@@ -25,6 +25,26 @@ class OpenAICompatibleAgent:
         self.max_steps = int(spec.config.get("max_steps", 3))
         self.max_tokens = int(spec.config.get("max_tokens", 64))
         self.disable_reasoning = bool(spec.config.get("disable_reasoning", True))
+        self.temperature = float(spec.config.get("temperature", 0.1))
+        self.top_p = _optional_float(spec.config.get("top_p"))
+        self.presence_penalty = _optional_float(spec.config.get("presence_penalty"))
+        self.frequency_penalty = _optional_float(spec.config.get("frequency_penalty"))
+        self.tool_choice = str(spec.config.get("tool_choice", "auto"))
+        self.system_prompt = str(
+            spec.config.get(
+                "system_prompt",
+                (
+                    "You control a Red Alert game using only the provided computer-use tools. "
+                    "Use a non-reasoning, short response. Play aggressively for this training smoke: "
+                    "select combat units, issue attack/move commands, and scout toward the enemy. "
+                    "Do not use wait during this smoke run. Prefer moving the mouse to a visible "
+                    "screen coordinate, drag-selecting units, pressing the attack hotkey, or clicking "
+                    "forward on the map. Return exactly one tool call."
+                ),
+            )
+        )
+        self.extra_body = _mapping(spec.config.get("extra_body"))
+        self.reasoning_effort = _optional_string(spec.config.get("reasoning_effort"))
         self.client = OpenAI(
             api_key=api_key,
             base_url=_base_url(spec.base_url),
@@ -71,38 +91,47 @@ class OpenAICompatibleAgent:
         return None
 
     def _complete(self, obs: AgentObservation, *, include_reasoning_disable: bool):
-        kwargs: dict[str, Any] = {}
-        if include_reasoning_disable:
-            kwargs["extra_body"] = {
-                "enable_thinking": False,
-                "chat_template_kwargs": {"enable_thinking": False},
-                "reasoning": {"effort": "none"},
-            }
+        kwargs = self._completion_options(include_reasoning_disable=include_reasoning_disable)
         return self.client.chat.completions.create(
             model=self.model,
             messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "You control a Red Alert game using only the provided computer-use tools. "
-                        "Use a non-reasoning, short response. Play aggressively for this training smoke: "
-                        "select combat units, issue attack/move commands, and scout toward the enemy. "
-                        "Do not use wait during this smoke run. Prefer moving the mouse to a visible "
-                        "screen coordinate, drag-selecting units, pressing the attack hotkey, or clicking "
-                        "forward on the map. Return exactly one tool call."
-                    ),
-                },
+                {"role": "system", "content": self.system_prompt},
                 {
                     "role": "user",
                     "content": _content(obs),
                 },
             ],
             tools=[_tool_schema(tool.name, tool.description, tool.parameters) for tool in obs.tools],
-            tool_choice="auto",
-            temperature=0.1,
-            max_tokens=self.max_tokens,
             **kwargs,
         )
+
+    def _completion_options(self, *, include_reasoning_disable: bool) -> dict[str, Any]:
+        kwargs: dict[str, Any] = {
+            "tool_choice": self.tool_choice,
+            "temperature": self.temperature,
+            "max_tokens": self.max_tokens,
+        }
+        if self.top_p is not None:
+            kwargs["top_p"] = self.top_p
+        if self.presence_penalty is not None:
+            kwargs["presence_penalty"] = self.presence_penalty
+        if self.frequency_penalty is not None:
+            kwargs["frequency_penalty"] = self.frequency_penalty
+        extra_body = dict(self.extra_body)
+        if include_reasoning_disable:
+            extra_body = {
+                "enable_thinking": False,
+                "chat_template_kwargs": {"enable_thinking": False},
+                "reasoning": {"effort": "none"},
+                **extra_body,
+            }
+        if self.reasoning_effort:
+            reasoning = _mapping(extra_body.get("reasoning"))
+            reasoning["effort"] = self.reasoning_effort
+            extra_body["reasoning"] = reasoning
+        if extra_body:
+            kwargs["extra_body"] = extra_body
+        return kwargs
 
 
 def create_agent(spec: AgentSpec) -> OpenAICompatibleAgent:
@@ -122,6 +151,23 @@ def _looks_like_reasoning_model(model: str) -> bool:
     lowered = model.lower()
     markers = ("reasoner", "reasoning", "deepseek-r1", "r1-", "-r1", "o1", "o3", "o4-mini")
     return any(marker in lowered for marker in markers)
+
+
+def _mapping(value: object) -> dict[str, Any]:
+    return dict(value) if isinstance(value, dict) else {}
+
+
+def _optional_float(value: object) -> float | None:
+    if value is None or value == "":
+        return None
+    return float(value)
+
+
+def _optional_string(value: object) -> str | None:
+    if value is None:
+        return None
+    text = str(value)
+    return text or None
 
 
 def _content(obs: AgentObservation) -> list[dict[str, Any]]:

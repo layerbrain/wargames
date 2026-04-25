@@ -87,6 +87,16 @@ api_key_env: OPENAI_API_KEY
 base_url: ${OPENAI_BASE_URL}
 config:
   temperature: 0.2
+  top_p: 0.9
+  max_tokens: 256
+  timeout_seconds: 20
+  disable_reasoning: false
+  reject_reasoning_models: false
+  reasoning_effort: medium
+  extra_body:
+    enable_thinking: true
+    chat_template_kwargs:
+      enable_thinking: true
 ```
 
 The Python factory receives the `AgentSpec` and returns an object implementing:
@@ -96,6 +106,13 @@ async def start(task): ...
 async def decide(obs): ...
 async def close(): ...
 ```
+
+For OpenAI-compatible providers, `config` is passed through to the local
+agent wrapper. Use it to choose model behavior per run. For fast non-thinking
+smoke runs, set `disable_reasoning: true` and keep `max_tokens` small. For
+models that need internal thinking, set `disable_reasoning: false` and pass the
+provider-specific `extra_body` they require. WarGames does not own those keys or
+settings; the agent config does.
 
 ## Run Locally
 

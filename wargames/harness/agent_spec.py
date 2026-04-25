@@ -39,7 +39,7 @@ class AgentSpec:
             api_key_env=str(data["api_key_env"]) if data.get("api_key_env") else None,
             base_url=_expand_optional(data.get("base_url")),
             env_file=str(data["env_file"]) if data.get("env_file") else None,
-            config=dict(data.get("config", {})),
+            config=_expand_config(dict(data.get("config", {}))),
         )
         spec.validate()
         return spec
@@ -67,6 +67,18 @@ def _driver(value: str) -> AgentDriver:
 
 def _expand_optional(value: object) -> str | None:
     return None if value is None else os.path.expandvars(str(value))
+
+
+def _expand_config(value: object) -> object:
+    if isinstance(value, str):
+        return os.path.expandvars(value)
+    if isinstance(value, list):
+        return [_expand_config(item) for item in value]
+    if isinstance(value, tuple):
+        return tuple(_expand_config(item) for item in value)
+    if isinstance(value, dict):
+        return {str(key): _expand_config(item) for key, item in value.items()}
+    return value
 
 
 def _is_ignored_local_env(path: Path) -> bool:
