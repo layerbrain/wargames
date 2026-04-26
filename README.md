@@ -280,6 +280,57 @@ Local:
 wargames run --task ... --agent ... --watch window
 ```
 
+Send controls to a live watched mission:
+
+```bash
+: > /tmp/wargames-control.jsonl
+
+tail -f /tmp/wargames-control.jsonl | wargames control \
+  --game redalert \
+  --mission redalert.soviet-01.normal \
+  --seed 42 \
+  --actions - \
+  --watch
+```
+
+Once the watch window is open, append JSON tool calls from another terminal:
+
+```bash
+printf '%s\n' '{"name":"move_mouse","arguments":{"x":640,"y":360}}' >> /tmp/wargames-control.jsonl
+printf '%s\n' '{"name":"click","arguments":{"x":760,"y":360,"button":"right"}}' >> /tmp/wargames-control.jsonl
+printf '%s\n' '{"name":"key","arguments":{"key":"a","modifiers":[]}}' >> /tmp/wargames-control.jsonl
+```
+
+To move the mouse in a circle, append a generated stream:
+
+```bash
+python - <<'PY' >> /tmp/wargames-control.jsonl
+import json
+import math
+import time
+
+center_x, center_y = 640, 360
+radius = 120
+steps = 96
+
+for step in range(steps):
+    angle = (2 * math.pi * step) / steps
+    print(json.dumps({
+        "name": "move_mouse",
+        "arguments": {
+            "x": round(center_x + radius * math.cos(angle)),
+            "y": round(center_y + radius * math.sin(angle)),
+        },
+    }), flush=True)
+    time.sleep(0.03)
+PY
+```
+
+`control` starts one live mission, opens the watch window, and applies each JSON
+line from `--actions -` to that same running session. Coordinates are
+window-local pixels. Valid tool names are `click`, `move_mouse`, `double_click`,
+`drag`, `key`, `type_text`, `scroll`, and `wait`.
+
 Replay public events from disk:
 
 ```bash
