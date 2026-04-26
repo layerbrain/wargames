@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 child_pids=()
 
 cleanup() {
@@ -96,8 +97,14 @@ if [ "${LAYERBRAIN_WARGAMES_BOOTSTRAP_OPENRA:-1}" = "1" ] && [ -n "${LAYERBRAIN_
     if [ "$(uname -m)" = "aarch64" ]; then
       platform="linux-arm64"
     fi
-    if ! file "$openra_root/bin/OpenRA" 2>/dev/null | grep -q 'ELF'; then
-      make -C "$openra_root" "TARGETPLATFORM=$platform" all
+    probe_source="$openra_root/OpenRA.Mods.Common/Traits/World/WarGames/WarGamesStateExport.cs"
+    probe_rules="$openra_root/mods/ra/rules/wargames-state-export.yaml"
+    probe_assembly="$openra_root/bin/OpenRA.Mods.Common.dll"
+    if ! file "$openra_root/bin/OpenRA" 2>/dev/null | grep -q 'ELF' \
+      || [ ! -f "$probe_source" ] \
+      || [ ! -f "$probe_rules" ] \
+      || [ ! -f "$probe_assembly" ]; then
+      TARGETPLATFORM="$platform" "$script_dir/install_probe.sh" "$openra_root"
     fi
   fi
 fi

@@ -1,22 +1,80 @@
+from contextlib import redirect_stdout
+from io import StringIO
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from types import SimpleNamespace
 from unittest import TestCase
 from unittest.mock import patch
 
 from wargames import WarGamesConfig
-from wargames.cli import _linux_box_command, _should_run_in_linux_box, _without_host_watch, build_parser
+from wargames.cli import (
+    _default_openra_root,
+    _find_openra_root,
+    _host_openra_support_dir,
+    _install_redalert,
+    _linux_box_command,
+    _should_run_in_linux_box,
+    _without_host_watch,
+    build_parser,
+)
+
+
+def _write_openra_checkout(root: Path) -> None:
+    (root / "mods" / "ra").mkdir(parents=True)
+    (root / "mods" / "ra" / "mod.yaml").write_text("Metadata:\n", encoding="utf-8")
+    (root / "launch-game.sh").write_text("#!/usr/bin/env bash\n", encoding="utf-8")
 
 
 class CLITests(TestCase):
-    def test_parser_exposes_primitive_commands_only(self) -> None:
+    def test_parser_exposes_commands(self) -> None:
         parser = build_parser()
+        self.assertEqual(parser.parse_args(["install", "--game", "redalert"]).command, "install")
         self.assertEqual(parser.parse_args(["missions"]).command, "missions")
         self.assertEqual(parser.parse_args(["boot"]).command, "boot")
         self.assertEqual(parser.parse_args(["control", "--actions", "-"]).command, "control")
         self.assertEqual(parser.parse_args(["serve"]).command, "serve")
 
+    def test_install_command_uses_top_level_game_option(self) -> None:
+        parser = build_parser()
+        args = parser.parse_args(["install", "--game", "redalert"])
+        self.assertEqual(args.command, "install")
+        self.assertEqual(args.game, "redalert")
+
     def test_host_runs_primitive_redalert_commands_in_linux_box(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["boot", "--mission", "redalert.soviet-01.normal"])
         self.assertTrue(_should_run_in_linux_box(args, platform="darwin", env={}))
+
+    def test_install_runs_on_host(self) -> None:
+        parser = build_parser()
+        args = parser.parse_args(["install", "--game", "redalert"])
+        self.assertFalse(_should_run_in_linux_box(args, platform="darwin", env={}))
+
+    def test_default_openra_root_uses_wargames_cache(self) -> None:
+        env = {"LAYERBRAIN_WARGAMES_CACHE_DIR": "/tmp/wargames-cache"}
+        self.assertEqual(_default_openra_root(env), Path("/tmp/wargames-cache/games/redalert/openra"))
+        self.assertEqual(_host_openra_support_dir(env), Path("/tmp/wargames-cache/openra-support"))
+
+    def test_find_openra_root_discovers_cached_checkout(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            env = {"LAYERBRAIN_WARGAMES_CACHE_DIR": temp_dir}
+            root = _default_openra_root(env)
+            _write_openra_checkout(root)
+
+            self.assertEqual(_find_openra_root(env), root)
+
+    def test_install_redalert_remembers_custom_checkout(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            env = {"LAYERBRAIN_WARGAMES_CACHE_DIR": str(Path(temp_dir) / "cache")}
+            root = Path(temp_dir) / "OpenRA"
+            _write_openra_checkout(root)
+            args = SimpleNamespace(root=str(root), repo="", ref="", build_probe=False)
+
+            with redirect_stdout(StringIO()):
+                self.assertEqual(_install_redalert(args, env), 0)
+
+            self.assertEqual(_find_openra_root(env), root)
+            self.assertTrue(_host_openra_support_dir(env).exists())
 
     def test_linux_box_command_does_not_forward_model_keys(self) -> None:
         with patch.dict(

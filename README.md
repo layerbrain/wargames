@@ -24,12 +24,21 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Red Alert needs a working OpenRA checkout:
+Install the Red Alert runtime:
 
 ```bash
-export LAYERBRAIN_WARGAMES_REDALERT_OPENRA_ROOT=/path/to/openra-source
-export LAYERBRAIN_WARGAMES_REDALERT_OPENRA_BINARY=/path/to/openra-source/launch-game.sh
+wargames install --game redalert
 ```
+
+If you already have an OpenRA source checkout, register it instead:
+
+```bash
+wargames install --game redalert --root /path/to/OpenRA
+```
+
+WarGames remembers the install path for later runs. On macOS, Red Alert runs
+inside the local Linux runtime box; the first run builds the WarGames OpenRA
+probe and installs the public Red Alert content.
 
 ## Local Secrets
 

@@ -26,6 +26,8 @@ _LINUX_BOX_IMAGE = "wargames-linux"
 _LINUX_BOX_OPENRA_MOUNT = "/openra"
 _LINUX_BOX_DEFAULT_RESOLUTION = (1280, 720)
 _BOX_COMMANDS = {"boot", "control", "run", "serve"}
+_OPENRA_REPO = "https://github.com/OpenRA/OpenRA.git"
+_OPENRA_REF = "bleed"
 
 
 def _game(id: str) -> GameDescriptor:
@@ -104,6 +106,67 @@ def _load_local_env() -> None:
         os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
 
 
+def _wargames_cache_dir(env: Mapping[str, str] = os.environ) -> Path:
+    raw = env.get("LAYERBRAIN_WARGAMES_CACHE_DIR")
+    if raw:
+        return Path(raw).expanduser()
+    raw = env.get("XDG_CACHE_HOME")
+    if raw:
+        return Path(raw).expanduser() / "wargames"
+    raw = env.get("HOME")
+    if raw:
+        return Path(raw).expanduser() / ".cache" / "wargames"
+    return Path.home() / ".cache" / "wargames"
+
+
+def _game_install_dir(game: str, env: Mapping[str, str] = os.environ) -> Path:
+    return _wargames_cache_dir(env) / "games" / game
+
+
+def _default_openra_root(env: Mapping[str, str] = os.environ) -> Path:
+    return _game_install_dir("redalert", env) / "openra"
+
+
+def _redalert_install_manifest(env: Mapping[str, str] = os.environ) -> Path:
+    return _game_install_dir("redalert", env) / "install.json"
+
+
+def _is_openra_root(path: Path) -> bool:
+    return (path / "mods" / "ra" / "mod.yaml").exists() and (path / "launch-game.sh").exists()
+
+
+def _manifest_openra_root(env: Mapping[str, str] = os.environ) -> Path | None:
+    manifest = _redalert_install_manifest(env)
+    if not manifest.exists():
+        return None
+    try:
+        data = json.loads(manifest.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    raw = data.get("openra_root")
+    if not isinstance(raw, str) or not raw:
+        return None
+    return Path(raw).expanduser()
+
+
+def _write_redalert_install_manifest(openra_root: Path, env: Mapping[str, str] = os.environ) -> None:
+    manifest = _redalert_install_manifest(env)
+    manifest.parent.mkdir(parents=True, exist_ok=True)
+    manifest.write_text(
+        json.dumps(
+            {
+                "game": "redalert",
+                "openra_binary": str(openra_root / "launch-game.sh"),
+                "openra_root": str(openra_root),
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+
 def _should_run_in_linux_box(
     args: argparse.Namespace,
     *,
@@ -117,13 +180,13 @@ def _find_openra_root(env: Mapping[str, str] = os.environ) -> Path | None:
     candidates = [
         env.get("LAYERBRAIN_WARGAMES_REDALERT_OPENRA_ROOT"),
         env.get("OPENRA_ROOT"),
-        str(_repo_root().parent / "openra-source"),
-        "/Users/aaronkazah/Documents/Codex/2026-04-24/yo/openra-source",
+        _manifest_openra_root(env),
+        _default_openra_root(env),
     ]
     for candidate in candidates:
         if candidate:
             path = Path(candidate).expanduser()
-            if (path / "mods" / "ra" / "mod.yaml").exists() and (path / "launch-game.sh").exists():
+            if _is_openra_root(path):
                 return path
     return None
 
@@ -132,7 +195,7 @@ def _host_openra_support_dir(env: Mapping[str, str] = os.environ) -> Path:
     raw = env.get("LAYERBRAIN_WARGAMES_REDALERT_HOST_SUPPORT_DIR")
     if raw:
         return Path(raw).expanduser()
-    return Path.home() / ".cache" / "wargames" / "openra-support"
+    return _wargames_cache_dir(env) / "openra-support"
 
 
 def _without_host_watch(argv: Sequence[str]) -> list[str]:
@@ -322,6 +385,76 @@ def _run_in_linux_box(argv: Sequence[str], args: argparse.Namespace) -> int:
         return completed.returncode
     finally:
         _stop_process(stream_process)
+
+
+def _clone_openra(*, repo: str, ref: str, target: Path) -> None:
+    git = shutil.which("git")
+    if git is None:
+        raise SystemExit("git is required to install Red Alert")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    command = [git, "clone", "--depth", "1"]
+    if ref:
+        command.extend(["--branch", ref])
+    command.extend([repo, str(target)])
+    try:
+        subprocess.run(command, check=True)
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(f"OpenRA clone failed with exit code {exc.returncode}") from exc
+
+
+def _install_probe(openra_root: Path) -> None:
+    script = _repo_root() / "scripts" / "install_probe.sh"
+    try:
+        subprocess.run([str(script), str(openra_root)], check=True)
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(f"WarGames probe build failed with exit code {exc.returncode}") from exc
+
+
+def _install_redalert(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
+    openra_root = Path(args.root).expanduser() if args.root else _default_openra_root(env)
+    status = "present"
+    if openra_root.exists():
+        if openra_root.is_file():
+            raise SystemExit(f"OpenRA install path is a file: {openra_root}")
+        if not _is_openra_root(openra_root):
+            if any(openra_root.iterdir()):
+                raise SystemExit(f"OpenRA install path exists but is not an OpenRA source checkout: {openra_root}")
+            _clone_openra(repo=args.repo, ref=args.ref, target=openra_root)
+            status = "installed"
+    else:
+        _clone_openra(repo=args.repo, ref=args.ref, target=openra_root)
+        status = "installed"
+
+    if not _is_openra_root(openra_root):
+        raise SystemExit(f"OpenRA checkout is missing Red Alert runtime files: {openra_root}")
+
+    _host_openra_support_dir(env).mkdir(parents=True, exist_ok=True)
+    probe_built = False
+    if args.build_probe:
+        _install_probe(openra_root)
+        probe_built = True
+
+    _write_redalert_install_manifest(openra_root, env)
+    print(
+        json.dumps(
+            {
+                "game": "redalert",
+                "openra_binary": str(openra_root / "launch-game.sh"),
+                "openra_root": str(openra_root),
+                "probe_built": probe_built,
+                "status": status,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+    return 0
+
+
+async def _install(args: argparse.Namespace) -> int:
+    if args.game == "redalert":
+        return await asyncio.to_thread(_install_redalert, args)
+    raise SystemExit(f"unknown game: {args.game}")
 
 
 async def _missions(args: argparse.Namespace) -> int:
@@ -631,6 +764,14 @@ async def _serve(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="wargames")
     subcommands = parser.add_subparsers(dest="command", required=True)
+
+    install = subcommands.add_parser("install", help="install game runtime dependencies")
+    install.add_argument("--game", choices=("redalert",), default="redalert")
+    install.add_argument("--root", help="use an existing OpenRA checkout or install into this path")
+    install.add_argument("--repo", default=_OPENRA_REPO, help=argparse.SUPPRESS)
+    install.add_argument("--ref", default=_OPENRA_REF, help=argparse.SUPPRESS)
+    install.add_argument("--build-probe", action="store_true", help="build the WarGames OpenRA probe immediately")
+    install.set_defaults(handler=_install)
 
     missions = subcommands.add_parser("missions", help="list or extract missions")
     missions.add_argument("--game", choices=("redalert",), default="redalert")

@@ -41,4 +41,16 @@ if entry not in text:
     path.write_text(text)
 PY
 
-make -C "$openra_root" all
+target_platform="${TARGETPLATFORM:-}"
+if [[ -z "$target_platform" && "$(uname -s)" == "Linux" ]]; then
+    target_platform="linux-x64"
+    if [[ "$(uname -m)" == "aarch64" || "$(uname -m)" == "arm64" ]]; then
+        target_platform="linux-arm64"
+    fi
+fi
+
+if [[ -n "$target_platform" ]]; then
+    make -C "$openra_root" "TARGETPLATFORM=$target_platform" all
+else
+    make -C "$openra_root" all
+fi
