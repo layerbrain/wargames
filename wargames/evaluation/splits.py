@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Iterable
 
 from wargames.evaluation.profile import profile_registry
-from wargames.evaluation.profile_loader import load_yaml
+from wargames.evaluation.profile_loader import load_yaml, resolve_scenarios_root
 from wargames.evaluation.task import SPLITS, SplitName, TaskSpec
 
 
@@ -15,7 +15,7 @@ class TaskCatalog:
 
     @classmethod
     def load(cls, root: str | Path = "scenarios") -> "TaskCatalog":
-        root_path = Path(root)
+        root_path = resolve_scenarios_root(root)
         tasks: list[TaskSpec] = []
         for game_dir in sorted(path for path in root_path.iterdir() if path.is_dir()) if root_path.exists() else ():
             tasks_dir = game_dir / "tasks"

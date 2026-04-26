@@ -12,6 +12,18 @@ from wargames.core.missions.rubric import Rubric, RubricEntry
 from wargames.evaluation.profile import RewardProfile
 
 
+def resolve_scenarios_root(root: str | Path = "scenarios") -> Path:
+    root_path = Path(root)
+    if root_path.exists() or root_path != Path("scenarios"):
+        return root_path
+
+    for parent in Path(__file__).resolve().parents:
+        for candidate in (parent / "scenarios", parent.parent / "scenarios"):
+            if candidate.exists():
+                return candidate
+    return root_path
+
+
 def load_yaml(path: Path) -> dict[str, Any]:
     data = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(data, dict):

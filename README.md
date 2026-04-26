@@ -6,8 +6,8 @@ actions back to the simulator.
 
 The runtime never calls an LLM and never trains a model. It does three things:
 capture frames, apply tool calls, and compute rewards from private simulator
-state. Your agent or external harness owns model calls. Prime/prime-rl owns
-gradient updates.
+state. Your agent, trainer, or external harness owns model calls and gradient
+updates. Prime/prime-rl is one supported trainer path, not a requirement.
 
 ## Example Output
 
@@ -174,6 +174,94 @@ profiles to measure whether reward design changes behavior.
 
 The full profile schema, every Red Alert reward field, built-in primitives, and
 Prime RL examples are documented in [`docs/reward_profiles.md`](docs/reward_profiles.md).
+
+## Custom Trainers
+
+Use `EpisodeController` directly when you want to build your own trainer instead
+of using Prime RL. WarGames owns the environment loop; your trainer owns rollout
+storage, advantage estimation, loss computation, checkpoints, and policy updates.
+
+```python
+import asyncio
+
+from wargames.core.runtime.arena import WarGames
+from wargames.episode.controller import EpisodeController
+from wargames.evaluation.splits import TaskCatalog
+from wargames.evaluation.task import RunConfig
+from wargames.games.redalert import GAME
+from wargames.games.redalert.config import RedAlertConfig
+from wargames.harness.agent import ToolCall
+
+
+class Policy:
+    async def act(self, *, frame, tools, history) -> ToolCall:
+        # Replace this with a model forward pass.
+        return ToolCall(name="wait", arguments={})
+
+    def update(self, trajectory: list[dict[str, object]]) -> None:
+        # Replace this with PPO/GRPO/ILQL/SFT-on-rollouts/etc.
+        pass
+
+
+async def run_training_episode(policy: Policy) -> None:
+    task = TaskCatalog.load().get("redalert.debug.smoke.seed-000000").with_reward_profile("dense")
+    run_config = RunConfig(recorder_mode="none")
+
+    async with WarGames.for_game(GAME, RedAlertConfig.from_env()) as wg:
+        controller = EpisodeController(task=task, run_config=run_config, wg=wg)
+        frame = await controller.start(agent_id="custom-trainer")
+        trajectory: list[dict[str, object]] = []
+        end_reason = "max_steps"
+
+        try:
+            while len(controller.public_history) < task.max_steps:
+                action = await policy.act(
+                    frame=frame,
+                    tools=wg.tools,
+                    history=controller.public_history,
+                )
+                outcome = await controller.apply_tool_call(action.name, action.arguments)
+                trajectory.append(
+                    {
+                        "frame": frame,
+                        "action": action,
+                        "reward": outcome.reward,
+                        "breakdown": outcome.breakdown.entries,
+                        "next_frame": outcome.frame,
+                        "done": outcome.finished or outcome.truncated,
+                    }
+                )
+                frame = outcome.frame
+
+                if outcome.finished or outcome.truncated:
+                    end_reason = outcome.end_reason or "finished"
+                    break
+
+            await controller.finish(end_reason)
+        finally:
+            await controller.close()
+
+    policy.update(trajectory)
+
+
+asyncio.run(run_training_episode(Policy()))
+```
+
+The policy sees public observations only: frames, tool specs, and public action
+history. Rewards are computed inside the controller from hidden simulator state,
+then returned as scalar reward plus a named breakdown for training diagnostics.
+
+If you only need to plug in an inference-time agent, implement the `Agent`
+protocol instead:
+
+```python
+async def start(task): ...
+async def decide(obs): ...
+async def close(): ...
+```
+
+Then run it with `wargames run --agent <id>`. Use direct `EpisodeController`
+access when the caller is a trainer and needs raw transitions.
 
 ## Watching
 

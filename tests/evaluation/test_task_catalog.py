@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import os
+import tempfile
 import unittest
 
 from wargames.evaluation.splits import TaskCatalog
@@ -11,6 +13,20 @@ class TaskCatalogTests(unittest.TestCase):
     def test_loads_debug_tasks(self) -> None:
         _ = GAME
         catalog = TaskCatalog.load("scenarios")
+
+        tasks = catalog.tasks(game="redalert", split="debug")
+
+        self.assertEqual(["redalert.debug.smoke.seed-000000"], [task.id for task in tasks])
+
+    def test_default_catalog_load_does_not_depend_on_cwd(self) -> None:
+        _ = GAME
+        cwd = os.getcwd()
+        with tempfile.TemporaryDirectory() as temp:
+            try:
+                os.chdir(temp)
+                catalog = TaskCatalog.load()
+            finally:
+                os.chdir(cwd)
 
         tasks = catalog.tasks(game="redalert", split="debug")
 

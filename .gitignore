@@ -33,6 +33,8 @@ htmlcov/
 /checkpoints/
 /.openra-cache/
 environments/*/.prime/
+environments/*/runs/
+environments/*/exports/
 local.env
 *.mp4
 *.log

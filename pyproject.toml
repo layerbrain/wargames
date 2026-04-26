@@ -53,6 +53,7 @@ wargames = "wargames.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["wargames"]
+force-include = { "scenarios" = "wargames/scenarios" }
 
 [tool.hatch.build.targets.sdist]
 exclude = [
