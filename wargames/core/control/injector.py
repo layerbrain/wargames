@@ -6,14 +6,22 @@ import subprocess
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
 
-from wargames.core.control.events import InputEvent, KeyEvent, MouseEvent, ScrollEvent, Target, WaitEvent, x11_button
+from wargames.core.control.events import (
+    InputEvent,
+    KeyEvent,
+    MouseEvent,
+    ScrollEvent,
+    Target,
+    WaitEvent,
+    x11_button,
+)
+from wargames.core.control.keys import x11_key_name
 from wargames.core.errors import DependencyMissing
 
 
 class InputInjector(ABC):
     @abstractmethod
-    async def send(self, target: Target, event: InputEvent) -> None:
-        ...
+    async def send(self, target: Target, event: InputEvent) -> None: ...
 
     async def send_many(self, target: Target, events: Iterable[InputEvent]) -> None:
         for event in events:
@@ -31,17 +39,7 @@ class RecordingInjector(InputInjector):
 def _x11_keysym(key: str) -> int:
     from Xlib import XK  # type: ignore[import-not-found]
 
-    aliases = {
-        "ArrowUp": "Up",
-        "ArrowDown": "Down",
-        "ArrowLeft": "Left",
-        "ArrowRight": "Right",
-        "Enter": "Return",
-        "Escape": "Escape",
-        "Esc": "Escape",
-        "Space": "space",
-    }
-    name = aliases.get(key, key)
+    name = x11_key_name(key)
     keysym = XK.string_to_keysym(name)
     if keysym == 0 and len(key) == 1:
         keysym = ord(key)
@@ -58,16 +56,10 @@ def _x11_window_id(value: int | str | None) -> int | None:
     return int(value, 0)
 
 
-def _window_local_pointer(target: Target, event: MouseEvent) -> tuple[int, int]:
-    x = event.x - target.rect.x
-    y = event.y - target.rect.y
-    return max(0, min(target.rect.width - 1, x)), max(0, min(target.rect.height - 1, y))
-
-
 class XTestInjector(InputInjector):
     async def send(self, target: Target, event: InputEvent) -> None:
         if isinstance(event, WaitEvent):
-            await asyncio.sleep(event.ticks / 25)
+            await asyncio.sleep(event.ms / 1000)
             return
         try:
             from Xlib import X, display  # type: ignore[import-not-found]
@@ -78,24 +70,20 @@ class XTestInjector(InputInjector):
         try:
             root = disp.screen().root
             if isinstance(event, MouseEvent):
-                xtest.fake_input(disp, X.MotionNotify, x=event.x, y=event.y, root=root)
-                disp.sync()
-                if event.kind in {"down", "up"}:
+                if event.kind == "move":
+                    if event.x is None or event.y is None:
+                        raise ValueError("move mouse events require x and y")
+                    xtest.fake_input(disp, X.MotionNotify, x=event.x, y=event.y, root=root)
+                else:
                     await asyncio.sleep(0.02)
                     kind = X.ButtonPress if event.kind == "down" else X.ButtonRelease
-                    xtest.fake_input(disp, kind, x11_button(event.button), root=root, x=event.x, y=event.y)
+                    xtest.fake_input(disp, kind, x11_button(event.button), root=root)
                 disp.sync()
                 return
             if isinstance(event, KeyEvent):
-                if event.kind == "type" and event.text:
-                    for char in event.text:
-                        code = disp.keysym_to_keycode(ord(char))
-                        xtest.fake_input(disp, X.KeyPress, code)
-                        xtest.fake_input(disp, X.KeyRelease, code)
-                else:
-                    code = disp.keysym_to_keycode(_x11_keysym(event.key))
-                    xtest.fake_input(disp, X.KeyPress, code)
-                    xtest.fake_input(disp, X.KeyRelease, code)
+                code = disp.keysym_to_keycode(_x11_keysym(event.key))
+                kind = X.KeyPress if event.kind == "down" else X.KeyRelease
+                xtest.fake_input(disp, kind, code)
                 disp.sync()
                 return
             if isinstance(event, ScrollEvent):
@@ -111,7 +99,7 @@ class XTestInjector(InputInjector):
 class XdotoolInjector(InputInjector):
     async def send(self, target: Target, event: InputEvent) -> None:
         if isinstance(event, WaitEvent):
-            await asyncio.sleep(event.ticks / 25)
+            await asyncio.sleep(event.ms / 1000)
             return
         window = str(target.window_id) if target.window_id is not None else None
         env = None
@@ -120,6 +108,8 @@ class XdotoolInjector(InputInjector):
             env["DISPLAY"] = target.display
         if isinstance(event, MouseEvent):
             if event.kind == "move":
+                if event.x is None or event.y is None:
+                    raise ValueError("move mouse events require x and y")
                 cmd = ["xdotool", "mousemove", str(event.x), str(event.y)]
             else:
                 action = "mousedown" if event.kind == "down" else "mouseup"
@@ -127,10 +117,8 @@ class XdotoolInjector(InputInjector):
                 if window is not None:
                     cmd[2:2] = ["--window", window]
         elif isinstance(event, KeyEvent):
-            if event.kind == "type" and event.text is not None:
-                cmd = ["xdotool", "type", event.text]
-            else:
-                cmd = ["xdotool", "key", event.key]
+            action = "keydown" if event.kind == "down" else "keyup"
+            cmd = ["xdotool", action, x11_key_name(event.key)]
             if window is not None:
                 cmd[2:2] = ["--window", window]
         elif isinstance(event, ScrollEvent):

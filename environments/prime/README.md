@@ -1,33 +1,38 @@
-# WarGames For Prime
+# WarGames For Prime RL
 
-Prime Intellect Verifiers surface for WarGames Red Alert. The public Prime
-environment is `layerbrain/wargames`. The implementation lives in
-`wargames.environments.prime`; this folder is only the publish wrapper.
+Use this package when you want Prime RL or Prime eval to run WarGames episodes.
+Prime receives screen frames from WarGames and returns the same primitive
+actions as any other agent: `move_mouse`, `mouse_down`, `mouse_up`, `key_down`,
+`key_up`, `scroll`, and `wait`.
 
 ```bash
-uv pip install -e .
-prime eval run wargames --config configs/eval-debug.toml -n 1 -r 1
+# from the WarGames repo root
+uv pip install -e ./environments/prime
+
+prime eval run wargames \
+  --config environments/prime/configs/redalert/eval-soviet-01.toml \
+  -n 1 -r 1
 ```
 
 Configs:
 
-- `configs/eval-debug.toml`: quick local eval
-- `configs/eval-test.toml`: held-out terminal-only eval
-- `configs/rl-redalert-dense.toml`: dense train split for RL
-- `configs/rl-redalert-curriculum.toml`: curriculum train split for RL
+- `environments/prime/configs/redalert/eval-soviet-01.toml`: Red Alert eval run
+- `environments/prime/configs/redalert/rl-soviet-01.toml`: Red Alert RL run
+- `environments/prime/configs/flightgear/eval-c172p-takeoff.toml`: FlightGear eval run
+- `environments/prime/configs/flightgear/rl-c172p-takeoff.toml`: FlightGear RL run
 
-Reward profiles are the RL behavior dial. Set `reward_profile = "dense"` for
-general warmup, `reward_profile = "protective"` to prioritize friendly-force
-preservation and collateral avoidance, or point at a custom profile in
-`scenarios/redalert/profiles/`.
+Reward profiles are the behavior dial. Set `reward_profile = "dense"` for
+general Red Alert warmup, `reward_profile = "protective"` to prioritize
+friendly-force preservation and collateral avoidance, or point at a custom
+profile in `scenarios/redalert/profiles/`.
 
 ```toml
-split = "train"
+game = "redalert"
+mission = "redalert.soviet-01.normal"
 reward_profile = "protective"
 recorder_mode = "none"
 max_steps = 500
 rollouts_per_example = 8
 ```
 
-The full YAML schema and Red Alert reward fields are in
-[`../../docs/reward_profiles.md`](../../docs/reward_profiles.md).
+The full YAML schema is in [`../../docs/reward_profiles.md`](../../docs/reward_profiles.md).

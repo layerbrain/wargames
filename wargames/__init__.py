@@ -1,6 +1,7 @@
 from wargames.core.config import WarGamesConfig
 from wargames.core.runtime.arena import GameDescriptor, WarGames
 
+
 def load_environment(*args: object, **kwargs: object) -> object:
     from wargames.environments.prime import load_environment as load_prime_environment
 

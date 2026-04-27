@@ -1,6 +1,5 @@
 id: scripted-wait
-driver: python
-description: Scripted smoke-test agent that only waits.
-factory: wargames.harness.builtin_agents:create_wait_agent
+kind: scripted-wait
+description: Scripted agent that only waits.
 config:
   max_steps: 3

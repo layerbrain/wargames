@@ -23,6 +23,7 @@ from wargames.core.runtime.lobby import Lobby
 from wargames.core.runtime.mission import Mission
 from wargames.core.runtime.observation import Observation
 from wargames.core.transport.ws.protocol import SessionMode
+from wargames.harness.turns import event_from_mapping, validate_turn
 
 
 BackendFactory = Callable[[WarGamesConfig], Backend]
@@ -119,7 +120,9 @@ class WSApplication:
         if mode not in {"sampled", "streaming"}:
             raise ValueError("mode must be sampled or streaming")
         config = replace(self.game.config_cls.from_env(), capture_frames=True)
-        backend = self.backend_factory(config) if self.backend_factory else self.game.backend_cls(config)
+        backend = (
+            self.backend_factory(config) if self.backend_factory else self.game.backend_cls(config)
+        )
         wg = WarGames(backend)
         await wg.__aenter__()
         mission = await wg.start_mission(mission_id, seed=seed)
@@ -143,7 +146,6 @@ class WSApplication:
                 "mode": mode,
                 "phase": "running",
                 "capabilities": {"launch_modes": ["direct", "menu"], "transport": "ws-v1"},
-                "tools": self._tool_specs(),
                 "frame_size": self._frame_size(observation.frame),
             }
         )
@@ -162,12 +164,20 @@ class WSApplication:
 
     async def _act(self, websocket: Any, payload: dict[str, Any]) -> None:
         session = self._session(payload)
-        tool_call = dict(payload["tool_call"])
-        action = self.game.action_from_tool_call(
-            str(tool_call["name"]),
-            dict(tool_call.get("arguments", {})),
-        )
-        result = await session.mission.step(action)
+        raw_events = payload["events"]
+        if not isinstance(raw_events, list):
+            raise ValueError("events must be an array")
+        events = validate_turn(event_from_mapping(item) for item in raw_events)
+        result = None
+        events_applied = 0
+        for event in events:
+            action = self.game.action_from_tool_call(event.name, event.arguments)
+            result = await session.mission.step(action)
+            events_applied += 1
+            if result.finished or result.truncated:
+                break
+        if result is None:
+            raise ValueError("turn must contain at least one event")
         await websocket.send_json(
             {
                 "event": "action_result",
@@ -176,6 +186,7 @@ class WSApplication:
                 "finished": result.finished,
                 "truncated": result.truncated,
                 "frame": self._frame_payload(result.frame),
+                "events_applied": events_applied,
             }
         )
 
@@ -186,7 +197,9 @@ class WSApplication:
             raise ValueError("fps must be between 1 and 60")
         await self._stop_stream(session)
         session.stream_task = asyncio.create_task(self._stream_frames(session, websocket, fps))
-        await websocket.send_json({"event": "frames_subscribed", "session_id": session.id, "fps": fps})
+        await websocket.send_json(
+            {"event": "frames_subscribed", "session_id": session.id, "fps": fps}
+        )
 
     async def _unsubscribe_frames(self, websocket: Any, payload: dict[str, Any]) -> None:
         session = self._session(payload)
@@ -223,17 +236,25 @@ class WSApplication:
         slots = int(payload.get("slots", getattr(mission, "player_slots", 2)))
         if hasattr(mission, "player_slots"):
             mission = replace(mission, player_slots=slots)
-        lobby = self.lobby_factory(config=self.game.config_cls.from_env(), mission=mission, seed=int(payload.get("seed", 0)))
+        lobby = self.lobby_factory(
+            config=self.game.config_cls.from_env(),
+            mission=mission,
+            seed=int(payload.get("seed", 0)),
+        )
         lobby_id = uuid.uuid4().hex
         self._lobbies[lobby_id] = lobby
         self._lobby_subscribers[lobby_id] = {websocket}
-        await websocket.send_json({"event": "lobby_created", "lobby_id": lobby_id, "snapshot": lobby.snapshot()})
+        await websocket.send_json(
+            {"event": "lobby_created", "lobby_id": lobby_id, "snapshot": lobby.snapshot()}
+        )
 
     async def _subscribe_lobby(self, websocket: Any, payload: dict[str, Any]) -> None:
         lobby_id = str(payload["lobby_id"])
         lobby = self._lobbies[lobby_id]
         self._lobby_subscribers.setdefault(lobby_id, set()).add(websocket)
-        await websocket.send_json({"event": "lobby_state", "lobby_id": lobby_id, "snapshot": lobby.snapshot()})
+        await websocket.send_json(
+            {"event": "lobby_state", "lobby_id": lobby_id, "snapshot": lobby.snapshot()}
+        )
 
     async def _join_lobby(self, websocket: Any, payload: dict[str, Any]) -> None:
         lobby_id = str(payload["lobby_id"])
@@ -277,7 +298,12 @@ class WSApplication:
         await self._broadcast_lobby(lobby_id)
         await self._broadcast(
             lobby_id,
-            {"event": "lobby_ready", "lobby_id": lobby_id, "sessions": sessions, "snapshot": lobby.snapshot()},
+            {
+                "event": "lobby_ready",
+                "lobby_id": lobby_id,
+                "sessions": sessions,
+                "snapshot": lobby.snapshot(),
+            },
         )
 
     async def _begin_lobby(self, websocket: Any, payload: dict[str, Any]) -> None:
@@ -298,7 +324,9 @@ class WSApplication:
 
     async def _broadcast_lobby(self, lobby_id: str) -> None:
         lobby = self._lobbies[lobby_id]
-        await self._broadcast(lobby_id, {"event": "lobby_state", "lobby_id": lobby_id, "snapshot": lobby.snapshot()})
+        await self._broadcast(
+            lobby_id, {"event": "lobby_state", "lobby_id": lobby_id, "snapshot": lobby.snapshot()}
+        )
 
     async def _broadcast(self, lobby_id: str, event: dict[str, Any]) -> None:
         for websocket in tuple(self._lobby_subscribers.get(lobby_id, ())):
@@ -329,7 +357,9 @@ class WSApplication:
 
     def _mission(self, mission_id: str) -> MissionSpec:
         config = self.game.config_cls.from_env()
-        backend = self.backend_factory(config) if self.backend_factory else self.game.backend_cls(config)
+        backend = (
+            self.backend_factory(config) if self.backend_factory else self.game.backend_cls(config)
+        )
         for mission in backend.missions():
             if mission.id == mission_id:
                 return mission
@@ -337,12 +367,6 @@ class WSApplication:
 
     def _session(self, payload: dict[str, Any]) -> _SessionRecord:
         return self._sessions[str(payload["session_id"])]
-
-    def _tool_specs(self) -> list[dict[str, Any]]:
-        return [
-            {"name": tool.name, "description": tool.description, "parameters": tool.parameters}
-            for tool in self.game.tools
-        ]
 
     def _observation_tick(self, observation: Observation) -> int:
         return observation.frame.captured_tick if observation.frame else 0
@@ -355,7 +379,12 @@ class WSApplication:
     def _frame_payload(self, frame: Frame | None) -> dict[str, Any] | None:
         if frame is None:
             return None
-        payload: dict[str, Any] = {"id": frame.id, "mime": frame.mime, "width": frame.width, "height": frame.height}
+        payload: dict[str, Any] = {
+            "id": frame.id,
+            "mime": frame.mime,
+            "width": frame.width,
+            "height": frame.height,
+        }
         if frame.image_b64:
             payload["image_b64"] = frame.image_b64
         elif frame.image_path:

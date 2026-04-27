@@ -1,0 +1,25 @@
+{
+  "aircraft": "c172p",
+  "airport": "PHTO",
+  "description": "This tutorial covers moving the aircraft around on the ground, from the parking position to the run-up area. For more information on taxiing, see Section 2-9 of the FAA Airplane Flying Handbook available at http://www.faa.gov/library/manuals/aircraft/airplane_handbook/.",
+  "difficulty": "easy",
+  "game": "flightgear",
+  "id": "flightgear.c172p.tutorial.taxiing",
+  "launch_mode": "direct",
+  "native_difficulty": "tutorial",
+  "runway": null,
+  "source": "builtin",
+  "startup_args": [
+    "--disable-freeze"
+  ],
+  "tags": [
+    "tutorial",
+    "c172p",
+    "taxiing"
+  ],
+  "time_limit_ticks": 36000,
+  "timeofday": "morning",
+  "title": "Taxiing",
+  "tutorial": "Taxiing",
+  "tutorial_file": "taxiing.xml"
+}

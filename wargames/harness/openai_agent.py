@@ -9,19 +9,26 @@ from openai import BadRequestError, OpenAI, OpenAIError
 from wargames.episode.media import frame_data_url
 from wargames.harness.agent import AgentDecision, AgentObservation, ToolCall
 from wargames.harness.agent_spec import AgentSpec
+from wargames.harness.turns import events_from_payload
 
-_INTEGER_ARGS = {"x", "y", "start_x", "start_y", "end_x", "end_y", "dx", "dy"}
+_INTEGER_ARGS = {"x", "y", "dx", "dy"}
 
 
 class OpenAICompatibleAgent:
     def __init__(self, spec: AgentSpec) -> None:
         api_key = os.getenv(spec.api_key_env or "OPENAI_API_KEY")
         if not api_key:
-            raise ValueError(f"agent {spec.id}: missing API key env {spec.api_key_env or 'OPENAI_API_KEY'}")
+            raise ValueError(
+                f"agent {spec.id}: missing API key env {spec.api_key_env or 'OPENAI_API_KEY'}"
+            )
         self.id = spec.id
         self.model = spec.model or os.getenv("OPENAI_MODEL") or "kimi-k2.5"
-        if bool(spec.config.get("reject_reasoning_models", True)) and _looks_like_reasoning_model(self.model):
-            raise ValueError(f"agent {spec.id}: refusing reasoning model for smoke run: {self.model}")
+        if bool(spec.config.get("reject_reasoning_models", True)) and _looks_like_reasoning_model(
+            self.model
+        ):
+            raise ValueError(
+                f"agent {spec.id}: refusing reasoning model for quickstart run: {self.model}"
+            )
         self.max_steps = int(spec.config.get("max_steps", 3))
         self.max_tokens = int(spec.config.get("max_tokens", 64))
         self.disable_reasoning = bool(spec.config.get("disable_reasoning", True))
@@ -35,11 +42,11 @@ class OpenAICompatibleAgent:
                 "system_prompt",
                 (
                     "You control a Red Alert game using only the provided computer-use tools. "
-                    "Use a non-reasoning, short response. Play aggressively for this training smoke: "
+                    "Use a non-reasoning, short response. Play aggressively: "
                     "select combat units, issue attack/move commands, and scout toward the enemy. "
-                    "Do not use wait during this smoke run. Prefer moving the mouse to a visible "
-                    "screen coordinate, drag-selecting units, pressing the attack hotkey, or clicking "
-                    "forward on the map. Return exactly one tool call."
+                    "Do not use wait unless there is no useful input. Use primitive input events: "
+                    "move the mouse, press or release mouse buttons, and press or release keys. "
+                    "Return one or more primitive input events."
                 ),
             )
         )
@@ -57,7 +64,7 @@ class OpenAICompatibleAgent:
 
     async def decide(self, obs: AgentObservation) -> AgentDecision:
         if obs.step_index >= self.max_steps:
-            return AgentDecision(tool_call=None, stop=True, reason="model_smoke_complete")
+            return AgentDecision(stop=True, reason="model_run_complete")
 
         try:
             response = self._complete(obs, include_reasoning_disable=self.disable_reasoning)
@@ -65,27 +72,42 @@ class OpenAICompatibleAgent:
             try:
                 response = self._complete(obs, include_reasoning_disable=False)
             except OpenAIError:
-                return AgentDecision(tool_call=_visible_fallback(obs.step_index), reason="model_api_error_visible_fallback")
+                return AgentDecision(
+                    events=(_visible_fallback(obs.step_index),),
+                    reason="model_api_error_visible_fallback",
+                )
         except OpenAIError:
-            return AgentDecision(tool_call=_visible_fallback(obs.step_index), reason="model_api_error_visible_fallback")
+            return AgentDecision(
+                events=(_visible_fallback(obs.step_index),),
+                reason="model_api_error_visible_fallback",
+            )
         message = response.choices[0].message
         if message.tool_calls:
-            call = message.tool_calls[0]
-            tool_call = ToolCall(
-                name=call.function.name,
-                arguments=_normalize_arguments(json.loads(call.function.arguments or "{}")),
+            tool_calls = tuple(
+                ToolCall(
+                    name=call.function.name,
+                    arguments=_normalize_arguments(json.loads(call.function.arguments or "{}")),
+                )
+                for call in message.tool_calls
             )
-            if tool_call.name == "wait":
-                return AgentDecision(tool_call=_visible_fallback(obs.step_index), reason="model_wait_visible_fallback")
-            return AgentDecision(
-                tool_call=tool_call
-            )
-        parsed = _parse_json_tool_call(message.content or "")
-        if parsed is not None:
-            if parsed.name == "wait":
-                return AgentDecision(tool_call=_visible_fallback(obs.step_index), reason="model_wait_visible_fallback")
-            return AgentDecision(tool_call=parsed)
-        return AgentDecision(tool_call=_visible_fallback(obs.step_index), reason="model_no_tool_call_visible_fallback")
+            if len(tool_calls) == 1 and tool_calls[0].name == "wait":
+                return AgentDecision(
+                    events=(_visible_fallback(obs.step_index),),
+                    reason="model_wait_visible_fallback",
+                )
+            return AgentDecision(events=tool_calls)
+        parsed = _parse_json_events(message.content or "")
+        if parsed:
+            if len(parsed) == 1 and parsed[0].name == "wait":
+                return AgentDecision(
+                    events=(_visible_fallback(obs.step_index),),
+                    reason="model_wait_visible_fallback",
+                )
+            return AgentDecision(events=parsed)
+        return AgentDecision(
+            events=(_visible_fallback(obs.step_index),),
+            reason="model_no_tool_call_visible_fallback",
+        )
 
     async def close(self) -> None:
         return None
@@ -101,7 +123,9 @@ class OpenAICompatibleAgent:
                     "content": _content(obs),
                 },
             ],
-            tools=[_tool_schema(tool.name, tool.description, tool.parameters) for tool in obs.tools],
+            tools=[
+                _tool_schema(tool.name, tool.description, tool.parameters) for tool in obs.tools
+            ],
             **kwargs,
         )
 
@@ -132,10 +156,6 @@ class OpenAICompatibleAgent:
         if extra_body:
             kwargs["extra_body"] = extra_body
         return kwargs
-
-
-def create_agent(spec: AgentSpec) -> OpenAICompatibleAgent:
-    return OpenAICompatibleAgent(spec)
 
 
 def _base_url(value: str | None) -> str | None:
@@ -172,7 +192,7 @@ def _optional_string(value: object) -> str | None:
 
 def _content(obs: AgentObservation) -> list[dict[str, Any]]:
     text = (
-        f"Task: {obs.task.prompt or obs.task.id}\n"
+        f"Mission: {obs.task.prompt or obs.task.id}\n"
         f"Step: {obs.step_index}\n"
         f"Elapsed seconds: {obs.elapsed_seconds:.2f}\n"
         f"Recent actions: {[event.tool_call.name for event in obs.history[-5:]]}\n"
@@ -196,29 +216,38 @@ def _tool_schema(name: str, description: str, parameters: dict[str, Any]) -> dic
     }
 
 
-def _parse_json_tool_call(content: str) -> ToolCall | None:
-    start = content.find("{")
-    end = content.rfind("}")
-    if start < 0 or end < start:
-        return None
+def _parse_json_events(content: str) -> tuple[ToolCall, ...]:
+    starts = [index for index in (content.find("{"), content.find("[")) if index >= 0]
+    if not starts:
+        return ()
+    start = min(starts)
+    end = content.rfind("}" if content[start] == "{" else "]")
+    if end < start:
+        return ()
     try:
         data = json.loads(content[start : end + 1])
     except json.JSONDecodeError:
-        return None
-    name = data.get("name") or data.get("tool")
-    if not isinstance(name, str):
-        return None
-    arguments = data.get("arguments") or data.get("input") or {}
-    if not isinstance(arguments, dict):
-        return None
-    return ToolCall(name=name, arguments=_normalize_arguments(arguments))
+        return ()
+    if isinstance(data, dict) and "tool" in data and "name" not in data:
+        data = {"name": data["tool"], "arguments": data.get("arguments") or data.get("input", {})}
+    try:
+        events = events_from_payload(data)
+    except ValueError:
+        return ()
+    return tuple(ToolCall(event.name, _normalize_arguments(event.arguments)) for event in events)
 
 
 def _visible_fallback(step_index: int) -> ToolCall:
     sequence = (
-        ToolCall("drag", {"start_x": 420, "start_y": 330, "end_x": 780, "end_y": 620, "button": "left"}),
-        ToolCall("key", {"key": "a", "modifiers": []}),
-        ToolCall("click", {"x": 940, "y": 360, "button": "left"}),
+        ToolCall("move_mouse", {"x": 420, "y": 330}),
+        ToolCall("mouse_down", {"button": "left"}),
+        ToolCall("move_mouse", {"x": 780, "y": 620}),
+        ToolCall("mouse_up", {"button": "left"}),
+        ToolCall("key_down", {"key": "a"}),
+        ToolCall("key_up", {"key": "a"}),
+        ToolCall("move_mouse", {"x": 940, "y": 360}),
+        ToolCall("mouse_down", {"button": "left"}),
+        ToolCall("mouse_up", {"button": "left"}),
     )
     return sequence[step_index % len(sequence)]
 

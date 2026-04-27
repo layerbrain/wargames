@@ -15,7 +15,7 @@ class AgentSpecTests(unittest.TestCase):
         spec = load_agent_spec("scripted-wait", (Path("agents"),))
 
         self.assertEqual("scripted-wait", spec.id)
-        self.assertEqual("python", spec.driver)
+        self.assertEqual("scripted-wait", spec.kind)
 
     def test_creates_builtin_wait_agent(self) -> None:
         spec = load_agent_spec("scripted-wait", (Path("agents"),))
@@ -29,8 +29,8 @@ class AgentSpecTests(unittest.TestCase):
             spec = AgentSpec.from_mapping(
                 {
                     "id": "custom",
-                    "driver": "python",
-                    "factory": "tests.harness.agents:scripted_wait_agent",
+                    "kind": "python",
+                    "entrypoint": "tests.harness.agents:scripted_wait_agent",
                     "config": {"extra_body": {"enable_thinking": "${WARGAMES_TEST_THINKING}"}},
                 }
             )
@@ -41,8 +41,7 @@ class AgentSpecTests(unittest.TestCase):
         spec = AgentSpec.from_mapping(
             {
                 "id": "custom-openai",
-                "driver": "python",
-                "factory": "wargames.harness.openai_agent:create_agent",
+                "kind": "openai",
                 "model": "kimi-k2.5",
                 "api_key_env": "OPENAI_API_KEY",
                 "config": {

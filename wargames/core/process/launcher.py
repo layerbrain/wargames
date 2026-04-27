@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import os
+import signal
 from collections.abc import Awaitable, Callable, Mapping, Sequence
 from dataclasses import dataclass
 
@@ -24,11 +25,21 @@ class ProcessHandle:
     async def terminate(self, timeout: float = 5.0) -> None:
         if self.process.returncode is not None:
             return
-        self.process.terminate()
+        try:
+            os.killpg(self.pid, signal.SIGTERM)
+        except ProcessLookupError:
+            return
+        except Exception:
+            self.process.terminate()
         try:
             await asyncio.wait_for(self.process.wait(), timeout=timeout)
         except TimeoutError:
-            self.process.kill()
+            try:
+                os.killpg(self.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                return
+            except Exception:
+                self.process.kill()
             await self.process.wait()
 
 
@@ -50,6 +61,7 @@ class ProcessLauncher:
             env=merged_env,
             stdout=asyncio.subprocess.DEVNULL,
             stderr=asyncio.subprocess.DEVNULL,
+            start_new_session=True,
         )
         handle = ProcessHandle(id=id, process=process, command=tuple(command), env=merged_env)
         if ready is not None:

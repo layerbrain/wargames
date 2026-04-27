@@ -1,0 +1,25 @@
+{
+  "aircraft": "c172p",
+  "airport": "PHTO",
+  "description": "Radios are used both for communication, and also for navigation. This tutorial will teach you how to tune the radio of the aircraft to pick up the ATIS - Automatic Terminal Information Service. This is broadcast by all but the smallest airports and provides information on the current ground-level weather, the altimeter setting and the runway in use.",
+  "difficulty": "easy",
+  "game": "flightgear",
+  "id": "flightgear.c172p.tutorial.radios",
+  "launch_mode": "direct",
+  "native_difficulty": "tutorial",
+  "runway": null,
+  "source": "builtin",
+  "startup_args": [
+    "--disable-freeze"
+  ],
+  "tags": [
+    "tutorial",
+    "c172p",
+    "radios"
+  ],
+  "time_limit_ticks": 36000,
+  "timeofday": "morning",
+  "title": "Radio Tuning",
+  "tutorial": "Radio Tuning",
+  "tutorial_file": "radios.xml"
+}

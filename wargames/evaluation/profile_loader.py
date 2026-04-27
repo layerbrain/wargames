@@ -10,6 +10,7 @@ import yaml
 
 from wargames.core.missions.rubric import Rubric, RubricEntry
 from wargames.evaluation.profile import RewardProfile
+from wargames.evaluation.schema import GameRewardSchema
 
 
 def resolve_scenarios_root(root: str | Path = "scenarios") -> Path:
@@ -31,8 +32,10 @@ def load_yaml(path: Path) -> dict[str, Any]:
     return data
 
 
-def load_profile_yaml(path: Path) -> RewardProfile:
+def load_profile_yaml(path: Path, *, schema: GameRewardSchema | None = None) -> RewardProfile:
     data = load_yaml(path)
+    if schema is not None and str(data["game"]) != schema.game:
+        raise ValueError(f"{path}: profile game {data['game']} does not match schema {schema.game}")
     entries: list[RubricEntry] = []
     per_step: list[str] = []
     terminal: list[str] = []
@@ -47,6 +50,10 @@ def load_profile_yaml(path: Path) -> RewardProfile:
         when = str(raw_entry["when"])
         if when not in {"per_step", "terminal"}:
             raise ValueError(f"{path}: invalid reward timing for {id}: {when}")
+        if schema is not None:
+            primitive = schema.primitive(id)
+            if primitive.when != when:
+                raise ValueError(f"{path}: reward primitive {id} must use timing {primitive.when}")
         entry = _build_entry(id, raw_entry)
         entries.append(entry)
         if when == "per_step":
@@ -67,13 +74,15 @@ def load_profile_yaml(path: Path) -> RewardProfile:
         step_reward_max=step_max,
         terminal_reward_weight=float(data.get("terminal_reward_weight", 1.0)),
         dense_reward_weight=float(data.get("dense_reward_weight", 1.0)),
-        train_only=bool(data.get("train_only", False)),
         description=str(data.get("description", "")),
     )
 
 
-def load_profile_dir(path: Path) -> list[RewardProfile]:
-    return [load_profile_yaml(profile_path) for profile_path in sorted(path.glob("*.yaml"))]
+def load_profile_dir(path: Path, *, schema: GameRewardSchema | None = None) -> list[RewardProfile]:
+    return [
+        load_profile_yaml(profile_path, schema=schema)
+        for profile_path in sorted(path.glob("*.yaml"))
+    ]
 
 
 def resolve_dotted_path(path: str) -> object:

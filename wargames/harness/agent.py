@@ -37,7 +37,7 @@ class AgentObservation:
 
 @dataclass(frozen=True)
 class AgentDecision:
-    tool_call: ToolCall | None
+    events: tuple[ToolCall, ...] = ()
     stop: bool = False
     reason: str | None = None
 
@@ -45,11 +45,8 @@ class AgentDecision:
 class Agent(Protocol):
     id: str
 
-    async def start(self, task: TaskSpec) -> None:
-        ...
+    async def start(self, task: TaskSpec) -> None: ...
 
-    async def decide(self, obs: AgentObservation) -> AgentDecision:
-        ...
+    async def decide(self, obs: AgentObservation) -> AgentDecision: ...
 
-    async def close(self) -> None:
-        ...
+    async def close(self) -> None: ...

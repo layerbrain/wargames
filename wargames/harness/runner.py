@@ -6,9 +6,12 @@ from wargames.core.runtime.arena import WarGames
 from wargames.evaluation.task import RunConfig, TaskSpec
 from wargames.episode.controller import EpisodeController, RunSummary
 from wargames.harness.agent import Agent, AgentObservation
+from wargames.harness.turns import validate_turn
 
 
-async def run_task(*, task: TaskSpec, run_config: RunConfig, wg: WarGames, agent: Agent) -> RunSummary:
+async def run_task(
+    *, task: TaskSpec, run_config: RunConfig, wg: WarGames, agent: Agent
+) -> RunSummary:
     controller = EpisodeController(task=task, run_config=run_config, wg=wg)
     await controller.start(agent_id=agent.id)
     await agent.start(task)
@@ -25,18 +28,23 @@ async def run_task(*, task: TaskSpec, run_config: RunConfig, wg: WarGames, agent
                 elapsed_seconds=time.monotonic() - t0,
             )
             decision = await agent.decide(obs)
-            if decision.stop or decision.tool_call is None:
+            if decision.stop or not decision.events:
                 end_reason = decision.reason or "agent_stop"
                 break
-            outcome = await controller.apply_tool_call(decision.tool_call.name, decision.tool_call.arguments)
-            if outcome.finished or outcome.truncated:
-                end_reason = outcome.end_reason or ("finished" if outcome.finished else "truncated")
-                break
-            if outcome.step + 1 >= task.max_steps:
-                end_reason = "max_steps"
-                break
-            if time.monotonic() - t0 >= task.max_wall_seconds:
-                end_reason = "wall_timeout"
+            for event in validate_turn(decision.events):
+                outcome = await controller.apply_tool_call(event.name, event.arguments)
+                if outcome.finished or outcome.truncated:
+                    end_reason = outcome.end_reason or (
+                        "finished" if outcome.finished else "truncated"
+                    )
+                    break
+                if outcome.step + 1 >= task.max_steps:
+                    end_reason = "max_steps"
+                    break
+                if time.monotonic() - t0 >= task.max_wall_seconds:
+                    end_reason = "wall_timeout"
+                    break
+            if end_reason != "unknown":
                 break
         await controller.finish(end_reason)
         return controller.summary()

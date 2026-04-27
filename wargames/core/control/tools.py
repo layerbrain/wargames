@@ -6,15 +6,15 @@ from typing import Any
 
 from wargames.core.control.cua import (
     ArenaAction,
-    ClickAction,
-    DoubleClickAction,
-    DragAction,
-    KeyAction,
+    KeyDownAction,
+    KeyUpAction,
     MoveMouseAction,
+    MouseDownAction,
+    MouseUpAction,
     ScrollAction,
-    TypeTextAction,
     WaitAction,
 )
+from wargames.core.control.keys import normalize_key
 
 
 @dataclass(frozen=True)
@@ -25,17 +25,16 @@ class ToolSpec:
 
 
 _ids = itertools.count()
-_INTEGER_FIELDS = {"x", "y", "start_x", "start_y", "end_x", "end_y", "dx", "dy"}
+_INTEGER_FIELDS = {"x", "y", "dx", "dy", "ms"}
 _BUTTONS = {"left", "right", "middle"}
 _ALLOWED_ARGS = {
-    "click": {"id", "x", "y", "button"},
     "move_mouse": {"id", "x", "y"},
-    "double_click": {"id", "x", "y", "button"},
-    "drag": {"id", "start_x", "start_y", "end_x", "end_y", "button"},
-    "key": {"id", "key", "modifiers"},
-    "type_text": {"id", "text"},
+    "mouse_down": {"id", "button"},
+    "mouse_up": {"id", "button"},
+    "key_down": {"id", "key"},
+    "key_up": {"id", "key"},
     "scroll": {"id", "dx", "dy"},
-    "wait": {"id"},
+    "wait": {"id", "ms"},
 }
 
 
@@ -78,58 +77,43 @@ def _reject_invalid_button_args(arguments: dict[str, Any]) -> None:
         raise ValueError("button must be one of: left, middle, right")
 
 
+def _reject_invalid_wait_args(arguments: dict[str, Any]) -> None:
+    if "ms" in arguments and _integer_arg(arguments, "ms") < 0:
+        raise ValueError("ms must be >= 0")
+
+
 def _button_property() -> dict[str, Any]:
     return {"type": "string", "enum": sorted(_BUTTONS)}
 
 
 CUA_TOOL_SPECS: tuple[ToolSpec, ...] = (
     ToolSpec(
-        name="click",
-        description="Click a window-local pixel coordinate.",
-        parameters=_object(
-            {"x": {"type": "integer"}, "y": {"type": "integer"}, "button": _button_property()},
-            ["x", "y"],
-        ),
-    ),
-    ToolSpec(
         name="move_mouse",
         description=(
-            "Move the visible pointer to a window-local pixel coordinate without clicking. "
-            "Use edge positions only when deliberately edge-panning."
+            "Move the visible pointer to a window-local pixel coordinate. "
+            "This does not press or release any mouse button."
         ),
         parameters=_object({"x": {"type": "integer"}, "y": {"type": "integer"}}, ["x", "y"]),
     ),
     ToolSpec(
-        name="double_click",
-        description="Double-click a window-local pixel coordinate.",
-        parameters=_object(
-            {"x": {"type": "integer"}, "y": {"type": "integer"}, "button": _button_property()},
-            ["x", "y"],
-        ),
+        name="mouse_down",
+        description="Press a mouse button at the current pointer position.",
+        parameters=_object({"button": _button_property()}, []),
     ),
     ToolSpec(
-        name="drag",
-        description="Drag between two window-local pixel coordinates.",
-        parameters=_object(
-            {
-                "start_x": {"type": "integer"},
-                "start_y": {"type": "integer"},
-                "end_x": {"type": "integer"},
-                "end_y": {"type": "integer"},
-                "button": _button_property(),
-            },
-            ["start_x", "start_y", "end_x", "end_y"],
-        ),
+        name="mouse_up",
+        description="Release a mouse button at the current pointer position.",
+        parameters=_object({"button": _button_property()}, []),
     ),
     ToolSpec(
-        name="key",
-        description="Press a key.",
-        parameters=_object({"key": {"type": "string"}, "modifiers": {"type": "array"}}, ["key"]),
+        name="key_down",
+        description="Press one keyboard key.",
+        parameters=_object({"key": {"type": "string"}}, ["key"]),
     ),
     ToolSpec(
-        name="type_text",
-        description="Type text into the target window.",
-        parameters=_object({"text": {"type": "string"}}, ["text"]),
+        name="key_up",
+        description="Release one keyboard key.",
+        parameters=_object({"key": {"type": "string"}}, ["key"]),
     ),
     ToolSpec(
         name="scroll",
@@ -138,8 +122,8 @@ CUA_TOOL_SPECS: tuple[ToolSpec, ...] = (
     ),
     ToolSpec(
         name="wait",
-        description="Wait for exactly one game tick.",
-        parameters=_object({}, []),
+        description="Wait without input for `ms` milliseconds (real wall-clock time).",
+        parameters=_object({"ms": {"type": "integer"}}, ["ms"]),
     ),
 )
 
@@ -148,38 +132,25 @@ def action_from_tool_call(name: str, arguments: dict[str, Any]) -> ArenaAction:
     _reject_unknown_args(name, arguments)
     _reject_invalid_integer_args(arguments)
     _reject_invalid_button_args(arguments)
-    id = str(arguments.get("id") or next_id())
-    if name == "click":
-        return ClickAction(
-            id=id,
-            x=_integer_arg(arguments, "x"),
-            y=_integer_arg(arguments, "y"),
-            button=arguments.get("button", "left"),
-        )
-    if name == "move_mouse":
-        return MoveMouseAction(id=id, x=_integer_arg(arguments, "x"), y=_integer_arg(arguments, "y"))
-    if name == "double_click":
-        return DoubleClickAction(
-            id=id,
-            x=_integer_arg(arguments, "x"),
-            y=_integer_arg(arguments, "y"),
-            button=arguments.get("button", "left"),
-        )
-    if name == "drag":
-        return DragAction(
-            id=id,
-            start_x=_integer_arg(arguments, "start_x"),
-            start_y=_integer_arg(arguments, "start_y"),
-            end_x=_integer_arg(arguments, "end_x"),
-            end_y=_integer_arg(arguments, "end_y"),
-            button=arguments.get("button", "left"),
-        )
-    if name == "key":
-        return KeyAction(id=id, key=str(arguments["key"]), modifiers=tuple(arguments.get("modifiers", ())))
-    if name == "type_text":
-        return TypeTextAction(id=id, text=str(arguments["text"]))
-    if name == "scroll":
-        return ScrollAction(id=id, dx=_integer_arg(arguments, "dx"), dy=_integer_arg(arguments, "dy"))
     if name == "wait":
-        return WaitAction(id=id, ticks=1)
+        _reject_invalid_wait_args(arguments)
+    id = str(arguments.get("id") or next_id())
+    if name == "move_mouse":
+        return MoveMouseAction(
+            id=id, x=_integer_arg(arguments, "x"), y=_integer_arg(arguments, "y")
+        )
+    if name == "mouse_down":
+        return MouseDownAction(id=id, button=arguments.get("button", "left"))
+    if name == "mouse_up":
+        return MouseUpAction(id=id, button=arguments.get("button", "left"))
+    if name == "key_down":
+        return KeyDownAction(id=id, key=normalize_key(str(arguments["key"])))
+    if name == "key_up":
+        return KeyUpAction(id=id, key=normalize_key(str(arguments["key"])))
+    if name == "scroll":
+        return ScrollAction(
+            id=id, dx=_integer_arg(arguments, "dx"), dy=_integer_arg(arguments, "dy")
+        )
+    if name == "wait":
+        return WaitAction(id=id, ms=_integer_arg(arguments, "ms") if "ms" in arguments else 0)
     raise ValueError(f"unknown CUA tool: {name}")

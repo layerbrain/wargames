@@ -10,8 +10,8 @@ def render_event(event: dict[str, Any]) -> str:
     if name == "reward":
         return f"[{step}] reward={event.get('value', 0.0):.3f} total={event.get('total', 0.0):.3f}"
     if name == "action":
-        tool = event.get("tool_call", {})
-        return f"[{step}] action={tool.get('name', '?')}"
+        action = event.get("action", {})
+        return f"[{step}] action={action.get('name', '?')}"
     if name == "run_finished":
         summary = event.get("summary", {})
         return f"finished end={summary.get('end_reason')} reward={summary.get('total_reward')}"

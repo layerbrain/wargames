@@ -1,377 +1,474 @@
 # WarGames
 
-WarGames turns OpenRA Red Alert into a computer-use environment for agentic AI.
-An agent receives pixels and a small CUA tool set, then sends mouse/keyboard/wait
-actions back to the simulator.
+WarGames turns real-time games into computer-use RL environments.
 
-The runtime never calls an LLM and never trains a model. It does three things:
-capture frames, apply tool calls, and compute rewards from private simulator
-state. Your agent, trainer, or external harness owns model calls and gradient
-updates. Prime/prime-rl is one supported trainer path, not a requirement.
+The agent sees the screen and sends mouse and keyboard actions. The real game
+state stays hidden and is used to score the run.
 
-## Example Output
+WarGames is not a trainer. It launches the game, captures frames, applies
+actions, records the episode, and returns rewards. Bring your own trainer or
+use the Prime RL adapter in this repo.
 
-This is a short Kimi K2.5 smoke run. The agent receives screenshots, chooses
-CUA actions, and WarGames applies them to the live OpenRA window.
+![Kimi K2.5 plays Red Alert](docs/assets/kimi-k2-redalert-demo.gif)
 
-![Kimi K2.5 Red Alert smoke run](docs/assets/kimi-k2-redalert-smoke.gif)
+```text
+                    +-----------------------------+
+                    |        Game process         |
+                    |   OpenRA, FlightGear, ...   |
+                    +--------------+--------------+
+                                   |
+                 capture           |          hidden state
+            +---------------+      |      +-------------------+
+            | window pixels | <----+----> | probe: units,     |
+            |   1280x720    |             | fuel, objectives  |
+            +-------+-------+             +---------+---------+
+                    |                               |
+                    v                               v
+              +-----------+                  +-------------+
+              |   Agent   |                  |  Evaluator  |
+              | (model)   |                  | (profile)   |
+              +-----+-----+                  +------+------+
+                    |                               |
+                    | action                        | reward
+                    v                               v
+              back to game                    to your trainer
+```
 
-## Install
+The agent only ever sees the left lane: pixels and its own past actions. The
+right lane - units, cash, telemetry, objectives - never reaches the agent;
+the evaluator reads it through a per-game probe and a reward profile turns
+it into the scalar your trainer consumes.
+
+## Games
+
+| Game | World | Missions | Docs |
+|---|---|---:|---|
+| Red Alert | OpenRA real-time strategy | 297 | [docs/games/redalert.md](docs/games/redalert.md) |
+| FlightGear | First-person C172P flight sim | 14 | [docs/games/flightgear.md](docs/games/flightgear.md) |
+
+A run is four pieces: a game, a mission, a reward profile, and an agent.
+
+## Quickstart
+
+Games run inside Docker. Nothing is installed on your host.
 
 ```bash
-python -m venv venv
+git clone https://github.com/layerbrain/wargames.git
+cd wargames
+python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
-```
+pip install -e .
 
-Install the Red Alert runtime:
-
-```bash
 wargames install --game redalert
+wargames install --game flightgear
 ```
 
-If you already have an OpenRA source checkout, register it instead:
-
-```bash
-wargames install --game redalert --root /path/to/OpenRA
-```
-
-WarGames remembers the install path for later runs. On macOS, Red Alert runs
-inside the local Linux runtime box; the first run builds the WarGames OpenRA
-probe and installs the public Red Alert content.
-
-## Local Secrets
-
-Create `local.env` from the template. `local.env` is gitignored.
-
-```bash
-cp local.env.example local.env
-```
-
-Use provider-standard names for model keys:
-
-```bash
-OPENAI_API_KEY=
-OPENAI_BASE_URL=
-OPENAI_MODEL=
-ANTHROPIC_API_KEY=
-ANTHROPIC_MODEL=
-GOOGLE_API_KEY=
-GOOGLE_MODEL=
-```
-
-`LAYERBRAIN_PRIME` is a publish/admin key only. WarGames does not use it for
-model inference.
-
-## Tasks
-
-Tasks are mission + seed + split + reward profile.
-
-```bash
-wargames tasks --game redalert --split debug
-```
-
-Splits:
-
-- `debug`: tiny smoke tasks
-- `train`: tasks agents may learn from
-- `validation`: tune prompts/profile weights/max steps
-- `test`: held-out reported benchmark tasks
-- `curriculum`: ordered train tasks
-
-The catalog rejects the same `(mission_id, seed)` appearing in multiple splits.
-It also rejects `train_only` reward profiles on `test`.
-
-## Agents
-
-Agents are named YAML configs under `agents/` or your own `--agent-dir`.
-
-```bash
-wargames agents list
-wargames agents validate agents/scripted-wait.yaml
-```
-
-Example:
-
-```yaml
-id: my-agent
-driver: python
-factory: my_project.agent:create_agent
-provider: openai
-model: ${OPENAI_MODEL}
-api_key_env: OPENAI_API_KEY
-base_url: ${OPENAI_BASE_URL}
-config:
-  temperature: 0.2
-  top_p: 0.9
-  max_tokens: 256
-  timeout_seconds: 20
-  disable_reasoning: false
-  reject_reasoning_models: false
-  reasoning_effort: medium
-  extra_body:
-    enable_thinking: true
-    chat_template_kwargs:
-      enable_thinking: true
-```
-
-The Python factory receives the `AgentSpec` and returns an object implementing:
-
-```python
-async def start(task): ...
-async def decide(obs): ...
-async def close(): ...
-```
-
-For OpenAI-compatible providers, `config` is passed through to the local
-agent wrapper. Use it to choose model behavior per run. For fast non-thinking
-smoke runs, set `disable_reasoning: true` and keep `max_tokens` small. For
-models that need internal thinking, set `disable_reasoning: false` and pass the
-provider-specific `extra_body` they require. WarGames does not own those keys or
-settings; the agent config does.
-
-## Run Locally
+Run a FlightGear episode:
 
 ```bash
 wargames run \
-  --task redalert.debug.smoke.seed-000000 \
+  --game flightgear \
+  --mission flightgear.c172p.tutorial.takeoff \
   --agent scripted-wait \
-  --watch none \
   --record summary_only
 ```
 
-For demo/debug runs, record frames and export video later:
+List what ships:
 
 ```bash
-wargames run \
-  --task redalert.debug.smoke.seed-000000 \
-  --agent scripted-wait \
-  --watch window \
-  --record full \
-  --video frames
-
-wargames export <run_id> --out exports --video mp4
+wargames missions --game redalert
+wargames missions --game flightgear
 ```
 
-MP4 is export-only. Runs write frames; export turns frames into a shareable
-video.
+## Run Your Own Model
 
-## Reward Profiles
+The simplest path is an OpenAI-compatible model:
 
-List profiles:
+```bash
+export OPENAI_API_KEY=...
+export OPENAI_BASE_URL=https://api.openai.com/v1
+export OPENAI_MODEL=gpt-4o-mini
+
+wargames run \
+  --game redalert \
+  --mission redalert.soviet-01.normal \
+  --profile standard \
+  --agent openai-quickstart \
+  --record full
+```
+
+`openai-quickstart` is the included OpenAI-compatible agent. It reads the env
+vars above and returns primitive keyboard and mouse events.
+
+## Live Control
+
+You can send actions to a live watched session as JSON lines. Each line can be
+one primitive event or one array of primitive events.
+
+```bash
+printf '%s\n' \
+  '{"name":"key_down","arguments":{"key":"PageUp"}}' \
+  '{"name":"wait","arguments":{}}' \
+  '{"name":"key_up","arguments":{"key":"PageUp"}}' \
+  | wargames control \
+      --game flightgear \
+      --mission flightgear.c172p.tutorial.takeoff \
+      --actions - \
+      --watch
+```
+
+That is the same action format a model uses.
+
+## Observations
+
+Each step, the agent gets one JSON object:
+
+| Field | What it is |
+|---|---|
+| `task` | Mission id, game id, profile, limits, and prompt text for this run. |
+| `frame.image_b64` | Latest game frame, PNG bytes base64-encoded. |
+| `frame.width`, `frame.height` | Frame dimensions in pixels. Default 1280x720. |
+| `history` | Public actions the agent has already sent this run. |
+| `step_index` | Zero-based step counter. |
+| `elapsed_seconds` | Wall-clock seconds since the run started. |
+
+That is everything. Red Alert unit positions, economy, objectives, FlightGear
+telemetry, and every other piece of hidden game state are read only by the
+evaluator and reward profile, never the agent.
+
+## Actions
+
+The action set is shared across games. These are primitive input events. No
+shortcut action combines pointer movement, button presses, or key presses.
+
+| Action | What it does |
+|---|---|
+| `move_mouse` | Move the pointer to a window pixel. |
+| `mouse_down` | Press a mouse button at the current pointer position. |
+| `mouse_up` | Release a mouse button at the current pointer position. |
+| `key_down` | Press one keyboard key. |
+| `key_up` | Release one keyboard key. |
+| `scroll` | Scroll the target window. |
+| `wait` | Let the game advance without input. `{"ms":1000}` sleeps one second of wall-clock; default is `ms:0`. |
+
+Coordinates are pixels inside the game window. Mouse buttons are `left`,
+`right`, or `middle`.
+
+Every primitive action your agent can send:
+
+```json
+{"name":"move_mouse","arguments":{"x":640,"y":360}}
+{"name":"mouse_down","arguments":{"button":"left"}}
+{"name":"mouse_up","arguments":{"button":"left"}}
+{"name":"key_down","arguments":{"key":"PageUp"}}
+{"name":"key_up","arguments":{"key":"PageUp"}}
+{"name":"scroll","arguments":{"dx":0,"dy":-3}}
+{"name":"wait","arguments":{}}
+```
+
+There is no shortcut `click` or `drag` action. To emulate a click, send
+`move_mouse`, `mouse_down`, then `mouse_up`. To hold input, send the down
+event, one or more `wait` events, then the up event.
+
+Keys use WarGames names, not X11 names: lowercase letters, digits, common
+symbol keys, `Control`, `Shift`, `Alt`, `Meta`, `Enter`, `Escape`, `Space`,
+`Tab`, `Backspace`, `PageUp`, `PageDown`, `ArrowUp`, `ArrowDown`,
+`ArrowLeft`, `ArrowRight`, and `F1` through `F12`.
+
+## Missions
+
+A mission is exported game content - a Red Alert map or a FlightGear C172P
+tutorial - wrapped with a difficulty, a step budget, a wall-clock budget, and
+a starting reward profile. Mission IDs look like
+`redalert.soviet-01.normal` or `flightgear.c172p.tutorial.takeoff` and are
+the same string you pass to `--mission`, the WebSocket `create_session` op,
+and Prime RL configs.
+
+```bash
+wargames missions --game redalert --difficulty hard
+wargames missions --game flightgear
+```
+
+Mission JSON lives in `scenarios/<game>/missions/<difficulty>/`.
+
+## Profiles
+
+A reward profile is the reward function for a run. It turns hidden game state
+into the scalar reward your trainer sees, with per-step shaping and a final
+terminal score.
+
+The YAML format is universal, but **each game ships its own schema**: the
+hidden-state fields and reward primitives Red Alert exposes (`us.cash`,
+`mission.objectives`, `delta_units_killed`, ...) are different from
+FlightGear's (`aircraft.altitude_ft`, `aircraft.crashed`, ...). Profiles for
+one game cannot be applied to another.
+
+Shipped profiles:
+
+| Game | Profiles |
+|---|---|
+| Red Alert | `terminal`, `standard`, `dense`, `protective`, `speedrun`, `aggressive_stress_test` |
+| FlightGear | `standard` |
 
 ```bash
 wargames profile list --game redalert
-```
-
-Built-ins:
-
-- `terminal`: win/loss only
-- `standard`: terminal + mild dense shaping
-- `dense`: training-only dense profile
-- `protective`: defense-aligned profile that rewards friendly-force preservation
-- `aggressive_stress_test`: training-only contrast profile, blocked from test
-
-Validate a profile YAML:
-
-```bash
+wargames profile list --game flightgear
 wargames profile validate scenarios/redalert/profiles/protective.yaml
 ```
 
-Profiles are the behavior dial. The same model can be evaluated under different
-profiles to measure whether reward design changes behavior.
+Full schema and the per-game field/primitive tables: [`docs/reward_profiles.md`](docs/reward_profiles.md).
 
-The full profile schema, every Red Alert reward field, built-in primitives, and
-Prime RL examples are documented in [`docs/reward_profiles.md`](docs/reward_profiles.md).
+## Custom Agents
 
-## Custom Trainers
+An agent is just a program that stays running.
 
-Use `EpisodeController` directly when you want to build your own trainer instead
-of using Prime RL. WarGames owns the environment loop; your trainer owns rollout
-storage, advantage estimation, loss computation, checkpoints, and policy updates.
+Subprocess agents use sampled mode: WarGames sends one observation, blocks on
+one turn line, applies it, then sends the next observation. The protocol is
+two newline-delimited JSON streams over stdin/stdout.
+
+1. WarGames writes one observation JSON line to your program's stdin.
+2. Your program writes one turn JSON line to stdout (`flush=True`).
+3. WarGames applies the event or events in that turn and loops.
+
+A trimmed observation looks like:
+
+```json
+{"frame":{"image_b64":"iVBORw0KGgo...","width":1280,"height":720},"history":[],"step_index":0,"elapsed_seconds":0.0}
+```
+
+The smallest agent that follows the protocol:
+
+```python
+import json
+import sys
+
+for line in sys.stdin:
+    observation = json.loads(line)
+    action = {"name": "wait", "arguments": {}}
+    print(json.dumps(action), flush=True)
+```
+
+A turn can also be an array. WarGames applies the events in order before it
+sends the next observation:
+
+```python
+turn = [
+    {"name": "key_down", "arguments": {"key": "PageUp"}},
+    {"name": "wait", "arguments": {"ms": 250}},
+    {"name": "key_up", "arguments": {"key": "PageUp"}},
+]
+print(json.dumps(turn), flush=True)
+```
+
+Save that as `my_agent.py`, then add an agent config:
+
+```yaml
+id: my-agent
+kind: subprocess
+command: ["python", "my_agent.py"]
+```
+
+```bash
+wargames run \
+  --game flightgear \
+  --mission flightgear.c172p.tutorial.takeoff \
+  --agent my-agent \
+  --agent-dir .
+```
+
+The `print(..., flush=True)` line is the whole send path. There is no API
+client. WarGames is already watching stdout, reads that one line, and applies
+it. A turn can contain up to 64 primitive events and at most five seconds of
+explicit `wait` time. Action shapes are the ones listed under [Actions](#actions).
+
+To stop the episode early, print one line:
+
+```json
+{"stop":true,"reason":"done"}
+```
+
+Two more sampled examples ship in this repo:
+
+- [`examples/agents/wait_agent.py`](examples/agents/wait_agent.py): sends `wait` every step.
+- [`examples/agents/circle_mouse.py`](examples/agents/circle_mouse.py): moves the mouse in a circle.
+
+## End Reasons And Summary
+
+When a mission ends, WarGames stops asking for actions, scores the terminal
+reward, and prints a run summary (also written to `summary.json` when
+recording is enabled). It does **not** send a final observation to the
+subprocess.
+
+| `end_reason` | Meaning |
+|---|---|
+| `objective_complete` | The game reported mission success. |
+| `defeat` | The game reported mission failure. |
+| `max_steps` | The run hit its step limit. |
+| `wall_timeout` | The run hit its wall-clock limit. |
+| `agent_stop` or custom reason | Your agent printed `{"stop":true,...}`. |
+| `subprocess_closed` | Your agent process exited before returning a turn. |
+
+Summary shape:
+
+```json
+{"run_id":"...","total_reward":1.0,"breakdown":{"terminal":1.0},"finished":true,"truncated":false,"end_reason":"objective_complete","steps":42,"duration_seconds":12.3}
+```
+
+## Timing Modes
+
+WarGames has two timing modes:
+
+| Mode | How frames and actions work | Use it for |
+|---|---|---|
+| Sampled | WarGames sends one observation, waits for one turn, applies one event or an event array, then sends the next observation. The game is still running while the model thinks, so the effective FPS depends on model latency. | Normal subprocess agents and most LLM/VLM agents. |
+| Streaming | WarGames pushes frames at a fixed FPS. The model can keep reading frames and send event arrays back whenever it is ready. | Realtime models that watch continuously and act asynchronously. |
+
+```text
+SAMPLED  -  one frame in, one turn out, repeat
+
+  time      WarGames                            Agent
+  ----      --------                            -----
+  0.00 s    frame 0  ----------------------->   [think 0.42 s]
+  0.42 s    apply    <-----  turn 0     <-----
+            frame 1  ----------------------->   [think 0.39 s]
+  0.81 s    apply    <-----  turn 1     <-----
+            frame 2  ----------------------->          ...
+
+  Effective FPS = 1 / model_latency.
+  The game keeps ticking while the model thinks.
+
+
+STREAMING  -  server pushes frames at fixed FPS, agent acts asynchronously
+
+  time      WarGames                            Agent
+  ----      --------                            -----
+  0.00 s    frame 0  ----------------------->   |
+  0.10 s    frame 1  ----------------------->   |  buffering frames
+  0.20 s    frame 2  ----------------------->   |
+  0.30 s    frame 3  ----------------------->   |
+            apply    <-----  events A   <-----  *  agent decides to act
+  0.40 s    frame 4  ----------------------->   |
+  0.50 s    frame 5  ----------------------->   |  thinking in parallel
+            apply    <-----  events B   <-----  *  with incoming frames
+  0.60 s    frame 6  ----------------------->        ...
+
+  Frame cadence is fixed by --fps.
+  Actions are async; the world never waits for the agent.
+```
+
+`wargames run --agent ...` always uses sampled mode. Your subprocess can be a
+plain blocking Python script - no async required.
+
+Streaming is a separate runtime that runs over WebSocket. A streaming client
+opens a session, subscribes to frame events, keeps its own latest-frame
+buffer, and sends `act` messages with one or more events whenever it decides
+to act. The world keeps moving while the model thinks, so the agent has to
+handle stale observations.
+
+Run the WebSocket server:
+
+```bash
+pip install -e '.[server]'
+wargames serve --game redalert --port 8000
+```
+
+Streaming client:
 
 ```python
 import asyncio
-
-from wargames.core.runtime.arena import WarGames
-from wargames.episode.controller import EpisodeController
-from wargames.evaluation.splits import TaskCatalog
-from wargames.evaluation.task import RunConfig
-from wargames.games.redalert import GAME
-from wargames.games.redalert.config import RedAlertConfig
-from wargames.harness.agent import ToolCall
-
-
-class Policy:
-    async def act(self, *, frame, tools, history) -> ToolCall:
-        # Replace this with a model forward pass.
-        return ToolCall(name="wait", arguments={})
-
-    def update(self, trajectory: list[dict[str, object]]) -> None:
-        # Replace this with PPO/GRPO/ILQL/SFT-on-rollouts/etc.
-        pass
-
-
-async def run_training_episode(policy: Policy) -> None:
-    task = TaskCatalog.load().get("redalert.debug.smoke.seed-000000").with_reward_profile("dense")
-    run_config = RunConfig(recorder_mode="none")
-
-    async with WarGames.for_game(GAME, RedAlertConfig.from_env()) as wg:
-        controller = EpisodeController(task=task, run_config=run_config, wg=wg)
-        frame = await controller.start(agent_id="custom-trainer")
-        trajectory: list[dict[str, object]] = []
-        end_reason = "max_steps"
-
-        try:
-            while len(controller.public_history) < task.max_steps:
-                action = await policy.act(
-                    frame=frame,
-                    tools=wg.tools,
-                    history=controller.public_history,
-                )
-                outcome = await controller.apply_tool_call(action.name, action.arguments)
-                trajectory.append(
-                    {
-                        "frame": frame,
-                        "action": action,
-                        "reward": outcome.reward,
-                        "breakdown": outcome.breakdown.entries,
-                        "next_frame": outcome.frame,
-                        "done": outcome.finished or outcome.truncated,
-                    }
-                )
-                frame = outcome.frame
-
-                if outcome.finished or outcome.truncated:
-                    end_reason = outcome.end_reason or "finished"
-                    break
-
-            await controller.finish(end_reason)
-        finally:
-            await controller.close()
-
-    policy.update(trajectory)
-
-
-asyncio.run(run_training_episode(Policy()))
-```
-
-The policy sees public observations only: frames, tool specs, and public action
-history. Rewards are computed inside the controller from hidden simulator state,
-then returned as scalar reward plus a named breakdown for training diagnostics.
-
-If you only need to plug in an inference-time agent, implement the `Agent`
-protocol instead:
-
-```python
-async def start(task): ...
-async def decide(obs): ...
-async def close(): ...
-```
-
-Then run it with `wargames run --agent <id>`. Use direct `EpisodeController`
-access when the caller is a trainer and needs raw transitions.
-
-## Watching
-
-Local:
-
-```bash
-wargames run --task ... --agent ... --watch window
-```
-
-Send controls to a live watched mission:
-
-```bash
-: > /tmp/wargames-control.jsonl
-
-tail -f /tmp/wargames-control.jsonl | wargames control \
-  --game redalert \
-  --mission redalert.soviet-01.normal \
-  --seed 42 \
-  --actions - \
-  --watch
-```
-
-Once the watch window is open, append JSON tool calls from another terminal:
-
-```bash
-printf '%s\n' '{"name":"move_mouse","arguments":{"x":640,"y":360}}' >> /tmp/wargames-control.jsonl
-printf '%s\n' '{"name":"click","arguments":{"x":760,"y":360,"button":"right"}}' >> /tmp/wargames-control.jsonl
-printf '%s\n' '{"name":"key","arguments":{"key":"a","modifiers":[]}}' >> /tmp/wargames-control.jsonl
-```
-
-To move the mouse in a circle, append a generated stream:
-
-```bash
-python - <<'PY' >> /tmp/wargames-control.jsonl
 import json
-import math
-import time
 
-center_x, center_y = 640, 360
-radius = 120
-steps = 96
+import websockets
 
-for step in range(steps):
-    angle = (2 * math.pi * step) / steps
-    print(json.dumps({
-        "name": "move_mouse",
-        "arguments": {
-            "x": round(center_x + radius * math.cos(angle)),
-            "y": round(center_y + radius * math.sin(angle)),
-        },
-    }), flush=True)
-    time.sleep(0.03)
-PY
+
+async def main():
+    async with websockets.connect("ws://127.0.0.1:8000/ws") as ws:
+        await ws.send(json.dumps({
+            "op": "create_session",
+            "mission": "redalert.soviet-01.normal",
+            "mode": "streaming",
+        }))
+        created = json.loads(await ws.recv())
+        session_id = created["session_id"]
+
+        await ws.send(json.dumps({"op": "subscribe_frames", "session_id": session_id, "fps": 10}))
+
+        frames_seen = 0
+        while True:
+            event = json.loads(await ws.recv())
+            if event["event"] == "frame":
+                frames_seen += 1
+                if frames_seen % 10 == 0:
+                    await ws.send(json.dumps({
+                        "op": "act",
+                        "session_id": session_id,
+                        "events": [{"name": "wait", "arguments": {}}],
+                    }))
+            elif event["event"] == "action_result" and (event["finished"] or event["truncated"]):
+                break
+
+
+asyncio.run(main())
 ```
 
-`control` starts one live mission, opens the watch window, and applies each JSON
-line from `--actions -` to that same running session. Coordinates are
-window-local pixels. Valid tool names are `click`, `move_mouse`, `double_click`,
-`drag`, `key`, `type_text`, `scroll`, and `wait`.
+In WebSocket mode, frame events are only frames. Mission-end status comes back
+on the next `action_result` after an `act` call:
 
-Replay public events from disk:
+```json
+{"event":"action_result","finished":true,"truncated":false}
+```
+
+The full streaming example is in
+[`examples/agents/streaming_ws_client.py`](examples/agents/streaming_ws_client.py).
+
+For a visible control check, this repo ships `circle-mouse`:
 
 ```bash
-wargames watch <run_id>
+wargames run \
+  --game flightgear \
+  --mission flightgear.c172p.tutorial.takeoff \
+  --agent circle-mouse \
+  --record full
 ```
 
-Public event files never include hidden state. Private traces are only written
-when explicitly requested.
+## Prime RL
 
-## Prime Intellect
-
-The Prime implementation lives in `wargames.environments.prime`.
-The public Prime environment is `layerbrain/wargames`.
-`environments/prime` is only the thin publish wrapper.
+The Prime Intellect Verifiers adapter is `layerbrain/wargames`. Configs live
+under `environments/prime/configs/<game>/`. Eval and RL configs are split:
 
 ```bash
 uv pip install -e ./environments/prime
-prime eval run wargames --config environments/prime/configs/eval-debug.toml -n 1 -r 1
+
+prime eval run wargames \
+  --config environments/prime/configs/redalert/eval-soviet-01.toml \
+  -n 1 -r 1
 ```
 
-Prime RL uses the shipped TOML configs. WarGames supplies the environment and
-reward signal; Prime/prime-rl owns rollouts, batching, GPUs, and gradient
-updates.
+The `reward_profile` TOML field is the RL behavior dial - point it at any
+profile under `scenarios/<game>/profiles/` (or a custom one). Set
+`recorder_mode = "none"` for fast rollouts and `max_steps` to bound the
+episode.
 
-RL training changes behavior by changing `reward_profile` in the Prime config:
+## Recording
 
-```toml
-split = "train"
-reward_profile = "protective"
-recorder_mode = "none"
-max_steps = 500
-rollouts_per_example = 8
+```bash
+wargames run \
+  --game redalert \
+  --mission redalert.soviet-01.normal \
+  --agent scripted-wait \
+  --record full \
+  --video frames
+
+wargames export <run-id> --out exports --video mp4
 ```
 
-Use `dense` or `protective` on `train`/`curriculum`, then report against
-`terminal` or `standard` on `test`.
+`--record summary_only` keeps just the run summary. `--record full` keeps
+every observation, action, and reward breakdown. `--video frames` writes one
+PNG per step; `wargames export ... --video mp4` stitches them.
 
 ## Tests
 
 ```bash
 source venv/bin/activate
-python -m unittest tests.evaluation tests.harness
-python -m unittest discover -s environments/prime/tests/conformance
+python -m unittest discover
 ```

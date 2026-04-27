@@ -109,7 +109,7 @@ if [ "${LAYERBRAIN_WARGAMES_BOOTSTRAP_OPENRA:-1}" = "1" ] && [ -n "${LAYERBRAIN_
   fi
 fi
 
-if [ "${LAYERBRAIN_WARGAMES_BOOTSTRAP_RA_CONTENT:-1}" = "1" ]; then
+if [ "${LAYERBRAIN_WARGAMES_BOOTSTRAP_RA_CONTENT:-1}" = "1" ] && [[ " $* " != *" --game flightgear "* ]]; then
   install_ra_quick_content
 fi
 

@@ -12,13 +12,14 @@ from wargames.harness.lobby import run_lobby
 
 class LobbyRunnerTests(unittest.IsolatedAsyncioTestCase):
     async def test_two_slot_lobby_runs_independent_summaries(self) -> None:
-        game = GameDescriptor(id="redalert", backend_cls=FakeRedAlertBackend, config_cls=RedAlertConfig)
+        game = GameDescriptor(
+            id="redalert", backend_cls=FakeRedAlertBackend, config_cls=RedAlertConfig
+        )
         task = TaskSpec(
-            id="redalert.debug.smoke.seed-000000",
+            id="redalert.debug.quickstart.seed-000000",
             game="redalert",
             mission_id="redalert.soviet-01.normal",
             seed=0,
-            split="debug",
             max_steps=2,
             reward_profile="standard",
         )

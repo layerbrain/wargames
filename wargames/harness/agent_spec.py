@@ -7,15 +7,15 @@ from typing import Any, Literal
 
 from wargames.evaluation.profile_loader import load_yaml
 
-AgentDriver = Literal["python", "subprocess", "websocket"]
+AgentKind = Literal["openai", "python", "scripted-wait", "subprocess", "websocket"]
 
 
 @dataclass(frozen=True)
 class AgentSpec:
     id: str
-    driver: AgentDriver
+    kind: AgentKind
     description: str = ""
-    factory: str | None = None
+    entrypoint: str | None = None
     command: tuple[str, ...] = ()
     url: str | None = None
     model: str | None = None
@@ -29,9 +29,9 @@ class AgentSpec:
     def from_mapping(cls, data: dict[str, Any]) -> "AgentSpec":
         spec = cls(
             id=str(data["id"]),
-            driver=_driver(str(data["driver"])),
+            kind=_kind(str(data["kind"])),
             description=str(data.get("description", "")),
-            factory=_expand_optional(data.get("factory")),
+            entrypoint=_expand_optional(data.get("entrypoint")),
             command=tuple(str(item) for item in data.get("command", ())),
             url=_expand_optional(data.get("url")),
             model=_expand_optional(data.get("model")),
@@ -49,19 +49,19 @@ class AgentSpec:
         return cls.from_mapping(load_yaml(path))
 
     def validate(self) -> None:
-        if self.driver == "python" and not self.factory:
-            raise ValueError(f"agent {self.id}: driver python requires factory")
-        if self.driver == "subprocess" and not self.command:
-            raise ValueError(f"agent {self.id}: driver subprocess requires command")
-        if self.driver == "websocket" and not self.url:
-            raise ValueError(f"agent {self.id}: driver websocket requires url")
+        if self.kind == "python" and not self.entrypoint:
+            raise ValueError(f"agent {self.id}: kind python requires entrypoint")
+        if self.kind == "subprocess" and not self.command:
+            raise ValueError(f"agent {self.id}: kind subprocess requires command")
+        if self.kind == "websocket" and not self.url:
+            raise ValueError(f"agent {self.id}: kind websocket requires url")
         if self.env_file and not _is_ignored_local_env(Path(self.env_file)):
             raise ValueError(f"agent {self.id}: env_file must be a local ignored dotenv file")
 
 
-def _driver(value: str) -> AgentDriver:
-    if value not in {"python", "subprocess", "websocket"}:
-        raise ValueError(f"invalid agent driver: {value}")
+def _kind(value: str) -> AgentKind:
+    if value not in {"openai", "python", "scripted-wait", "subprocess", "websocket"}:
+        raise ValueError(f"invalid agent kind: {value}")
     return value  # type: ignore[return-value]
 
 

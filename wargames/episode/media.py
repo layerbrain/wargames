@@ -4,7 +4,6 @@ import base64
 from pathlib import Path
 
 
-
 def frame_base64(frame: object | None) -> str | None:
     if frame is None:
         return None

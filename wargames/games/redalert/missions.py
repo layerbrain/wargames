@@ -52,7 +52,11 @@ def _native_difficulties_for_map(map_dir: Path) -> tuple[str, ...]:
     text = rules.read_text(errors="ignore")
     if "ScriptLobbyDropdown@difficulty" not in text:
         return ("normal",)
-    found = tuple(difficulty for difficulty in REDALERT_DIFFICULTIES if re.search(rf"^\s*{difficulty}:", text, re.MULTILINE))
+    found = tuple(
+        difficulty
+        for difficulty in REDALERT_DIFFICULTIES
+        if re.search(rf"^\s*{difficulty}:", text, re.MULTILINE)
+    )
     return found or ("normal",)
 
 
@@ -66,12 +70,16 @@ def _mission_variants(
     player_slots: int = 1,
     min_players: int = 1,
 ) -> list[RedAlertMissionSpec]:
-    native_difficulties = _native_difficulties_for_map(map_path) if map_path and map_path.is_dir() else ("normal",)
+    native_difficulties = (
+        _native_difficulties_for_map(map_path) if map_path and map_path.is_dir() else ("normal",)
+    )
     specs: list[RedAlertMissionSpec] = []
     for native in native_difficulties:
         difficulty: MissionDifficulty = native if native in REDALERT_DIFFICULTIES else "normal"  # type: ignore[assignment]
         spec_id = f"{id_prefix}.{difficulty}" if source == "builtin" else id_prefix
-        spec_title = f"{title} ({difficulty.replace('_', ' ').title()})" if source == "builtin" else title
+        spec_title = (
+            f"{title} ({difficulty.replace('_', ' ').title()})" if source == "builtin" else title
+        )
         specs.append(
             RedAlertMissionSpec(
                 id=spec_id,
@@ -109,7 +117,14 @@ def _mission_entries(missions_yaml: Path) -> list[tuple[str, str]]:
             if child:
                 children.append(child)
             index += 1
-        title = next((child.partition("Title:")[2].strip().strip("'\"") for child in children if child.startswith("Title:")), "")
+        title = next(
+            (
+                child.partition("Title:")[2].strip().strip("'\"")
+                for child in children
+                if child.startswith("Title:")
+            ),
+            "",
+        )
         mission_children = [child for child in children if ":" not in child]
         if title:
             entries.append((key, title))
@@ -179,7 +194,9 @@ def discover(openra_root: str | Path) -> tuple[RedAlertMissionSpec, ...]:
     maps = ra / "maps"
     if maps.exists():
         for path in sorted(maps.iterdir()):
-            spec = _skirmish_archive(path) if path.suffix == ".oramap" else _skirmish_directory(path)
+            spec = (
+                _skirmish_archive(path) if path.suffix == ".oramap" else _skirmish_directory(path)
+            )
             if spec is not None:
                 discovered.append(spec)
     return tuple(discovered)

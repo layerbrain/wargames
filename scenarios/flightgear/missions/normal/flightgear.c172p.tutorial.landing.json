@@ -1,0 +1,25 @@
+{
+  "aircraft": "c172p",
+  "airport": "PHTO",
+  "description": "Landings are not optional... Land the aircraft from an altitude of 1700 ft on runway 21 at Hilo (PHTO) on a calm morning. Unlike normal flight, when landing you use power alone to control descent rate. The runway should stay in the same position throughout the descent - about a third of the distance above the glare-shield. You start the tutorial cruising at around 1000 ft and 90 kts. To begin your descent, you will need to reduce power and drop one notch flaps. You are aiming to approach at 60-70 kts and 300 fpm. As you get closer, you will need to reduce power further and drop more flaps, aiming to touch down \"on the numbers\" at 65 kts.",
+  "difficulty": "normal",
+  "game": "flightgear",
+  "id": "flightgear.c172p.tutorial.landing",
+  "launch_mode": "direct",
+  "native_difficulty": "tutorial",
+  "runway": null,
+  "source": "builtin",
+  "startup_args": [
+    "--disable-freeze"
+  ],
+  "tags": [
+    "tutorial",
+    "c172p",
+    "landing"
+  ],
+  "time_limit_ticks": 36000,
+  "timeofday": "morning",
+  "title": "Straight-in Landing",
+  "tutorial": "Straight-in Landing",
+  "tutorial_file": "landing.xml"
+}

@@ -20,7 +20,9 @@ class RunBus:
     def tail(self, run_id: str) -> tuple[dict[str, Any], ...]:
         return tuple(self._events[run_id])
 
-    async def subscribe(self, run_id: str, *, replay_tail: bool = True) -> AsyncIterator[dict[str, Any]]:
+    async def subscribe(
+        self, run_id: str, *, replay_tail: bool = True
+    ) -> AsyncIterator[dict[str, Any]]:
         queue: asyncio.Queue[dict[str, Any]] = asyncio.Queue()
         self._subscribers[run_id].add(queue)
         try:

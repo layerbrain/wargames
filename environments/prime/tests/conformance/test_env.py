@@ -18,15 +18,33 @@ from wargames_prime import load_environment
 
 class PrimeConformanceTests(unittest.IsolatedAsyncioTestCase):
     def test_load_environment_returns_multiturn_env(self) -> None:
-        env = load_environment(split="debug", reward_profile="standard")
+        env = load_environment(mission="redalert.soviet-01.normal", reward_profile="standard")
 
         self.assertIsInstance(env, vf.MultiTurnEnv)
         self.assertTrue(env.get_dataset())
 
-    async def test_setup_response_cleanup_drive_episode_controller(self) -> None:
-        game = GameDescriptor(id="redalert", backend_cls=FakeRedAlertBackend, config_cls=RedAlertConfig)
+    def test_load_environment_selects_flightgear_tasks(self) -> None:
         env = load_environment(
-            split="debug",
+            game="flightgear",
+            mission="flightgear.c172p.tutorial.takeoff",
+            reward_profile="standard",
+            max_steps=7,
+        )
+
+        self.assertIsInstance(env, vf.MultiTurnEnv)
+        self.assertTrue(
+            all(row["info"]["task_spec"]["game"] == "flightgear" for row in env.get_dataset())
+        )
+        self.assertTrue(
+            all(row["info"]["task_spec"]["max_steps"] == 7 for row in env.get_dataset())
+        )
+
+    async def test_setup_response_cleanup_drive_episode_controller(self) -> None:
+        game = GameDescriptor(
+            id="redalert", backend_cls=FakeRedAlertBackend, config_cls=RedAlertConfig
+        )
+        env = load_environment(
+            mission="redalert.soviet-01.normal",
             reward_profile="standard",
             game_descriptor=game,
             config_factory=lambda: RedAlertConfig(capture_frames=True),

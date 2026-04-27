@@ -20,9 +20,7 @@ from wargames.core.control.tools import CUA_TOOL_SPECS
 from wargames.core.runtime.arena import GameDescriptor, WarGames
 from wargames.episode.controller import EpisodeController
 from wargames.episode.media import frame_data_url
-from wargames.evaluation.profile import profile_registry
-from wargames.evaluation.splits import TaskCatalog
-from wargames.evaluation.task import RunConfig, TaskSpec
+from wargames.evaluation.task import RunConfig, TaskSpec, canonical_task_id
 from wargames.games.redalert import GAME
 from wargames.games.redalert.config import RedAlertConfig
 
@@ -35,7 +33,6 @@ class WarGamesPrimeEnv(vf.MultiTurnEnv):
         self,
         *,
         tasks: tuple[TaskSpec, ...],
-        split: str,
         profile_id: str,
         run_config: RunConfig,
         game_descriptor: GameDescriptor = GAME,
@@ -43,7 +40,6 @@ class WarGamesPrimeEnv(vf.MultiTurnEnv):
         max_turns: int = -1,
     ) -> None:
         self.tasks = tasks
-        self.split = split
         self.profile_id = profile_id
         self.run_config = run_config
         self.game_descriptor = game_descriptor
@@ -52,7 +48,7 @@ class WarGamesPrimeEnv(vf.MultiTurnEnv):
         super().__init__(
             dataset=dataset,
             eval_dataset=dataset,
-            rubric=build_prime_rubric(split=split),
+            rubric=build_prime_rubric(),
             tool_defs=_tool_defs(),
             max_turns=max_turns,
             env_id="layerbrain/wargames",
@@ -61,9 +57,6 @@ class WarGamesPrimeEnv(vf.MultiTurnEnv):
     async def setup_state(self, state: vf.State) -> vf.State:
         info = state.get("info", {})
         task = TaskSpec.from_mapping(dict(info["task_spec"]))
-        profile = profile_registry.get(task.game, task.reward_profile)
-        if task.split == "test" and profile.train_only:
-            raise ValueError(f"test split cannot use train-only profile: {profile.id}")
 
         wg = await WarGames.for_game(
             self.game_descriptor,
@@ -80,19 +73,23 @@ class WarGamesPrimeEnv(vf.MultiTurnEnv):
         state["prompt"] = [
             UserMessage(
                 content=_content(
-                    task.prompt or "Play the Red Alert mission through the available computer-control tools.",
+                    task.prompt or "Play the mission through the available computer-control tools.",
                     first_frame,
                 )
             )
         ]
         return state
 
-    async def env_response(self, messages: vf.Messages, state: vf.State, **kwargs: object) -> vf.Messages:
+    async def env_response(
+        self, messages: vf.Messages, state: vf.State, **kwargs: object
+    ) -> vf.Messages:
         ctrl: EpisodeController = state["ctrl"]
         call = _latest_tool_call(messages)
         if call is None:
             await ctrl.finish("agent_stop")
-            state["final_env_response"] = [UserMessage(content="Episode stopped because the model did not call a CUA tool.")]
+            state["final_env_response"] = [
+                UserMessage(content="Episode stopped because the model did not call a CUA tool.")
+            ]
             return state["final_env_response"]
 
         name, arguments, call_id = call
@@ -151,43 +148,53 @@ class WarGamesPrimeEnv(vf.MultiTurnEnv):
 
 
 def load_environment(
-    split: str = "train",
     game: str = "redalert",
+    mission: str | None = None,
+    missions: tuple[str, ...] | list[str] | None = None,
+    seed: int = 0,
+    seeds: tuple[int, ...] | list[int] | None = None,
     reward_profile: str = "standard",
     recorder_mode: str = "none",
+    max_steps: int | None = None,
     max_turns: int = -1,
     game_descriptor: GameDescriptor | None = None,
     config_factory: ConfigFactory | None = None,
     **kwargs: object,
 ) -> vf.Environment:
+    default_game_descriptor, default_config_factory = _game_runtime(game)
+    runtime = game_descriptor or default_game_descriptor
+    runtime_config = config_factory or default_config_factory
+    mission_ids = _selected_missions(runtime, runtime_config, mission=mission, missions=missions)
+    seed_values = tuple(int(value) for value in (seeds or (seed,)))
     tasks = tuple(
-        replace(task, reward_profile=reward_profile)
-        for task in TaskCatalog.load("scenarios").tasks(game=game, split=split)
+        TaskSpec(
+            id=canonical_task_id(game, mission_id, seed_value),
+            game=game,
+            mission_id=mission_id,
+            seed=seed_value,
+            reward_profile=reward_profile,
+            max_steps=max_steps if max_steps is not None else 512,
+            prompt=f"Play {mission_id} through the available computer-control tools.",
+        )
+        for mission_id in mission_ids
+        for seed_value in seed_values
     )
-    profile = profile_registry.get(game, reward_profile)
-    if split == "test" and profile.train_only:
-        raise ValueError(f"test split cannot use train-only profile: {profile.id}")
     return WarGamesPrimeEnv(
         tasks=tasks,
-        split=split,
         profile_id=reward_profile,
         run_config=RunConfig(recorder_mode=recorder_mode),
-        game_descriptor=game_descriptor or GAME,
-        config_factory=config_factory or RedAlertConfig.from_env,
+        game_descriptor=runtime,
+        config_factory=runtime_config,
         max_turns=max_turns,
     )
 
 
-def build_prime_rubric(*, split: str) -> vf.Rubric:
-    is_train = split in {"train", "curriculum"}
-
+def build_prime_rubric() -> vf.Rubric:
     def episode_reward(state: vf.State) -> float:
         ctrl = state.get("ctrl")
         if ctrl is None:
             return 0.0
-        if is_train:
-            return float(ctrl.total_reward)
-        return float(ctrl.total_breakdown.get("terminal", 0.0))
+        return float(ctrl.total_reward)
 
     def dense_breakdown(state: vf.State) -> float:
         ctrl = state.get("ctrl")
@@ -207,18 +214,48 @@ def build_prime_rubric(*, split: str) -> vf.Rubric:
     )
 
 
+def _selected_missions(
+    game: GameDescriptor,
+    config_factory: ConfigFactory,
+    *,
+    mission: str | None,
+    missions: tuple[str, ...] | list[str] | None,
+) -> tuple[str, ...]:
+    if mission and missions:
+        raise ValueError("use mission or missions, not both")
+    if mission:
+        return (mission,)
+    if missions:
+        return tuple(str(item) for item in missions)
+    available = game.backend_cls(config_factory()).missions()
+    if not available:
+        raise ValueError(f"game has no missions: {game.id}")
+    return (available[0].id,)
+
+
 def _dataset(tasks: tuple[TaskSpec, ...]) -> Dataset:
     return Dataset.from_list(
         [
             {
-                "prompt": [{"role": "user", "content": task.prompt or "Play the Red Alert mission."}],
+                "prompt": [{"role": "user", "content": task.prompt or "Play the mission."}],
                 "answer": "",
-                "task": task.id,
+                "mission": task.mission_id,
                 "info": {"task_spec": task.to_mapping()},
             }
             for task in tasks
         ]
     )
+
+
+def _game_runtime(game: str) -> tuple[GameDescriptor, ConfigFactory]:
+    if game == "redalert":
+        return GAME, RedAlertConfig.from_env
+    if game == "flightgear":
+        from wargames.games.flightgear import GAME as FLIGHTGEAR_GAME
+        from wargames.games.flightgear.config import FlightGearConfig
+
+        return FLIGHTGEAR_GAME, FlightGearConfig.from_env
+    raise ValueError(f"unknown game: {game}")
 
 
 def _tool_defs() -> list[Tool]:

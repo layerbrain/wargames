@@ -140,7 +140,9 @@ def world_from_frame(frame: dict[str, Any]) -> RedAlertWorld:
         )
         for item in mission.get("objectives", ())
     )
-    visible_tiles = tuple(tuple(tile) for tile in frame.get("visible_tiles", frame.get("visibleTiles", ())))
+    visible_tiles = tuple(
+        tuple(tile) for tile in frame.get("visible_tiles", frame.get("visibleTiles", ()))
+    )
     return RedAlertWorld(
         tick=int(frame.get("tick", mission.get("elapsed_ticks", 0))),
         us=players["us"],

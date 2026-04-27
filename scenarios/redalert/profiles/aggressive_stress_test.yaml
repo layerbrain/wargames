@@ -1,8 +1,7 @@
 id: aggressive_stress_test
 game: redalert
-description: Training-only contrast profile for stress-testing safety profiles.
+description: Aggressive contrast profile for stress-testing safety profiles.
 step_reward_max: 0.50
-train_only: true
 entries:
   - id: terminal
     fn: wargames.core.missions.rewards.terminal

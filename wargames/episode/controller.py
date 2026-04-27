@@ -15,7 +15,7 @@ from wargames.evaluation.profile import profile_registry
 from wargames.evaluation.task import RunConfig, TaskSpec
 from wargames.episode.evaluator import RewardEvaluator, ZERO_BREAKDOWN
 from wargames.episode.recorder import Recorder
-from wargames.episode.serialization import frame_to_dict, public_value
+from wargames.episode.serialization import frame_to_dict, public_value, tool_call_to_dict
 from wargames.harness.agent import PublicEvent, ToolCall
 from wargames.runs.bus import run_bus
 
@@ -91,7 +91,14 @@ class EpisodeController:
         self.recorder.record_initial_frame(observation.frame)
         self._publish("run_started", {"task": self.task.to_mapping(), "agent": {"id": agent_id}})
         if observation.frame is not None:
-            self._publish("frame", {"step": 0, "tick": observation.frame.captured_tick, "frame": frame_to_dict(observation.frame)})
+            self._publish(
+                "frame",
+                {
+                    "step": 0,
+                    "tick": observation.frame.captured_tick,
+                    "frame": frame_to_dict(observation.frame),
+                },
+            )
         return observation.frame
 
     async def observe(self) -> Frame | None:
@@ -117,16 +124,28 @@ class EpisodeController:
         elif result.truncated:
             self.end_reason = "truncated"
         tool_call = ToolCall(name=name, arguments=dict(arguments))
-        public_event = PublicEvent(step=step, tool_call=tool_call, reward=breakdown.total, tick=result.tick)
+        public_event = PublicEvent(
+            step=step, tool_call=tool_call, reward=breakdown.total, tick=result.tick
+        )
         self.public_history = (*self.public_history, public_event)
         self.recorder.record_step(result=result, public_event=public_event, breakdown=breakdown)
-        self._publish("action", {"step": step, "tool_call": asdict(tool_call), "tick": result.tick})
+        self._publish(
+            "action", {"step": step, "action": tool_call_to_dict(tool_call), "tick": result.tick}
+        )
         self._publish(
             "reward",
-            {"step": step, "value": breakdown.total, "total": self.total_reward, "breakdown": dict(breakdown.entries)},
+            {
+                "step": step,
+                "value": breakdown.total,
+                "total": self.total_reward,
+                "breakdown": dict(breakdown.entries),
+            },
         )
         if result.frame is not None:
-            self._publish("frame", {"step": step + 1, "tick": result.tick, "frame": frame_to_dict(result.frame)})
+            self._publish(
+                "frame",
+                {"step": step + 1, "tick": result.tick, "frame": frame_to_dict(result.frame)},
+            )
         return StepOutcome(
             step=step,
             tick=result.tick,
@@ -136,7 +155,9 @@ class EpisodeController:
             reward=breakdown.total,
             finished=result.finished,
             truncated=result.truncated,
-            end_reason=self.end_reason if (result.finished or result.truncated) else result.end_reason,
+            end_reason=self.end_reason
+            if (result.finished or result.truncated)
+            else result.end_reason,
             metadata=dict(result.info or {}),
         )
 
@@ -144,7 +165,11 @@ class EpisodeController:
         if self._terminal_scored:
             return self._outcome(ZERO_BREAKDOWN)
         self._terminal_scored = True
-        prev = self.last_result.prev_hidden if self.last_result and self.last_result.prev_hidden else self.initial_hidden
+        prev = (
+            self.last_result.prev_hidden
+            if self.last_result and self.last_result.prev_hidden
+            else self.initial_hidden
+        )
         breakdown = await self.evaluator.score_terminal(prev, self.latest_hidden)
         self._accumulate(breakdown)
         if end_reason:
@@ -194,7 +219,9 @@ class EpisodeController:
         )
 
     def _publish(self, event: str, payload: dict[str, Any]) -> None:
-        run_bus.publish(self.run_id, {"event": event, "run_id": self.run_id, **public_value(payload)})
+        run_bus.publish(
+            self.run_id, {"event": event, "run_id": self.run_id, **public_value(payload)}
+        )
 
 
 async def _latest_hidden(mission: Mission) -> HiddenStateSnapshot | None:

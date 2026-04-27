@@ -28,7 +28,9 @@ def _payload(tick: int) -> bytes:
 
 class RedAlertProbeTests(TestCase):
     def test_probe_tracks_socket_path(self) -> None:
-        self.assertEqual(SocketStateProbe("/tmp/wargames-test.sock").socket_path, "/tmp/wargames-test.sock")
+        self.assertEqual(
+            SocketStateProbe("/tmp/wargames-test.sock").socket_path, "/tmp/wargames-test.sock"
+        )
 
 
 class RedAlertSocketProbeTests(IsolatedAsyncioTestCase):

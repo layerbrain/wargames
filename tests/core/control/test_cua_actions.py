@@ -1,12 +1,12 @@
 from unittest import TestCase
 
 from wargames.core.control.cua import (
-    ClickAction,
-    DragAction,
-    KeyAction,
+    KeyDownAction,
+    KeyUpAction,
     MoveMouseAction,
+    MouseDownAction,
+    MouseUpAction,
     ScrollAction,
-    TypeTextAction,
     WaitAction,
 )
 
@@ -14,12 +14,12 @@ from wargames.core.control.cua import (
 class CuaActionTests(TestCase):
     def test_all_actions_use_id(self) -> None:
         actions = (
-            WaitAction(id="a", ticks=1),
-            ClickAction(id="b", x=1, y=2),
-            MoveMouseAction(id="c", x=3, y=4),
-            DragAction(id="d", start_x=1, start_y=2, end_x=3, end_y=4),
-            KeyAction(id="e", key="a"),
-            TypeTextAction(id="f", text="hi"),
+            WaitAction(id="a", ms=10),
+            MoveMouseAction(id="b", x=3, y=4),
+            MouseDownAction(id="c"),
+            MouseUpAction(id="d"),
+            KeyDownAction(id="e", key="a"),
+            KeyUpAction(id="f", key="a"),
             ScrollAction(id="g", dx=0, dy=1),
         )
         for action in actions:

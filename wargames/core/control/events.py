@@ -6,7 +6,7 @@ from typing import Literal, TypeAlias
 from wargames.core.control.cua import MouseButton
 
 MouseEventKind: TypeAlias = Literal["move", "down", "up"]
-KeyEventKind: TypeAlias = Literal["down", "up", "type"]
+KeyEventKind: TypeAlias = Literal["down", "up"]
 
 
 @dataclass(frozen=True)
@@ -31,8 +31,8 @@ class Target:
 @dataclass(frozen=True)
 class MouseEvent:
     kind: MouseEventKind
-    x: int
-    y: int
+    x: int | None = None
+    y: int | None = None
     button: MouseButton = "left"
 
 
@@ -40,8 +40,6 @@ class MouseEvent:
 class KeyEvent:
     kind: KeyEventKind
     key: str
-    modifiers: tuple[str, ...] = ()
-    text: str | None = None
 
 
 @dataclass(frozen=True)
@@ -52,7 +50,7 @@ class ScrollEvent:
 
 @dataclass(frozen=True)
 class WaitEvent:
-    ticks: int
+    ms: int = 0
 
 
 InputEvent: TypeAlias = MouseEvent | KeyEvent | ScrollEvent | WaitEvent

@@ -14,13 +14,17 @@ from wargames.core.errors import DependencyMissing
 
 class WindowCapture(ABC):
     @abstractmethod
-    async def capture(self, target: Target, *, tick: int) -> Frame:
-        ...
+    async def capture(self, target: Target, *, tick: int) -> Frame: ...
 
 
 class NullWindowCapture(WindowCapture):
     async def capture(self, target: Target, *, tick: int) -> Frame:
-        return Frame(id=f"frame-{tick}", width=target.rect.width, height=target.rect.height, captured_tick=tick)
+        return Frame(
+            id=f"frame-{tick}",
+            width=target.rect.width,
+            height=target.rect.height,
+            captured_tick=tick,
+        )
 
 
 class ScreenRegionCapture(WindowCapture):

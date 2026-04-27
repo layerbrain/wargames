@@ -27,7 +27,9 @@ class RedAlertLobby(Lobby):
                 f"RedAlert lobby slots must be between {self.MIN_SLOTS} and {self.MAX_SLOTS}"
             )
         super().__init__(
-            spec=LobbySpec(id=f"{mission.id}:{seed}", mission=mission, seed=seed, slots=mission.player_slots),
+            spec=LobbySpec(
+                id=f"{mission.id}:{seed}", mission=mission, seed=seed, slots=mission.player_slots
+            ),
             faction_choices=self.FACTIONS,
         )
         self.config = config

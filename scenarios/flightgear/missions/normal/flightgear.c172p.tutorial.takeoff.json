@@ -1,0 +1,25 @@
+{
+  "aircraft": "c172p",
+  "airport": "PHTO",
+  "description": "This tutorial starts from Hilo Intl Airport (PHTO), an airfield in the northeast of Hawai\u02bbi, in clear, still, weather. This tutorial will teach you how to take-off from runway 21, and climb at 600 feet per minute. You will level off at 2000 ft to complete the tutorial.",
+  "difficulty": "normal",
+  "game": "flightgear",
+  "id": "flightgear.c172p.tutorial.takeoff",
+  "launch_mode": "direct",
+  "native_difficulty": "tutorial",
+  "runway": null,
+  "source": "builtin",
+  "startup_args": [
+    "--disable-freeze"
+  ],
+  "tags": [
+    "tutorial",
+    "c172p",
+    "takeoff"
+  ],
+  "time_limit_ticks": 36000,
+  "timeofday": "morning",
+  "title": "Takeoff",
+  "tutorial": "Takeoff",
+  "tutorial_file": "takeoff.xml"
+}

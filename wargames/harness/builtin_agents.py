@@ -15,8 +15,8 @@ class WaitAgent:
 
     async def decide(self, obs: AgentObservation) -> AgentDecision:
         if obs.step_index >= self.max_steps:
-            return AgentDecision(tool_call=None, stop=True, reason="scripted_wait_complete")
-        return AgentDecision(tool_call=ToolCall("wait", {}))
+            return AgentDecision(stop=True, reason="scripted_wait_complete")
+        return AgentDecision(events=(ToolCall("wait", {}),))
 
     async def close(self) -> None:
         return None

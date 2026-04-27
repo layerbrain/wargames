@@ -15,19 +15,27 @@ def load_agent_spec(id: str, dirs: tuple[Path, ...] = ()) -> AgentSpec:
 
 
 def create_agent(spec: AgentSpec) -> Agent:
-    if spec.driver == "python":
+    if spec.kind == "openai":
+        from wargames.harness.openai_agent import OpenAICompatibleAgent
+
+        return OpenAICompatibleAgent(spec)
+    if spec.kind == "scripted-wait":
+        from wargames.harness.builtin_agents import create_wait_agent
+
+        return create_wait_agent(spec)
+    if spec.kind == "python":
         from wargames.harness.drivers.python import create_python_agent
 
         return create_python_agent(spec)
-    if spec.driver == "subprocess":
+    if spec.kind == "subprocess":
         from wargames.harness.drivers.subprocess import SubprocessAgent
 
         return SubprocessAgent(spec)
-    if spec.driver == "websocket":
+    if spec.kind == "websocket":
         from wargames.harness.drivers.websocket import WebSocketAgent
 
         return WebSocketAgent(spec)
-    raise ValueError(f"unsupported agent driver: {spec.driver}")
+    raise ValueError(f"unsupported agent kind: {spec.kind}")
 
 
 def list_agent_specs(dirs: tuple[Path, ...] = ()) -> tuple[AgentSpec, ...]:

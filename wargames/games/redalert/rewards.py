@@ -33,7 +33,11 @@ def scout_distance(weight: float = 0.0001) -> RubricEntry:
         curr_tiles = set(curr.world.visible_tiles)
         if curr_tiles:
             return float(len(curr_tiles - prev_tiles))
-        visible_enemy = [unit for unit in curr.world.units if unit.owner.id == curr.world.enemy.id and unit.visible]
+        visible_enemy = [
+            unit
+            for unit in curr.world.units
+            if unit.owner.id == curr.world.enemy.id and unit.visible
+        ]
         if not visible_enemy:
             return 0.0
         own = [unit for unit in curr.world.units if unit.owner.id == curr.world.us.id]
@@ -62,7 +66,9 @@ def collateral_damage_avoidance(weight: float = 0.01) -> RubricEntry:
 def _friendly_health(snapshot: HiddenStateSnapshot) -> int:
     player_id = snapshot.world.us.id
     unit_health = sum(unit.health for unit in snapshot.world.units if unit.owner.id == player_id)
-    building_health = sum(building.health for building in snapshot.world.buildings if building.owner.id == player_id)
+    building_health = sum(
+        building.health for building in snapshot.world.buildings if building.owner.id == player_id
+    )
     return unit_health + building_health
 
 
@@ -71,5 +77,6 @@ def _neutral_health(snapshot: HiddenStateSnapshot) -> int:
     return sum(
         building.health
         for building in snapshot.world.buildings
-        if building.owner.id not in player_ids or building.owner.faction.lower() in {"civilian", "neutral"}
+        if building.owner.id not in player_ids
+        or building.owner.faction.lower() in {"civilian", "neutral"}
     )

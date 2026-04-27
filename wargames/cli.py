@@ -17,15 +17,19 @@ from typing import Any
 from wargames import GameDescriptor, WarGames, WarGamesConfig
 from wargames.core.capture.frame import Frame
 from wargames.evaluation.profile import profile_registry
-from wargames.evaluation.splits import TaskCatalog
-from wargames.evaluation.task import RunConfig
+from wargames.evaluation.schema import GameRewardSchema
+from wargames.evaluation.task import RunConfig, TaskSpec, canonical_task_id
 from wargames.harness.agent_loader import create_agent, list_agent_specs, load_agent_spec
+from wargames.harness.turns import events_from_payload, validate_turn
 
 _LINUX_BOX_ENV = "LAYERBRAIN_WARGAMES_IN_LINUX_BOX"
 _LINUX_BOX_IMAGE = "wargames-linux"
-_LINUX_BOX_OPENRA_MOUNT = "/openra"
 _LINUX_BOX_DEFAULT_RESOLUTION = (1280, 720)
-_BOX_COMMANDS = {"boot", "control", "run", "serve"}
+_BOX_COMMANDS = {"boot", "control", "install", "run", "serve"}
+_INSTALLABLE_GAMES = ("redalert", "flightgear")
+_TASK_GAMES = ("redalert", "flightgear")
+_LINUX_BOX_CACHE_MOUNT = "/opt/wargames-cache"
+_LINUX_BOX_CACHE_VOLUME = "wargames-games"
 _OPENRA_REPO = "https://github.com/OpenRA/OpenRA.git"
 _OPENRA_REF = "bleed"
 
@@ -35,7 +39,23 @@ def _game(id: str) -> GameDescriptor:
         from wargames.games.redalert import GAME
 
         return GAME
+    if id == "flightgear":
+        from wargames.games.flightgear import GAME
+
+        return GAME
     raise SystemExit(f"unknown game: {id}")
+
+
+def _reward_schema(game: str) -> GameRewardSchema:
+    if game == "redalert":
+        from wargames.games.redalert.reward_schema import REDALERT_REWARD_SCHEMA
+
+        return REDALERT_REWARD_SCHEMA
+    if game == "flightgear":
+        from wargames.games.flightgear.reward_schema import FLIGHTGEAR_REWARD_SCHEMA
+
+        return FLIGHTGEAR_REWARD_SCHEMA
+    raise SystemExit(f"unknown game: {game}")
 
 
 def _config(game: GameDescriptor, *, capture_frames: bool = False) -> WarGamesConfig:
@@ -71,11 +91,11 @@ def _frame_payload(frame: Frame | None) -> dict[str, Any] | None:
 def _start_watch_stream(session: object, config: WarGamesConfig) -> subprocess.Popen[bytes] | None:
     from wargames.core.errors import DependencyMissing
     from wargames.core.stream.x11 import X11StreamViewer
-    from wargames.games.redalert.backend import RedAlertSession
 
-    if not isinstance(session, RedAlertSession):
+    target = getattr(session, "target", None)
+    if target is None:
         return None
-    display = session.target.display or os.getenv("DISPLAY", ":99")
+    display = target.display or os.getenv("DISPLAY", ":99")
     viewer_display = os.getenv("LAYERBRAIN_WARGAMES_VIEWER_DISPLAY")
     if viewer_display is None and os.getenv("DISPLAY") == display:
         raise DependencyMissing(
@@ -123,12 +143,28 @@ def _game_install_dir(game: str, env: Mapping[str, str] = os.environ) -> Path:
     return _wargames_cache_dir(env) / "games" / game
 
 
+def _game_install_manifest(game: str, env: Mapping[str, str] = os.environ) -> Path:
+    return _game_install_dir(game, env) / "install.json"
+
+
+def _write_game_install_manifest(
+    game: str,
+    payload: Mapping[str, object],
+    env: Mapping[str, str] = os.environ,
+) -> None:
+    manifest = _game_install_manifest(game, env)
+    manifest.parent.mkdir(parents=True, exist_ok=True)
+    manifest.write_text(
+        json.dumps(dict(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+
+
 def _default_openra_root(env: Mapping[str, str] = os.environ) -> Path:
     return _game_install_dir("redalert", env) / "openra"
 
 
 def _redalert_install_manifest(env: Mapping[str, str] = os.environ) -> Path:
-    return _game_install_dir("redalert", env) / "install.json"
+    return _game_install_manifest("redalert", env)
 
 
 def _is_openra_root(path: Path) -> bool:
@@ -149,7 +185,9 @@ def _manifest_openra_root(env: Mapping[str, str] = os.environ) -> Path | None:
     return Path(raw).expanduser()
 
 
-def _write_redalert_install_manifest(openra_root: Path, env: Mapping[str, str] = os.environ) -> None:
+def _write_redalert_install_manifest(
+    openra_root: Path, env: Mapping[str, str] = os.environ
+) -> None:
     manifest = _redalert_install_manifest(env)
     manifest.parent.mkdir(parents=True, exist_ok=True)
     manifest.write_text(
@@ -167,13 +205,45 @@ def _write_redalert_install_manifest(openra_root: Path, env: Mapping[str, str] =
     )
 
 
+def _is_flightgear_root(path: Path) -> bool:
+    return (path / "bin" / "fgfs").exists() or path.name == "fgfs"
+
+
+def _find_flightgear_binary(root: Path | None = None) -> Path | None:
+    candidates: list[Path | str | None] = [
+        root if root and root.name == "fgfs" else None,
+        root / "bin" / "fgfs" if root and root.name != "fgfs" else None,
+        shutil.which("fgfs"),
+        "/usr/games/fgfs",
+        "/usr/bin/fgfs",
+    ]
+    for candidate in candidates:
+        if candidate:
+            path = Path(candidate).expanduser()
+            if path.exists():
+                return path
+    return None
+
+
+def _flightgear_root(binary: Path, root: Path | None = None) -> Path:
+    if root is not None:
+        return root
+    if binary.parent.name == "bin":
+        return binary.parent.parent
+    return binary.parent
+
+
 def _should_run_in_linux_box(
     args: argparse.Namespace,
     *,
     platform: str = sys.platform,
     env: Mapping[str, str] = os.environ,
 ) -> bool:
-    return platform != "linux" and env.get(_LINUX_BOX_ENV) != "1" and args.command in _BOX_COMMANDS
+    if env.get(_LINUX_BOX_ENV) == "1":
+        return False
+    if args.command == "missions" and getattr(args, "extract", False):
+        return True
+    return args.command in _BOX_COMMANDS
 
 
 def _find_openra_root(env: Mapping[str, str] = os.environ) -> Path | None:
@@ -232,7 +302,10 @@ def _parse_resolution(value: str) -> tuple[int, int]:
 
 
 def _runtime_resolution(env: Mapping[str, str] = os.environ) -> tuple[int, int]:
-    for key in ("LAYERBRAIN_WARGAMES_REDALERT_OPENRA_WINDOW_SIZE", "LAYERBRAIN_WARGAMES_XVFB_RESOLUTION"):
+    for key in (
+        "LAYERBRAIN_WARGAMES_REDALERT_OPENRA_WINDOW_SIZE",
+        "LAYERBRAIN_WARGAMES_XVFB_RESOLUTION",
+    ):
         value = env.get(key)
         if value:
             return _parse_resolution(value)
@@ -306,7 +379,9 @@ def _image_exists(image: str) -> bool:
 
 def _ensure_linux_box_image() -> None:
     if shutil.which("docker") is None:
-        raise SystemExit("WarGames needs the local Linux runtime box to run Red Alert from this host.")
+        raise SystemExit(
+            "WarGames needs the local Linux runtime box to run Red Alert from this host."
+        )
     if _image_exists(_LINUX_BOX_IMAGE):
         return
     subprocess.run(
@@ -322,31 +397,33 @@ def _linux_box_command(
     stream_port: int | None = None,
     resolution: tuple[int, int] | None = None,
 ) -> list[str]:
-    openra_root = _find_openra_root()
     command = ["docker", "run", "--rm", "-i"]
     if argv and argv[0] == "serve":
         port = _arg_value(argv, "--port") or "8000"
         command.extend(["-p", f"127.0.0.1:{port}:{port}"])
     host_repo = _repo_root()
     command.extend(["-v", f"{host_repo}:/workspace/host-wargames"])
+    command.extend(["-v", f"{_LINUX_BOX_CACHE_VOLUME}:{_LINUX_BOX_CACHE_MOUNT}"])
     command.extend(["--entrypoint", "/workspace/host-wargames/scripts/linux_box.sh"])
     env: dict[str, str] = {_LINUX_BOX_ENV: "1"}
     for key, value in os.environ.items():
         if key.startswith("LAYERBRAIN_WARGAMES_"):
             env[key] = value
     active_resolution = resolution or _runtime_resolution(env)
+    env["LAYERBRAIN_WARGAMES_CACHE_DIR"] = _LINUX_BOX_CACHE_MOUNT
     env.setdefault("LAYERBRAIN_WARGAMES_XVFB_RESOLUTION", _resolution_text(active_resolution))
     env.setdefault("LAYERBRAIN_WARGAMES_XVFB_SCREEN", f"{_resolution_text(active_resolution)}x24")
-    env.setdefault("LAYERBRAIN_WARGAMES_REDALERT_OPENRA_WINDOW_SIZE", _resolution_text(active_resolution))
+    env.setdefault(
+        "LAYERBRAIN_WARGAMES_REDALERT_OPENRA_WINDOW_SIZE", _resolution_text(active_resolution)
+    )
     if stream_port is not None:
-        env["LAYERBRAIN_WARGAMES_HOST_STREAM_URL"] = f"udp://host.docker.internal:{stream_port}?pkt_size=1316"
-    if openra_root is not None:
-        command.extend(["-v", f"{openra_root}:{_LINUX_BOX_OPENRA_MOUNT}"])
-        env["LAYERBRAIN_WARGAMES_REDALERT_OPENRA_ROOT"] = _LINUX_BOX_OPENRA_MOUNT
-        env["LAYERBRAIN_WARGAMES_REDALERT_OPENRA_BINARY"] = f"{_LINUX_BOX_OPENRA_MOUNT}/launch-game.sh"
-    support_dir = _host_openra_support_dir()
-    command.extend(["-v", f"{support_dir}:/tmp/wargames/openra-support"])
-    env.setdefault("LAYERBRAIN_WARGAMES_REDALERT_OPENRA_SUPPORT_DIR", "/tmp/wargames/openra-support")
+        env["LAYERBRAIN_WARGAMES_HOST_STREAM_URL"] = (
+            f"udp://host.docker.internal:{stream_port}?pkt_size=1316"
+        )
+    env.setdefault(
+        "LAYERBRAIN_WARGAMES_REDALERT_OPENRA_SUPPORT_DIR",
+        f"{_LINUX_BOX_CACHE_MOUNT}/openra-support",
+    )
     for key, value in sorted(env.items()):
         command.extend(["-e", f"{key}={value}"])
     inner = (
@@ -372,7 +449,6 @@ def _arg_value(argv: Sequence[str], name: str) -> str | None:
 
 def _run_in_linux_box(argv: Sequence[str], args: argparse.Namespace) -> int:
     _ensure_linux_box_image()
-    _host_openra_support_dir().mkdir(parents=True, exist_ok=True)
     stream_process: subprocess.Popen[bytes] | None = None
     stream_port: int | None = None
     resolution = _runtime_resolution()
@@ -381,7 +457,9 @@ def _run_in_linux_box(argv: Sequence[str], args: argparse.Namespace) -> int:
         stream_port = _free_udp_port()
         stream_process = _start_host_stream_viewer(stream_port, resolution=resolution)
     try:
-        completed = subprocess.run(_linux_box_command(argv, stream_port=stream_port, resolution=resolution), check=False)
+        completed = subprocess.run(
+            _linux_box_command(argv, stream_port=stream_port, resolution=resolution), check=False
+        )
         return completed.returncode
     finally:
         _stop_process(stream_process)
@@ -418,7 +496,9 @@ def _install_redalert(args: argparse.Namespace, env: Mapping[str, str] = os.envi
             raise SystemExit(f"OpenRA install path is a file: {openra_root}")
         if not _is_openra_root(openra_root):
             if any(openra_root.iterdir()):
-                raise SystemExit(f"OpenRA install path exists but is not an OpenRA source checkout: {openra_root}")
+                raise SystemExit(
+                    f"OpenRA install path exists but is not an OpenRA source checkout: {openra_root}"
+                )
             _clone_openra(repo=args.repo, ref=args.ref, target=openra_root)
             status = "installed"
     else:
@@ -451,9 +531,42 @@ def _install_redalert(args: argparse.Namespace, env: Mapping[str, str] = os.envi
     return 0
 
 
+def _install_flightgear(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
+    root = Path(args.root).expanduser() if args.root else None
+    if root is not None and not _is_flightgear_root(root):
+        raise SystemExit(f"FlightGear root does not contain fgfs: {root}")
+
+    binary = _find_flightgear_binary(root)
+    status = "present"
+
+    if binary is None:
+        raise SystemExit(
+            "FlightGear was not found in the Linux runtime. Rebuild the WarGames Docker image "
+            "or register a container-visible install with --root."
+        )
+
+    payload = {
+        "game": "flightgear",
+        "fgfs_binary": str(binary),
+        "root": str(_flightgear_root(binary, root)),
+        "state_interface": "property-tree via --telnet/--httpd/generic protocol",
+        "status": status,
+    }
+    _write_game_install_manifest("flightgear", payload, env)
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0
+
+
 async def _install(args: argparse.Namespace) -> int:
+    if os.environ.get(_LINUX_BOX_ENV) != "1" and not args.root:
+        raise SystemExit(
+            "game runtimes install inside the WarGames Docker runtime; "
+            "run the normal host CLI or pass a container-visible --root"
+        )
     if args.game == "redalert":
         return await asyncio.to_thread(_install_redalert, args)
+    if args.game == "flightgear":
+        return await asyncio.to_thread(_install_flightgear, args)
     raise SystemExit(f"unknown game: {args.game}")
 
 
@@ -461,16 +574,19 @@ async def _missions(args: argparse.Namespace) -> int:
     game = _game(args.game)
     config = _config(game)
     if args.extract:
-        if args.game != "redalert":
-            raise SystemExit("mission extraction is only implemented for redalert")
-        from wargames.games.redalert.missions import extract_mission_catalog
-
-        openra_root = getattr(config, "openra_root", None)
-        if openra_root is None:
-            raise SystemExit("LAYERBRAIN_WARGAMES_REDALERT_OPENRA_ROOT is required for mission extraction")
-        output = args.output or getattr(config, "extracted_missions_dir")
-        written = extract_mission_catalog(openra_root, output)
-        print(json.dumps({"written": [str(path) for path in written]}, indent=2))
+        output = args.output or _mission_catalog_output(game, config)
+        backend = game.backend_cls(config)
+        written = backend.export_missions(output)
+        print(
+            json.dumps(
+                {
+                    "game": game.id,
+                    "count": len(written),
+                    "written": [str(path) for path in written],
+                },
+                indent=2,
+            )
+        )
         return 0
 
     missions = game.backend_cls(config).missions()
@@ -485,23 +601,19 @@ async def _missions(args: argparse.Namespace) -> int:
     return 0
 
 
-async def _tasks(args: argparse.Namespace) -> int:
-    _game(args.game)
-    catalog = TaskCatalog.load(args.scenarios)
-    tasks = catalog.tasks(game=args.game, split=args.split)
-    if args.json:
-        print(json.dumps([task.to_mapping() for task in tasks], indent=2, sort_keys=True))
-    else:
-        for task in tasks:
-            print(f"{task.id}\t{task.split}\t{task.mission_id}\tseed={task.seed}\tprofile={task.reward_profile}")
-    return 0
+def _mission_catalog_output(game: GameDescriptor, config: WarGamesConfig) -> str:
+    if hasattr(config, "extracted_missions_dir"):
+        return str(getattr(config, "extracted_missions_dir"))
+    if hasattr(config, "missions_dir"):
+        return str(getattr(config, "missions_dir"))
+    return f"scenarios/{game.id}/missions"
 
 
 async def _agents(args: argparse.Namespace) -> int:
     dirs = tuple(Path(path) for path in args.agent_dir)
     if args.agent_command == "list":
         for spec in list_agent_specs(dirs):
-            print(f"{spec.id}\t{spec.driver}\t{spec.model or ''}\t{spec.description}")
+            print(f"{spec.id}\t{spec.kind}\t{spec.model or ''}\t{spec.description}")
         return 0
     if args.agent_command == "show":
         spec = load_agent_spec(args.agent_id, dirs)
@@ -511,7 +623,7 @@ async def _agents(args: argparse.Namespace) -> int:
         from wargames.harness.agent_spec import AgentSpec
 
         spec = AgentSpec.from_file(Path(args.path))
-        print(json.dumps({"ok": True, "id": spec.id, "driver": spec.driver}, sort_keys=True))
+        print(json.dumps({"ok": True, "id": spec.id, "kind": spec.kind}, sort_keys=True))
         return 0
     raise SystemExit(f"unknown agents command: {args.agent_command}")
 
@@ -520,8 +632,7 @@ async def _profiles(args: argparse.Namespace) -> int:
     _game(args.game)
     if args.profile_command == "list":
         for profile in profile_registry.list(args.game):
-            flag = "train_only" if profile.train_only else "eval"
-            print(f"{profile.id}\t{flag}\t{profile.description}")
+            print(f"{profile.id}\t{profile.description}")
         return 0
     if args.profile_command == "show":
         profile = profile_registry.get(args.game, args.profile_id)
@@ -533,7 +644,6 @@ async def _profiles(args: argparse.Namespace) -> int:
                     "description": profile.description,
                     "per_step_entries": profile.per_step_entries,
                     "terminal_entries": profile.terminal_entries,
-                    "train_only": profile.train_only,
                     "step_reward_min": profile.step_reward_min,
                     "step_reward_max": profile.step_reward_max,
                 },
@@ -545,7 +655,7 @@ async def _profiles(args: argparse.Namespace) -> int:
     if args.profile_command == "validate":
         from wargames.evaluation.profile_loader import load_profile_yaml
 
-        profile = load_profile_yaml(Path(args.path))
+        profile = load_profile_yaml(Path(args.path), schema=_reward_schema(args.game))
         print(json.dumps({"ok": True, "id": profile.id, "game": profile.game}, sort_keys=True))
         return 0
     if args.profile_command == "new":
@@ -582,15 +692,25 @@ async def _profiles(args: argparse.Namespace) -> int:
             curr_raw = data.get("hidden")
             if curr_raw is None:
                 continue
-            curr = HiddenStateSnapshot(tick=int(curr_raw["tick"]), world=_object_tree(curr_raw["world"]))
+            curr = HiddenStateSnapshot(
+                tick=int(curr_raw["tick"]), world=_object_tree(curr_raw["world"])
+            )
             prev_raw = data.get("prev_hidden")
-            prev = HiddenStateSnapshot(tick=int(prev_raw["tick"]), world=_object_tree(prev_raw["world"])) if prev_raw else previous
+            prev = (
+                HiddenStateSnapshot(
+                    tick=int(prev_raw["tick"]), world=_object_tree(prev_raw["world"])
+                )
+                if prev_raw
+                else previous
+            )
             breakdown = await profile.score_step(prev, curr) if prev else None
             if breakdown is not None:
                 for key, value in breakdown.entries.items():
                     total[key] = total.get(key, 0.0) + value
             previous = curr
-        print(json.dumps({"total": sum(total.values()), "breakdown": total}, indent=2, sort_keys=True))
+        print(
+            json.dumps({"total": sum(total.values()), "breakdown": total}, indent=2, sort_keys=True)
+        )
         return 0
     raise SystemExit(f"unknown profile command: {args.profile_command}")
 
@@ -607,13 +727,10 @@ def _object_tree(value: object) -> object:
 
 async def _run(args: argparse.Namespace) -> int:
     game = _game(args.game)
-    catalog = TaskCatalog.load(args.scenarios)
-    task = catalog.get(args.task)
+    mission = _resolve_run_mission(args)
     if args.profile:
-        task = task.with_reward_profile(args.profile)
-    profile = profile_registry.get(task.game, task.reward_profile)
-    if task.split == "test" and profile.train_only:
-        raise SystemExit(f"test task cannot use train-only profile: {profile.id}")
+        mission = mission.with_reward_profile(args.profile)
+    profile_registry.get(mission.game, mission.reward_profile)
     run_config = RunConfig(
         recorder_mode=args.record,
         video_mode=args.video,
@@ -627,9 +744,22 @@ async def _run(args: argparse.Namespace) -> int:
     from wargames.harness.runner import run_task
 
     async with WarGames.for_game(game, config) as wg:
-        summary = await run_task(task=task, run_config=run_config, wg=wg, agent=agent)
+        summary = await run_task(task=mission, run_config=run_config, wg=wg, agent=agent)
     print(json.dumps(summary.__dict__, indent=2, sort_keys=True))
     return 0
+
+
+def _resolve_run_mission(args: argparse.Namespace) -> TaskSpec:
+    seed = int(args.seed) if args.seed is not None else 0
+    return TaskSpec(
+        id=canonical_task_id(args.game, args.mission, seed),
+        game=args.game,
+        mission_id=args.mission,
+        seed=seed,
+        max_steps=args.max_steps,
+        max_wall_seconds=args.max_wall_seconds,
+        reward_profile=args.profile or "standard",
+    )
 
 
 async def _watch(args: argparse.Namespace) -> int:
@@ -697,7 +827,15 @@ async def _boot(args: argparse.Namespace) -> int:
             if args.watch:
                 watch_process = _start_watch_stream(mission.session, config)
             observation = await mission.observe()
-            print(json.dumps({"event": "booted", "mission": mission.session.mission.id, "frame": _frame_payload(observation.frame)}))
+            print(
+                json.dumps(
+                    {
+                        "event": "booted",
+                        "mission": mission.session.mission.id,
+                        "frame": _frame_payload(observation.frame),
+                    }
+                )
+            )
             await asyncio.sleep(args.hold)
         finally:
             _stop_process(watch_process)
@@ -707,7 +845,7 @@ async def _boot(args: argparse.Namespace) -> int:
 
 async def _control(args: argparse.Namespace) -> int:
     game = _game(args.game)
-    config = _config(game, capture_frames=True)
+    config = _config(game, capture_frames=bool(args.capture_frames))
     mission_id = args.mission or _default_mission(game, config)
     stream = sys.stdin if args.actions == "-" else open(args.actions, encoding="utf-8")
     watch_process: subprocess.Popen[bytes] | None = None
@@ -719,11 +857,16 @@ async def _control(args: argparse.Namespace) -> int:
             async for line in _read_lines(stream):
                 if not line.strip():
                     continue
-                tool_call = json.loads(line)
-                name = str(tool_call.get("name") or tool_call.get("tool"))
-                arguments = dict(tool_call.get("arguments", {}))
-                action = game.action_from_tool_call(name, arguments)
-                result = await mission.step(action)
+                result = None
+                events_applied = 0
+                for event in validate_turn(events_from_payload(json.loads(line))):
+                    action = game.action_from_tool_call(event.name, event.arguments)
+                    result = await mission.step(action)
+                    events_applied += 1
+                    if result.finished or result.truncated:
+                        break
+                if result is None:
+                    continue
                 print(
                     json.dumps(
                         {
@@ -732,6 +875,7 @@ async def _control(args: argparse.Namespace) -> int:
                             "finished": result.finished,
                             "truncated": result.truncated,
                             "frame": _frame_payload(result.frame),
+                            "events_applied": events_applied,
                         },
                         sort_keys=True,
                     ),
@@ -753,10 +897,14 @@ async def _serve(args: argparse.Namespace) -> int:
 
     if args.game == "redalert":
         from wargames.games.redalert.transport.ws import app
+    elif args.game == "flightgear":
+        from wargames.games.flightgear.transport.ws import app
     else:
         raise SystemExit(f"unknown game: {args.game}")
 
-    config = uvicorn.Config(app.fastapi_app, host=args.host, port=args.port, log_level=args.log_level)
+    config = uvicorn.Config(
+        app.fastapi_app, host=args.host, port=args.port, log_level=args.log_level
+    )
     await uvicorn.Server(config).serve()
     return 0
 
@@ -766,35 +914,34 @@ def build_parser() -> argparse.ArgumentParser:
     subcommands = parser.add_subparsers(dest="command", required=True)
 
     install = subcommands.add_parser("install", help="install game runtime dependencies")
-    install.add_argument("--game", choices=("redalert",), default="redalert")
-    install.add_argument("--root", help="use an existing OpenRA checkout or install into this path")
+    install.add_argument("--game", choices=_INSTALLABLE_GAMES, default="redalert")
+    install.add_argument(
+        "--root", help="use an existing game install or install into this path when supported"
+    )
     install.add_argument("--repo", default=_OPENRA_REPO, help=argparse.SUPPRESS)
     install.add_argument("--ref", default=_OPENRA_REF, help=argparse.SUPPRESS)
-    install.add_argument("--build-probe", action="store_true", help="build the WarGames OpenRA probe immediately")
+    install.add_argument(
+        "--build-probe", action="store_true", help="build the WarGames OpenRA probe immediately"
+    )
     install.set_defaults(handler=_install)
 
     missions = subcommands.add_parser("missions", help="list or extract missions")
-    missions.add_argument("--game", choices=("redalert",), default="redalert")
+    missions.add_argument("--game", choices=_TASK_GAMES, default="redalert")
     missions.add_argument("--difficulty", choices=("easy", "normal", "hard", "extra_hard"))
     missions.add_argument("--json", action="store_true")
     missions.add_argument("--extract", action="store_true")
     missions.add_argument("--output")
     missions.set_defaults(handler=_missions)
 
-    tasks = subcommands.add_parser("tasks", help="list task catalog entries")
-    tasks.add_argument("--game", choices=("redalert",), default="redalert")
-    tasks.add_argument("--split", choices=("debug", "train", "validation", "test", "curriculum"))
-    tasks.add_argument("--scenarios", default="scenarios")
-    tasks.add_argument("--json", action="store_true")
-    tasks.set_defaults(handler=_tasks)
-
-    run = subcommands.add_parser("run", help="run a named agent against a task")
-    run.add_argument("--game", choices=("redalert",), default="redalert")
-    run.add_argument("--task", required=True)
+    run = subcommands.add_parser("run", help="run a named agent against a mission")
+    run.add_argument("--game", choices=_TASK_GAMES, default="redalert")
+    run.add_argument("--mission", required=True)
+    run.add_argument("--seed", type=int, default=0, help=argparse.SUPPRESS)
+    run.add_argument("--max-steps", type=int, default=512)
+    run.add_argument("--max-wall-seconds", type=int, default=900)
     run.add_argument("--agent", required=True)
     run.add_argument("--agent-dir", action="append", default=[])
     run.add_argument("--profile")
-    run.add_argument("--scenarios", default="scenarios")
     run.add_argument("--watch", choices=("none", "window", "hud"), default="none")
     run.add_argument("--record", choices=("none", "summary_only", "full"), default="summary_only")
     run.add_argument("--video", choices=("none", "frames"), default="none")
@@ -820,25 +967,25 @@ def build_parser() -> argparse.ArgumentParser:
     profile = subcommands.add_parser("profile", help="list, show, or validate reward profiles")
     profile_subcommands = profile.add_subparsers(dest="profile_command", required=True)
     profile_list = profile_subcommands.add_parser("list")
-    profile_list.add_argument("--game", choices=("redalert",), default="redalert")
+    profile_list.add_argument("--game", choices=_TASK_GAMES, default="redalert")
     profile_list.set_defaults(handler=_profiles)
     profile_show = profile_subcommands.add_parser("show")
     profile_show.add_argument("profile_id")
-    profile_show.add_argument("--game", choices=("redalert",), default="redalert")
+    profile_show.add_argument("--game", choices=_TASK_GAMES, default="redalert")
     profile_show.set_defaults(handler=_profiles)
     profile_validate = profile_subcommands.add_parser("validate")
     profile_validate.add_argument("path")
-    profile_validate.add_argument("--game", choices=("redalert",), default="redalert")
+    profile_validate.add_argument("--game", choices=_TASK_GAMES, default="redalert")
     profile_validate.set_defaults(handler=_profiles)
     profile_new = profile_subcommands.add_parser("new")
     profile_new.add_argument("profile_id")
-    profile_new.add_argument("--game", choices=("redalert",), default="redalert")
+    profile_new.add_argument("--game", choices=_TASK_GAMES, default="redalert")
     profile_new.add_argument("-o", "--output")
     profile_new.set_defaults(handler=_profiles)
     profile_dry_run = profile_subcommands.add_parser("dry-run")
     profile_dry_run.add_argument("path")
     profile_dry_run.add_argument("--trace", required=True)
-    profile_dry_run.add_argument("--game", choices=("redalert",), default="redalert")
+    profile_dry_run.add_argument("--game", choices=_TASK_GAMES, default="redalert")
     profile_dry_run.set_defaults(handler=_profiles)
 
     watch = subcommands.add_parser("watch", help="replay recorded public run events")
@@ -856,26 +1003,29 @@ def build_parser() -> argparse.ArgumentParser:
     export.set_defaults(handler=_export)
 
     boot = subcommands.add_parser("boot", help="boot a mission and keep it running")
-    boot.add_argument("--game", choices=("redalert",), default="redalert")
+    boot.add_argument("--game", choices=_TASK_GAMES, default="redalert")
     boot.add_argument("--mission")
-    boot.add_argument("--seed", type=int, default=42)
+    boot.add_argument("--seed", type=int, default=0, help=argparse.SUPPRESS)
     boot.add_argument("--watch", dest="watch", action="store_true", default=True)
     boot.add_argument("--no-watch", dest="watch", action="store_false")
     boot.add_argument("--capture-frames", action="store_true")
     boot.add_argument("--hold", type=float, default=300.0)
     boot.set_defaults(handler=_boot)
 
-    control = subcommands.add_parser("control", help="dispatch CUA tool calls from JSON lines")
-    control.add_argument("--game", choices=("redalert",), default="redalert")
+    control = subcommands.add_parser(
+        "control", help="dispatch primitive CUA events from JSON lines"
+    )
+    control.add_argument("--game", choices=_TASK_GAMES, default="redalert")
     control.add_argument("--mission")
-    control.add_argument("--seed", type=int, default=42)
+    control.add_argument("--seed", type=int, default=0, help=argparse.SUPPRESS)
     control.add_argument("--actions", required=True)
     control.add_argument("--watch", dest="watch", action="store_true", default=True)
     control.add_argument("--no-watch", dest="watch", action="store_false")
+    control.add_argument("--capture-frames", action="store_true")
     control.set_defaults(handler=_control)
 
     serve = subcommands.add_parser("serve", help="serve the WebSocket transport")
-    serve.add_argument("--game", choices=("redalert",), default="redalert")
+    serve.add_argument("--game", choices=_TASK_GAMES, default="redalert")
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8000)
     serve.add_argument("--log-level", default="info")

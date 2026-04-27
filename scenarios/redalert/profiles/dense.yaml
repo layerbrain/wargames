@@ -1,9 +1,8 @@
 id: dense
 game: redalert
-description: Training-only dense Red Alert profile.
+description: Dense Red Alert profile.
 step_reward_min: -0.20
 step_reward_max: 0.20
-train_only: true
 entries:
   - id: terminal
     fn: wargames.core.missions.rewards.terminal
