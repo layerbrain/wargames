@@ -1,0 +1,20 @@
+{
+  "difficulty": "hard",
+  "game": "supertuxkart",
+  "id": "supertuxkart.race.candela-city.hard",
+  "kart": "tux",
+  "laps": 3,
+  "launch_mode": "direct",
+  "mode": "normal",
+  "native_difficulty": "2",
+  "num_karts": 9,
+  "reverse": false,
+  "source": "builtin",
+  "tags": [
+    "race",
+    "candela_city"
+  ],
+  "time_limit_ticks": 21600,
+  "title": "Candela City (Hard)",
+  "track": "candela_city"
+}

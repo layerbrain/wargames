@@ -1,0 +1,20 @@
+{
+  "difficulty": "normal",
+  "game": "supertuxkart",
+  "id": "supertuxkart.race.cocoa-temple.normal",
+  "kart": "tux",
+  "laps": 3,
+  "launch_mode": "direct",
+  "mode": "normal",
+  "native_difficulty": "1",
+  "num_karts": 6,
+  "reverse": false,
+  "source": "builtin",
+  "tags": [
+    "race",
+    "cocoa_temple"
+  ],
+  "time_limit_ticks": 21600,
+  "title": "Cocoa Temple (Normal)",
+  "track": "cocoa_temple"
+}

@@ -1,0 +1,6 @@
+game = "supertuxkart"
+mission = "supertuxkart.race.lighthouse.normal"
+reward_profile = "standard"
+recorder_mode = "none"
+max_steps = 512
+rollouts_per_example = 4

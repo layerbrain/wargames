@@ -145,6 +145,24 @@ The shipped FlightGear profile starts sparse with `terminal`. Add shaping
 entries only after declaring the primitive in
 `wargames/games/flightgear/reward_schema.py`.
 
+## SuperTuxKart Reward Fields
+
+SuperTuxKart profiles use the same profile format. The shipped adapter exposes
+race setup and process lifecycle state.
+
+| Field | Direction | Meaning |
+|---|---|---|
+| `mission.finished` | maximize | Race completed. |
+| `mission.failed` | minimize | Race process failed. |
+| `race.track` | track | Track identifier. |
+| `race.laps` | track | Configured lap count. |
+| `race.num_karts` | track | Number of karts in the race. |
+| `race.elapsed_ticks` | minimize | Elapsed WarGames ticks. |
+
+The shipped SuperTuxKart profile starts sparse with `terminal`. Add shaping
+entries only after declaring the primitive in
+`wargames/games/supertuxkart/reward_schema.py`.
+
 ## Eval And RL
 
 Use dense shaping for training and sparse or mild profiles for reporting.
@@ -181,6 +199,7 @@ recorder_mode = "summary_only"
 ```bash
 wargames profile validate scenarios/redalert/profiles/protective.yaml
 wargames profile validate scenarios/flightgear/profiles/standard.yaml --game flightgear
+wargames profile validate scenarios/supertuxkart/profiles/standard.yaml --game supertuxkart
 python -m unittest tests.evaluation.test_profiles -v
 ```
 

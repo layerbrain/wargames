@@ -1,0 +1,10 @@
+id: standard
+game: supertuxkart
+description: "SuperTuxKart standard reward profile: finish the race without process failure."
+step_reward_min: -0.10
+step_reward_max: 0.10
+entries:
+  - id: terminal
+    fn: wargames.core.missions.rewards.terminal
+    weight: 1.0
+    when: terminal

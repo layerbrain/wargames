@@ -26,8 +26,8 @@ _LINUX_BOX_ENV = "LAYERBRAIN_WARGAMES_IN_LINUX_BOX"
 _LINUX_BOX_IMAGE = "wargames-linux"
 _LINUX_BOX_DEFAULT_RESOLUTION = (1280, 720)
 _BOX_COMMANDS = {"boot", "control", "install", "run", "serve"}
-_INSTALLABLE_GAMES = ("redalert", "flightgear")
-_TASK_GAMES = ("redalert", "flightgear")
+_INSTALLABLE_GAMES = ("redalert", "flightgear", "supertuxkart")
+_TASK_GAMES = ("redalert", "flightgear", "supertuxkart")
 _LINUX_BOX_CACHE_MOUNT = "/opt/wargames-cache"
 _LINUX_BOX_CACHE_VOLUME = "wargames-games"
 _OPENRA_REPO = "https://github.com/OpenRA/OpenRA.git"
@@ -43,6 +43,10 @@ def _game(id: str) -> GameDescriptor:
         from wargames.games.flightgear import GAME
 
         return GAME
+    if id == "supertuxkart":
+        from wargames.games.supertuxkart import GAME
+
+        return GAME
     raise SystemExit(f"unknown game: {id}")
 
 
@@ -55,6 +59,10 @@ def _reward_schema(game: str) -> GameRewardSchema:
         from wargames.games.flightgear.reward_schema import FLIGHTGEAR_REWARD_SCHEMA
 
         return FLIGHTGEAR_REWARD_SCHEMA
+    if game == "supertuxkart":
+        from wargames.games.supertuxkart.reward_schema import SUPERTUXKART_REWARD_SCHEMA
+
+        return SUPERTUXKART_REWARD_SCHEMA
     raise SystemExit(f"unknown game: {game}")
 
 
@@ -209,6 +217,14 @@ def _is_flightgear_root(path: Path) -> bool:
     return (path / "bin" / "fgfs").exists() or path.name == "fgfs"
 
 
+def _is_supertuxkart_root(path: Path) -> bool:
+    return (
+        (path / "data" / "tracks").exists()
+        or (path / "tracks").exists()
+        or path.name == "supertuxkart"
+    )
+
+
 def _find_flightgear_binary(root: Path | None = None) -> Path | None:
     candidates: list[Path | str | None] = [
         root if root and root.name == "fgfs" else None,
@@ -225,9 +241,36 @@ def _find_flightgear_binary(root: Path | None = None) -> Path | None:
     return None
 
 
+def _find_supertuxkart_binary(root: Path | None = None) -> Path | None:
+    candidates: list[Path | str | None] = [
+        root if root and root.name == "supertuxkart" else None,
+        root / "bin" / "supertuxkart" if root and root.name != "supertuxkart" else None,
+        shutil.which("supertuxkart"),
+        "/usr/games/supertuxkart",
+        "/usr/bin/supertuxkart",
+    ]
+    for candidate in candidates:
+        if candidate:
+            path = Path(candidate).expanduser()
+            if path.exists():
+                return path
+    return None
+
+
 def _flightgear_root(binary: Path, root: Path | None = None) -> Path:
     if root is not None:
         return root
+    if binary.parent.name == "bin":
+        return binary.parent.parent
+    return binary.parent
+
+
+def _supertuxkart_root(binary: Path, root: Path | None = None) -> Path:
+    if root is not None and root.name != "supertuxkart":
+        return root
+    share_root = Path("/usr/share/games/supertuxkart")
+    if share_root.exists():
+        return share_root
     if binary.parent.name == "bin":
         return binary.parent.parent
     return binary.parent
@@ -304,6 +347,8 @@ def _parse_resolution(value: str) -> tuple[int, int]:
 def _runtime_resolution(env: Mapping[str, str] = os.environ) -> tuple[int, int]:
     for key in (
         "LAYERBRAIN_WARGAMES_REDALERT_OPENRA_WINDOW_SIZE",
+        "LAYERBRAIN_WARGAMES_SUPERTUXKART_WINDOW_SIZE",
+        "LAYERBRAIN_WARGAMES_FLIGHTGEAR_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_XVFB_RESOLUTION",
     ):
         value = env.get(key)
@@ -380,7 +425,7 @@ def _image_exists(image: str) -> bool:
 def _ensure_linux_box_image() -> None:
     if shutil.which("docker") is None:
         raise SystemExit(
-            "WarGames needs the local Linux runtime box to run Red Alert from this host."
+            "WarGames needs the local Linux runtime box to run game environments from this host."
         )
     if _image_exists(_LINUX_BOX_IMAGE):
         return
@@ -415,6 +460,10 @@ def _linux_box_command(
     env.setdefault("LAYERBRAIN_WARGAMES_XVFB_SCREEN", f"{_resolution_text(active_resolution)}x24")
     env.setdefault(
         "LAYERBRAIN_WARGAMES_REDALERT_OPENRA_WINDOW_SIZE", _resolution_text(active_resolution)
+    )
+    env.setdefault("LAYERBRAIN_WARGAMES_FLIGHTGEAR_WINDOW_SIZE", _resolution_text(active_resolution))
+    env.setdefault(
+        "LAYERBRAIN_WARGAMES_SUPERTUXKART_WINDOW_SIZE", _resolution_text(active_resolution)
     )
     if stream_port is not None:
         env["LAYERBRAIN_WARGAMES_HOST_STREAM_URL"] = (
@@ -557,6 +606,32 @@ def _install_flightgear(args: argparse.Namespace, env: Mapping[str, str] = os.en
     return 0
 
 
+def _install_supertuxkart(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
+    root = Path(args.root).expanduser() if args.root else None
+    if root is not None and not _is_supertuxkart_root(root):
+        raise SystemExit(f"SuperTuxKart root does not contain game data: {root}")
+
+    binary = _find_supertuxkart_binary(root)
+    status = "present"
+
+    if binary is None:
+        raise SystemExit(
+            "SuperTuxKart was not found in the Linux runtime. Rebuild the WarGames Docker image "
+            "or register a container-visible install with --root."
+        )
+
+    payload = {
+        "game": "supertuxkart",
+        "binary": str(binary),
+        "root": str(_supertuxkart_root(binary, root)),
+        "state_interface": "window pixels plus process lifecycle",
+        "status": status,
+    }
+    _write_game_install_manifest("supertuxkart", payload, env)
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0
+
+
 async def _install(args: argparse.Namespace) -> int:
     if os.environ.get(_LINUX_BOX_ENV) != "1" and not args.root:
         raise SystemExit(
@@ -567,6 +642,8 @@ async def _install(args: argparse.Namespace) -> int:
         return await asyncio.to_thread(_install_redalert, args)
     if args.game == "flightgear":
         return await asyncio.to_thread(_install_flightgear, args)
+    if args.game == "supertuxkart":
+        return await asyncio.to_thread(_install_supertuxkart, args)
     raise SystemExit(f"unknown game: {args.game}")
 
 
@@ -899,6 +976,8 @@ async def _serve(args: argparse.Namespace) -> int:
         from wargames.games.redalert.transport.ws import app
     elif args.game == "flightgear":
         from wargames.games.flightgear.transport.ws import app
+    elif args.game == "supertuxkart":
+        from wargames.games.supertuxkart.transport.ws import app
     else:
         raise SystemExit(f"unknown game: {args.game}")
 

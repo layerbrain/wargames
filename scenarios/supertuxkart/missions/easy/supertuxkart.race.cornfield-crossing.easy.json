@@ -1,0 +1,20 @@
+{
+  "difficulty": "easy",
+  "game": "supertuxkart",
+  "id": "supertuxkart.race.cornfield-crossing.easy",
+  "kart": "tux",
+  "laps": 1,
+  "launch_mode": "direct",
+  "mode": "normal",
+  "native_difficulty": "0",
+  "num_karts": 3,
+  "reverse": false,
+  "source": "builtin",
+  "tags": [
+    "race",
+    "cornfield_crossing"
+  ],
+  "time_limit_ticks": 7200,
+  "title": "Cornfield Crossing (Easy)",
+  "track": "cornfield_crossing"
+}

@@ -1,0 +1,20 @@
+{
+  "difficulty": "normal",
+  "game": "supertuxkart",
+  "id": "supertuxkart.race.black-forest.normal",
+  "kart": "tux",
+  "laps": 2,
+  "launch_mode": "direct",
+  "mode": "normal",
+  "native_difficulty": "1",
+  "num_karts": 6,
+  "reverse": false,
+  "source": "builtin",
+  "tags": [
+    "race",
+    "black_forest"
+  ],
+  "time_limit_ticks": 14400,
+  "title": "Black Forest (Normal)",
+  "track": "black_forest"
+}

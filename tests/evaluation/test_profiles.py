@@ -10,6 +10,10 @@ from wargames.games.flightgear.profiles import register_profiles as register_fli
 from wargames.games.flightgear.reward_schema import FLIGHTGEAR_REWARD_SCHEMA
 from wargames.games.redalert.profiles import profiles
 from wargames.games.redalert.reward_schema import REDALERT_REWARD_SCHEMA
+from wargames.games.supertuxkart.profiles import (
+    register_profiles as register_supertuxkart_profiles,
+)
+from wargames.games.supertuxkart.reward_schema import SUPERTUXKART_REWARD_SCHEMA
 
 
 class RewardProfileTests(unittest.TestCase):
@@ -78,3 +82,9 @@ class RewardProfileTests(unittest.TestCase):
 
             with self.assertRaisesRegex(ValueError, "unknown reward primitive"):
                 load_profile_yaml(path, schema=FLIGHTGEAR_REWARD_SCHEMA)
+
+    def test_supertuxkart_profiles_are_loaded_from_shipped_yaml(self) -> None:
+        loaded = register_supertuxkart_profiles()
+
+        self.assertEqual(["standard"], [profile.id for profile in loaded])
+        SUPERTUXKART_REWARD_SCHEMA.validate_primitive("terminal")

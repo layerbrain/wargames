@@ -1,0 +1,20 @@
+{
+  "difficulty": "hard",
+  "game": "supertuxkart",
+  "id": "supertuxkart.race.minigolf.hard",
+  "kart": "tux",
+  "laps": 4,
+  "launch_mode": "direct",
+  "mode": "normal",
+  "native_difficulty": "2",
+  "num_karts": 9,
+  "reverse": false,
+  "source": "builtin",
+  "tags": [
+    "race",
+    "minigolf"
+  ],
+  "time_limit_ticks": 28800,
+  "title": "Minigolf (Hard)",
+  "track": "minigolf"
+}

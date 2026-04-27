@@ -10,9 +10,11 @@ from wargames import WarGamesConfig
 from wargames.cli import (
     _default_openra_root,
     _find_openra_root,
+    _find_supertuxkart_binary,
     _host_openra_support_dir,
     _install_flightgear,
     _install_redalert,
+    _install_supertuxkart,
     _linux_box_command,
     _should_run_in_linux_box,
     _without_host_watch,
@@ -30,6 +32,13 @@ def _write_flightgear_app(root: Path) -> None:
     binary = root / "bin" / "fgfs"
     binary.parent.mkdir(parents=True)
     binary.write_text("#!/usr/bin/env bash\n", encoding="utf-8")
+
+
+def _write_supertuxkart_app(root: Path) -> None:
+    binary = root / "bin" / "supertuxkart"
+    binary.parent.mkdir(parents=True)
+    binary.write_text("#!/usr/bin/env bash\n", encoding="utf-8")
+    (root / "data" / "tracks").mkdir(parents=True)
 
 
 class CLITests(TestCase):
@@ -58,6 +67,9 @@ class CLITests(TestCase):
         self.assertEqual(args.command, "install")
         self.assertEqual(args.game, "redalert")
         self.assertEqual(parser.parse_args(["install", "--game", "flightgear"]).game, "flightgear")
+        self.assertEqual(
+            parser.parse_args(["install", "--game", "supertuxkart"]).game, "supertuxkart"
+        )
 
     def test_host_runs_primitive_redalert_commands_in_linux_box(self) -> None:
         parser = build_parser()
@@ -130,6 +142,20 @@ class CLITests(TestCase):
             manifest = Path(temp_dir) / "cache" / "games" / "flightgear" / "install.json"
             self.assertIn("fgfs_binary", manifest.read_text(encoding="utf-8"))
 
+    def test_install_supertuxkart_remembers_registered_app(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            env = {"LAYERBRAIN_WARGAMES_CACHE_DIR": str(Path(temp_dir) / "cache")}
+            root = Path(temp_dir) / "supertuxkart-root"
+            _write_supertuxkart_app(root)
+            args = SimpleNamespace(root=str(root))
+
+            with redirect_stdout(StringIO()):
+                self.assertEqual(_install_supertuxkart(args, env), 0)
+
+            manifest = Path(temp_dir) / "cache" / "games" / "supertuxkart" / "install.json"
+            self.assertIn("supertuxkart", manifest.read_text(encoding="utf-8"))
+            self.assertEqual(_find_supertuxkart_binary(root), root / "bin" / "supertuxkart")
+
     def test_linux_box_command_does_not_forward_model_keys(self) -> None:
         with patch.dict(
             "os.environ",
@@ -146,6 +172,8 @@ class CLITests(TestCase):
         self.assertIn("wargames-games:/opt/wargames-cache", joined)
         self.assertIn("LAYERBRAIN_WARGAMES_CACHE_DIR=/opt/wargames-cache", joined)
         self.assertIn("LAYERBRAIN_WARGAMES_XVFB_RESOLUTION=1280x720", joined)
+        self.assertIn("LAYERBRAIN_WARGAMES_FLIGHTGEAR_WINDOW_SIZE=1280x720", joined)
+        self.assertIn("LAYERBRAIN_WARGAMES_SUPERTUXKART_WINDOW_SIZE=1280x720", joined)
         self.assertIn("--entrypoint /workspace/host-wargames/scripts/linux_box.sh", joined)
 
     def test_linux_box_install_uses_docker_volume_cache(self) -> None:

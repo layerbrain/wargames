@@ -14,7 +14,7 @@ use the Prime RL adapter in this repo.
 ```text
                     +-----------------------------+
                     |        Game process         |
-                    |   OpenRA, FlightGear, ...   |
+                    | OpenRA, FlightGear, STK, ... |
                     +--------------+--------------+
                                    |
                  capture           |          hidden state
@@ -45,6 +45,7 @@ it into the scalar your trainer consumes.
 |---|---|---:|---|
 | Red Alert | OpenRA real-time strategy | 297 | [docs/games/redalert.md](docs/games/redalert.md) |
 | FlightGear | First-person C172P flight sim | 14 | [docs/games/flightgear.md](docs/games/flightgear.md) |
+| SuperTuxKart | Real-time 3D kart racing | 63 | [docs/games/supertuxkart.md](docs/games/supertuxkart.md) |
 
 A run is four pieces: a game, a mission, a reward profile, and an agent.
 
@@ -61,14 +62,15 @@ pip install -e .
 
 wargames install --game redalert
 wargames install --game flightgear
+wargames install --game supertuxkart
 ```
 
-Run a FlightGear episode:
+Run a SuperTuxKart episode:
 
 ```bash
 wargames run \
-  --game flightgear \
-  --mission flightgear.c172p.tutorial.takeoff \
+  --game supertuxkart \
+  --mission supertuxkart.race.lighthouse.normal \
   --agent scripted-wait \
   --record summary_only
 ```
@@ -78,6 +80,7 @@ List what ships:
 ```bash
 wargames missions --game redalert
 wargames missions --game flightgear
+wargames missions --game supertuxkart
 ```
 
 ## Run Your Own Model
@@ -133,8 +136,8 @@ Each step, the agent gets one JSON object:
 | `elapsed_seconds` | Wall-clock seconds since the run started. |
 
 That is everything. Red Alert unit positions, economy, objectives, FlightGear
-telemetry, and every other piece of hidden game state are read only by the
-evaluator and reward profile, never the agent.
+telemetry, SuperTuxKart race metadata, and every other piece of hidden game
+state are read only by the evaluator and reward profile, never the agent.
 
 ## Actions
 
@@ -177,16 +180,17 @@ symbol keys, `Control`, `Shift`, `Alt`, `Meta`, `Enter`, `Escape`, `Space`,
 
 ## Missions
 
-A mission is exported game content - a Red Alert map or a FlightGear C172P
-tutorial - wrapped with a difficulty, a step budget, a wall-clock budget, and
-a starting reward profile. Mission IDs look like
-`redalert.soviet-01.normal` or `flightgear.c172p.tutorial.takeoff` and are
-the same string you pass to `--mission`, the WebSocket `create_session` op,
-and Prime RL configs.
+A mission is exported game content - a Red Alert map, a FlightGear C172P
+tutorial, or a SuperTuxKart race track - wrapped with a difficulty, a step
+budget, a wall-clock budget, and a starting reward profile. Mission IDs look
+like `redalert.soviet-01.normal`, `flightgear.c172p.tutorial.takeoff`, or
+`supertuxkart.race.lighthouse.normal` and are the same string you pass to
+`--mission`, the WebSocket `create_session` op, and Prime RL configs.
 
 ```bash
 wargames missions --game redalert --difficulty hard
 wargames missions --game flightgear
+wargames missions --game supertuxkart
 ```
 
 Mission JSON lives in `scenarios/<game>/missions/<difficulty>/`.
@@ -209,10 +213,12 @@ Shipped profiles:
 |---|---|
 | Red Alert | `terminal`, `standard`, `dense`, `protective`, `speedrun`, `aggressive_stress_test` |
 | FlightGear | `standard` |
+| SuperTuxKart | `standard` |
 
 ```bash
 wargames profile list --game redalert
 wargames profile list --game flightgear
+wargames profile list --game supertuxkart
 wargames profile validate scenarios/redalert/profiles/protective.yaml
 ```
 
