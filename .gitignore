@@ -32,6 +32,7 @@ htmlcov/
 /exports/
 /checkpoints/
 /.openra-cache/
+/.wargames-proof/
 environments/*/.prime/
 environments/*/runs/
 environments/*/exports/

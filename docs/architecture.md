@@ -40,7 +40,6 @@ Red Alert lives under `wargames/games/redalert/`.
 - `backend.py` launches OpenRA, wires input/capture/probe, and returns primitive
   observations/results.
 - `missions.py` discovers OpenRA campaign and skirmish maps.
-- `catalog.py` defines curated mission suites.
 - `lobby.py` manages 2-8 player lobby setup and readiness.
 - `openra/` contains the C# state-export trait and build patch.
 
@@ -72,7 +71,7 @@ scenarios/redalert/missions/extra_hard/
 ## WebSocket Modes
 
 `sampled`: the world keeps running. `observe` samples the latest frame, and
-`act` applies one action then returns an `action_result`.
+`act` applies one primitive event or one event array, then returns an `action_result`.
 
 `streaming`: the world keeps running and `subscribe_frames` pushes frame events
 at the requested FPS. `act` can be sent asynchronously while frames stream.

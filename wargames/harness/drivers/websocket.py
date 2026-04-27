@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import json
-from dataclasses import asdict
 
-from wargames.harness.agent import AgentDecision, AgentObservation, ToolCall
+from wargames.harness.agent import AgentDecision, AgentObservation
 from wargames.harness.agent_spec import AgentSpec
-from wargames.episode.serialization import public_value
+from wargames.episode.serialization import agent_observation_to_dict, public_value
+from wargames.harness.turns import events_from_payload
 
 
 class WebSocketAgent:
@@ -25,12 +25,13 @@ class WebSocketAgent:
     async def decide(self, obs: AgentObservation) -> AgentDecision:
         if self._websocket is None:
             raise RuntimeError("websocket agent has not started")
-        await self._websocket.send(json.dumps({"event": "observe", "observation": public_value(asdict(obs))}))
+        await self._websocket.send(
+            json.dumps({"event": "observe", "observation": agent_observation_to_dict(obs)})
+        )
         payload = json.loads(await self._websocket.recv())
-        if payload.get("stop"):
-            return AgentDecision(tool_call=None, stop=True, reason=payload.get("reason"))
-        tool = payload.get("tool_call") or payload
-        return AgentDecision(tool_call=ToolCall(name=str(tool["name"]), arguments=dict(tool.get("arguments", {}))))
+        if isinstance(payload, dict) and payload.get("stop"):
+            return AgentDecision(stop=True, reason=payload.get("reason"))
+        return AgentDecision(events=events_from_payload(payload))
 
     async def close(self) -> None:
         if self._websocket is not None:

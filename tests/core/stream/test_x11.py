@@ -6,7 +6,9 @@ from wargames.core.stream.x11 import X11StreamViewer, stop_stream_viewer
 
 class X11StreamViewerTests(TestCase):
     def test_command_captures_xvfb_with_visible_virtual_pointer(self) -> None:
-        command = X11StreamViewer(display=":99", resolution=(1024, 768), fps=20, title="WarGames test").command()
+        command = X11StreamViewer(
+            display=":99", resolution=(1024, 768), fps=20, title="WarGames test"
+        ).command()
         self.assertIn("-f", command)
         self.assertIn("x11grab", command)
         self.assertIn("-draw_mouse", command)

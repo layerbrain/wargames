@@ -1,0 +1,4 @@
+id: circle-mouse
+kind: subprocess
+description: Example subprocess agent that moves the mouse in a circle.
+command: ["python", "examples/agents/circle_mouse.py"]

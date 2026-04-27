@@ -108,4 +108,6 @@ class CoreTestBackend(Backend):
         self.closed = True
 
 
-CORE_TEST_GAME = GameDescriptor(id="core-test", backend_cls=CoreTestBackend, config_cls=WarGamesConfig)
+CORE_TEST_GAME = GameDescriptor(
+    id="core-test", backend_cls=CoreTestBackend, config_cls=WarGamesConfig
+)

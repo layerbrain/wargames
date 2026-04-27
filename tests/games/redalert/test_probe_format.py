@@ -15,7 +15,10 @@ class RedAlertProbeFormatTests(TestCase):
                 "units": [],
                 "buildings": [],
                 "resources": [],
-                "mission": {"elapsed_ticks": 123, "objectives": [{"id": "o1", "description": "Scout"}]},
+                "mission": {
+                    "elapsed_ticks": 123,
+                    "objectives": [{"id": "o1", "description": "Scout"}],
+                },
             },
             use_bin_type=True,
         )

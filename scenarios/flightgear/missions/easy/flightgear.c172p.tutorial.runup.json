@@ -1,0 +1,25 @@
+{
+  "aircraft": "c172p",
+  "airport": "PHTO",
+  "description": "This tutorial covers the before takeoff checklist. This involves the engine checks that are made in the run-up area just prior to taxiing to the runway and taking off. For more information on the before takeoff checklist, see Section 2-11 of the FAA Airplane Flying Handbook available at http://www.faa.gov/library/manuals/aircraft/airplane_handbook/.",
+  "difficulty": "easy",
+  "game": "flightgear",
+  "id": "flightgear.c172p.tutorial.runup",
+  "launch_mode": "direct",
+  "native_difficulty": "tutorial",
+  "runway": null,
+  "source": "builtin",
+  "startup_args": [
+    "--disable-freeze"
+  ],
+  "tags": [
+    "tutorial",
+    "c172p",
+    "runup"
+  ],
+  "time_limit_ticks": 36000,
+  "timeofday": "morning",
+  "title": "Before Takeoff Checks",
+  "tutorial": "Before Takeoff Checks",
+  "tutorial_file": "runup.xml"
+}

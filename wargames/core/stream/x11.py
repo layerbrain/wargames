@@ -50,7 +50,9 @@ class X11StreamViewer:
         env = os.environ.copy()
         if self.viewer_display:
             env["DISPLAY"] = self.viewer_display
-        return subprocess.Popen(self.command(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=env)
+        return subprocess.Popen(
+            self.command(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=env
+        )
 
 
 def stop_stream_viewer(process: subprocess.Popen[bytes] | None) -> None:

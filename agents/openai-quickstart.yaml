@@ -1,0 +1,21 @@
+id: openai-quickstart
+kind: openai
+description: Local OpenAI-compatible agent template.
+provider: openai-compatible
+model: ${OPENAI_MODEL}
+api_key_env: OPENAI_API_KEY
+base_url: ${OPENAI_BASE_URL}
+config:
+  max_steps: 30
+  timeout_seconds: 2
+  max_retries: 0
+  max_tokens: 32
+  temperature: 0.1
+  disable_reasoning: true
+  reject_reasoning_models: true
+  # Provider-specific controls can be set here without code changes.
+  # Example for Kimi-style endpoints:
+  # extra_body:
+  #   enable_thinking: false
+  #   chat_template_kwargs:
+  #     enable_thinking: false

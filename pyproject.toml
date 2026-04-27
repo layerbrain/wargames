@@ -12,7 +12,7 @@ license = "MIT"
 authors = [
   { name = "Layerbrain" },
 ]
-keywords = ["benchmark", "cua", "games", "openra", "red-alert", "reinforcement-learning"]
+keywords = ["benchmark", "cua", "games", "real-time", "red-alert", "flight-simulator", "reinforcement-learning"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",

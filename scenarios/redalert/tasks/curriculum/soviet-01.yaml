@@ -1,9 +1,0 @@
-id: redalert.soviet-01.curriculum.seed-000045
-game: redalert
-mission_id: redalert.soviet-01.normal
-seed: 45
-max_steps: 256
-max_wall_seconds: 600
-reward_profile: dense
-prompt: "Curriculum warmup: make progress while preserving friendly force."
-tags: [soviet, curriculum]

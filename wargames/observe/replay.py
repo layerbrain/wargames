@@ -11,5 +11,9 @@ def load_public_events(run_dir: Path) -> tuple[dict[str, Any], ...]:
         path = run_dir / name
         if not path.exists():
             continue
-        events.extend(json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip())
+        events.extend(
+            json.loads(line)
+            for line in path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        )
     return tuple(events)

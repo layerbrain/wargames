@@ -9,15 +9,7 @@ MouseButton: TypeAlias = Literal["left", "right", "middle"]
 @dataclass(frozen=True)
 class WaitAction:
     id: str
-    ticks: int
-
-
-@dataclass(frozen=True)
-class ClickAction:
-    id: str
-    x: int
-    y: int
-    button: MouseButton = "left"
+    ms: int = 0
 
 
 @dataclass(frozen=True)
@@ -28,34 +20,27 @@ class MoveMouseAction:
 
 
 @dataclass(frozen=True)
-class DoubleClickAction:
+class MouseDownAction:
     id: str
-    x: int
-    y: int
     button: MouseButton = "left"
 
 
 @dataclass(frozen=True)
-class DragAction:
+class MouseUpAction:
     id: str
-    start_x: int
-    start_y: int
-    end_x: int
-    end_y: int
     button: MouseButton = "left"
 
 
 @dataclass(frozen=True)
-class KeyAction:
+class KeyDownAction:
     id: str
     key: str
-    modifiers: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
-class TypeTextAction:
+class KeyUpAction:
     id: str
-    text: str
+    key: str
 
 
 @dataclass(frozen=True)
@@ -68,10 +53,9 @@ class ScrollAction:
 ArenaAction: TypeAlias = (
     WaitAction
     | MoveMouseAction
-    | ClickAction
-    | DoubleClickAction
-    | DragAction
-    | KeyAction
-    | TypeTextAction
+    | MouseDownAction
+    | MouseUpAction
+    | KeyDownAction
+    | KeyUpAction
     | ScrollAction
 )

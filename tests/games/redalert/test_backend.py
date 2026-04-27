@@ -3,9 +3,9 @@ from unittest import IsolatedAsyncioTestCase, TestCase
 
 from wargames.core.control.events import MouseEvent, Target, WindowRect
 from wargames.core.control.injector import RecordingInjector, XTestInjector, XdotoolInjector
-from wargames.core.control.cua import ClickAction, KeyAction, MoveMouseAction, WaitAction
+from wargames.core.control.cua import WaitAction
 from wargames.core.world.probe import HiddenStateSnapshot
-from wargames.games.redalert.backend import RedAlertBackend, RedAlertSession, _recenter_after_action, _recenter_before_action
+from wargames.games.redalert.backend import RedAlertBackend, RedAlertSession
 from wargames.games.redalert.config import RedAlertConfig
 from wargames.games.redalert.missions import RedAlertMissionSpec
 from wargames.games.redalert.world import MissionState, Player, RedAlertWorld
@@ -32,7 +32,9 @@ class RedAlertSessionTests(TestCase):
         injector = RecordingInjector()
         session = RedAlertSession(
             id="s",
-            mission=RedAlertMissionSpec(id="redalert.soviet-01.normal", title="S", game="redalert", source="builtin"),
+            mission=RedAlertMissionSpec(
+                id="redalert.soviet-01.normal", title="S", game="redalert", source="builtin"
+            ),
             seed=1,
             target=Target(pid=1, window_id=2, rect=WindowRect(10, 20, 1280, 720), display=":99"),
             injector=injector,
@@ -46,18 +48,6 @@ class RedAlertSessionTests(TestCase):
         asyncio.run(session.center_pointer())
 
         self.assertEqual(injector.events[-1][1], MouseEvent(kind="move", x=650, y=380))
-
-    def test_recenter_after_every_action_except_explicit_pointer_move(self) -> None:
-        self.assertTrue(_recenter_after_action(ClickAction(id="a", x=1, y=2)))
-        self.assertTrue(_recenter_after_action(KeyAction(id="a", key="ArrowUp")))
-        self.assertTrue(_recenter_after_action(WaitAction(id="a", ticks=1)))
-        self.assertFalse(_recenter_after_action(MoveMouseAction(id="a", x=1, y=2)))
-
-    def test_recenter_before_passive_actions(self) -> None:
-        self.assertTrue(_recenter_before_action(KeyAction(id="a", key="ArrowUp")))
-        self.assertTrue(_recenter_before_action(WaitAction(id="a", ticks=1)))
-        self.assertFalse(_recenter_before_action(ClickAction(id="a", x=1, y=2)))
-        self.assertFalse(_recenter_before_action(MoveMouseAction(id="a", x=1, y=2)))
 
 
 class PausedProbe:
@@ -88,7 +78,9 @@ class RedAlertPausedStepTests(IsolatedAsyncioTestCase):
     async def test_step_returns_latest_snapshot_when_menu_pauses_probe_ticks(self) -> None:
         session = RedAlertSession(
             id="s",
-            mission=RedAlertMissionSpec(id="redalert.soviet-01.normal", title="S", game="redalert", source="builtin"),
+            mission=RedAlertMissionSpec(
+                id="redalert.soviet-01.normal", title="S", game="redalert", source="builtin"
+            ),
             seed=1,
             target=Target(pid=1, window_id=None, rect=WindowRect(0, 0, 1280, 720), display=":99"),
             injector=RecordingInjector(),
@@ -97,7 +89,7 @@ class RedAlertPausedStepTests(IsolatedAsyncioTestCase):
             config=RedAlertConfig(),
         )
 
-        result = await session.step(WaitAction(id="a", ticks=1))
+        result = await session.step(WaitAction(id="a"))
 
         self.assertEqual(result.tick, 5)
         self.assertIs(result.hidden, session._last_hidden)

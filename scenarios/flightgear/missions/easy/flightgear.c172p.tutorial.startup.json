@@ -1,0 +1,25 @@
+{
+  "aircraft": "c172p",
+  "airport": "PHTO",
+  "description": "Before you go flying, you'll need to learn how to start the engines. This tutorial will take you through starting the Cessna 172p.",
+  "difficulty": "easy",
+  "game": "flightgear",
+  "id": "flightgear.c172p.tutorial.startup",
+  "launch_mode": "direct",
+  "native_difficulty": "tutorial",
+  "runway": null,
+  "source": "builtin",
+  "startup_args": [
+    "--disable-freeze"
+  ],
+  "tags": [
+    "tutorial",
+    "c172p",
+    "startup"
+  ],
+  "time_limit_ticks": 36000,
+  "timeofday": "morning",
+  "title": "Start Up",
+  "tutorial": "Start Up",
+  "tutorial_file": "startup.xml"
+}

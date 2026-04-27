@@ -1,0 +1,25 @@
+{
+  "aircraft": "c172p",
+  "airport": "PHTO",
+  "description": "Before the flight you have to assure that your aircraft is in a good condition This tutorial will guide you through the Preflight inspection",
+  "difficulty": "easy",
+  "game": "flightgear",
+  "id": "flightgear.c172p.tutorial.preflight",
+  "launch_mode": "direct",
+  "native_difficulty": "tutorial",
+  "runway": null,
+  "source": "builtin",
+  "startup_args": [
+    "--disable-freeze"
+  ],
+  "tags": [
+    "tutorial",
+    "c172p",
+    "preflight"
+  ],
+  "time_limit_ticks": 36000,
+  "timeofday": "morning",
+  "title": "Preflight",
+  "tutorial": "Preflight",
+  "tutorial_file": "preflight.xml"
+}

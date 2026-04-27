@@ -46,7 +46,9 @@ def openra_dotnet_root(config: RedAlertConfig) -> str | None:
     return None
 
 
-def openra_environment(config: RedAlertConfig, *, probe_socket: str | None = None, display: str | None = None) -> Mapping[str, str]:
+def openra_environment(
+    config: RedAlertConfig, *, probe_socket: str | None = None, display: str | None = None
+) -> Mapping[str, str]:
     env: dict[str, str] = {
         "SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS": "0",
     }
@@ -65,17 +67,26 @@ def bootstrap_openra(config: RedAlertConfig) -> None:
     binary = Path(locate_openra(config))
     if not binary.exists():
         raise GameNotInstalled(f"OpenRA binary was not found: {binary}")
-    if config.openra_root and not (Path(config.openra_root) / "mods" / config.openra_mod / "mod.yaml").exists():
-        raise GameNotInstalled(f"OpenRA mod '{config.openra_mod}' was not found under {config.openra_root}")
+    if (
+        config.openra_root
+        and not (Path(config.openra_root) / "mods" / config.openra_mod / "mod.yaml").exists()
+    ):
+        raise GameNotInstalled(
+            f"OpenRA mod '{config.openra_mod}' was not found under {config.openra_root}"
+        )
     if config.openra_support_dir:
         Path(config.openra_support_dir).mkdir(parents=True, exist_ok=True)
 
 
 def verify_probe_installed(config: RedAlertConfig) -> None:
     if not config.openra_root:
-        raise ProbeNotInstalled("LAYERBRAIN_WARGAMES_REDALERT_OPENRA_ROOT is required for the probe build")
+        raise ProbeNotInstalled(
+            "LAYERBRAIN_WARGAMES_REDALERT_OPENRA_ROOT is required for the probe build"
+        )
     root = Path(config.openra_root)
-    source = root / "OpenRA.Mods.Common" / "Traits" / "World" / "WarGames" / "WarGamesStateExport.cs"
+    source = (
+        root / "OpenRA.Mods.Common" / "Traits" / "World" / "WarGames" / "WarGamesStateExport.cs"
+    )
     rules = root / "mods" / "ra" / "rules" / "wargames-state-export.yaml"
     assembly = root / "bin" / "OpenRA.Mods.Common.dll"
     missing = [str(path) for path in (source, rules, assembly) if not path.exists()]

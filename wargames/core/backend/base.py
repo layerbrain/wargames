@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import ClassVar, Protocol
 
 from wargames.core.config import WarGamesConfig
@@ -15,17 +16,13 @@ class BackendSession(Protocol):
     mission: MissionSpec
     seed: int
 
-    async def step(self, action: ArenaAction) -> StepResult:
-        ...
+    async def step(self, action: ArenaAction) -> StepResult: ...
 
-    async def observe(self) -> Observation:
-        ...
+    async def observe(self) -> Observation: ...
 
-    async def summary(self) -> MissionSummary:
-        ...
+    async def summary(self) -> MissionSummary: ...
 
-    async def close(self) -> None:
-        ...
+    async def close(self) -> None: ...
 
 
 class Backend(ABC):
@@ -38,20 +35,19 @@ class Backend(ABC):
         """Prepare game-specific runtime dependencies before sessions start."""
 
     @abstractmethod
-    def missions(self) -> tuple[MissionSpec, ...]:
-        ...
+    def missions(self) -> tuple[MissionSpec, ...]: ...
+
+    def export_missions(self, output_dir: str | Path) -> tuple[Path, ...]:
+        raise NotImplementedError(f"{self.game} does not support mission export")
 
     @abstractmethod
-    def supports(self, mission: MissionSpec) -> bool:
-        ...
+    def supports(self, mission: MissionSpec) -> bool: ...
 
     @abstractmethod
-    async def start(self, mission: MissionSpec, *, seed: int) -> BackendSession:
-        ...
+    async def start(self, mission: MissionSpec, *, seed: int) -> BackendSession: ...
 
     @abstractmethod
-    async def close(self) -> None:
-        ...
+    async def close(self) -> None: ...
 
     async def __aenter__(self) -> "Backend":
         await self.bootstrap()

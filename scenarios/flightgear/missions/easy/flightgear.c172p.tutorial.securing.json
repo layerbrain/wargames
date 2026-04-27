@@ -1,0 +1,25 @@
+{
+  "aircraft": "c172p",
+  "airport": "PHTO",
+  "description": "After landing you need to secure the aircraft. This tutorial will take you through that process.",
+  "difficulty": "easy",
+  "game": "flightgear",
+  "id": "flightgear.c172p.tutorial.securing",
+  "launch_mode": "direct",
+  "native_difficulty": "tutorial",
+  "runway": null,
+  "source": "builtin",
+  "startup_args": [
+    "--disable-freeze"
+  ],
+  "tags": [
+    "tutorial",
+    "c172p",
+    "securing"
+  ],
+  "time_limit_ticks": 36000,
+  "timeofday": "noon",
+  "title": "Securing Aircraft",
+  "tutorial": "Securing Aircraft",
+  "tutorial_file": "securing.xml"
+}

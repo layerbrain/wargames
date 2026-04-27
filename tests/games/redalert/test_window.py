@@ -1,9 +1,16 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest import TestCase
+from unittest.mock import patch
 
 from wargames.core.control.events import Target, WindowRect
-from wargames.games.redalert.window import _candidate_pids, _largest_window, _normalize_target
+from wargames.games.redalert.window import (
+    _candidate_pids,
+    _largest_window,
+    _locate_x11_window_by_title,
+    _normalize_target,
+    _window_title_matches,
+)
 
 
 class RedAlertWindowTests(TestCase):
@@ -36,3 +43,11 @@ class RedAlertWindowTests(TestCase):
 
         self.assertIsNone(normalized.window_id)
         self.assertEqual((normalized.rect.width, normalized.rect.height), (1280, 720))
+
+    def test_title_match_is_case_insensitive(self) -> None:
+        self.assertTrue(_window_title_matches("FlightGear", "flightgear"))
+        self.assertFalse(_window_title_matches(None, "flightgear"))
+
+    def test_closed_x11_display_is_treated_as_missing_window(self) -> None:
+        with patch("Xlib.display.Display", side_effect=RuntimeError("closed")):
+            self.assertIsNone(_locate_x11_window_by_title(title="FlightGear", display=":99"))

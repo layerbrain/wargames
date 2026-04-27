@@ -32,9 +32,12 @@ class GameRewardSchema:
     fields: dict[str, RewardField]
     primitives: dict[str, RewardPrimitiveSpec]
 
-    def validate_primitive(self, id: str) -> None:
+    def primitive(self, id: str) -> RewardPrimitiveSpec:
         if id in self.primitives:
-            return
+            return self.primitives[id]
         if id.startswith("objective.") and "objective.<id>" in self.primitives:
-            return
+            return self.primitives["objective.<id>"]
         raise ValueError(f"unknown reward primitive for {self.game}: {id}")
+
+    def validate_primitive(self, id: str) -> None:
+        self.primitive(id)

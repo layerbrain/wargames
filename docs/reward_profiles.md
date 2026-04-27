@@ -2,10 +2,10 @@
 
 Reward profiles are the training and evaluation contract. A profile says which
 hidden-state measurements become reward, when they are emitted, and how strongly
-they count. Agents still see only pixels and CUA tools; the profile runs inside
-the trusted environment after each action.
+they count. Agents see pixels plus their own public action history; the profile
+runs inside the trusted environment after each action.
 
-Profiles live in `scenarios/<game>/profiles/*.yaml`. Tasks reference them by
+Profiles live in `scenarios/<game>/profiles/*.yaml`. Missions reference them by
 ID through `reward_profile`. Prime RL, Prime eval, and the local runner all use
 the same profile loader and evaluator.
 
@@ -31,10 +31,6 @@ step_reward_max: 0.10
 # dense_reward_weight affects when: per_step entries.
 terminal_reward_weight: 1.0
 dense_reward_weight: 1.0
-
-# true means the profile is allowed on train/curriculum only.
-# The catalog rejects train_only profiles on test.
-train_only: true
 
 entries:
   - id: terminal
@@ -69,14 +65,13 @@ entries:
 
 | Field | Type | Required | Meaning |
 |---|---:|---:|---|
-| `id` | string | yes | Profile ID used by tasks, CLI, and Prime configs. Unique per game. |
+| `id` | string | yes | Profile ID used by missions, CLI, and Prime configs. Unique per game. |
 | `game` | string | yes | Game namespace. Red Alert uses `redalert`. |
 | `description` | string | no | Human description shown in docs and profile listings. |
 | `step_reward_min` | float/null | no | Lower clamp for the total reward from `per_step` entries on one step. |
 | `step_reward_max` | float/null | no | Upper clamp for the total reward from `per_step` entries on one step. |
 | `terminal_reward_weight` | float | no | Multiplier applied to all terminal entries after entry weights. Defaults to `1.0`. |
 | `dense_reward_weight` | float | no | Multiplier applied to all per-step entries after entry weights. Defaults to `1.0`. |
-| `train_only` | bool | no | If `true`, blocked from `test` split. Use for shaping-heavy RL profiles. |
 | `entries` | list | yes | Reward entries. Each entry becomes a `RubricEntry`. |
 
 ## Entry Fields
@@ -84,10 +79,10 @@ entries:
 | Field | Type | Required | Meaning |
 |---|---:|---:|---|
 | `id` | string | yes | Entry name inside the profile. Must be unique. Appears in reward breakdowns. |
-| `fn` | dotted path | yes | Python function or factory. It must return a `RubricEntry` or a callable scorer. |
+| `fn` | dotted path | yes | Python function that returns a `RubricEntry` or callable scorer. |
 | `args` | mapping | no | Keyword args passed to `fn`. Use this for objective IDs or custom primitive settings. |
 | `weight` | float | no | Entry multiplier. Defaults to `1.0`. |
-| `when` | `per_step`/`terminal` | yes | `per_step` runs after each tool call. `terminal` runs once in `finish()`. |
+| `when` | `per_step`/`terminal` | yes | `per_step` runs after each primitive event. `terminal` runs once in `finish()`. |
 
 ## Red Alert Reward Fields
 
@@ -128,13 +123,35 @@ never shown to the model.
 | `friendly_force_preservation` | `0.02` | per-step | `units`, `buildings` | Penalizes loss of friendly health. |
 | `collateral_damage_avoidance` | `0.01` | per-step | `buildings` | Penalizes neutral/civilian building damage. |
 
-## Train, Eval, And RL
+## FlightGear Reward Fields
+
+FlightGear profiles use the same profile format, but the hidden state is
+aircraft telemetry.
+
+| Field | Direction | Meaning |
+|---|---|---|
+| `mission.finished` | maximize | Mission success. |
+| `mission.failed` | minimize | Mission failure. |
+| `aircraft.altitude_ft` | maximize | Altitude above mean sea level. |
+| `aircraft.airspeed_kt` | track | Indicated airspeed. |
+| `aircraft.pitch_deg` | track | Pitch angle. |
+| `aircraft.roll_deg` | minimize | Roll angle magnitude. |
+| `aircraft.heading_deg` | track | Heading angle. |
+| `aircraft.vertical_speed_fps` | track | Vertical speed. |
+| `aircraft.throttle` | track | Engine throttle setting. |
+| `aircraft.crashed` | minimize | FlightGear crash flag. |
+
+The shipped FlightGear profile starts sparse with `terminal`. Add shaping
+entries only after declaring the primitive in
+`wargames/games/flightgear/reward_schema.py`.
+
+## Eval And RL
 
 Use dense shaping for training and sparse or mild profiles for reporting.
 
 ```toml
-# environments/prime/configs/rl-redalert-dense.toml
-split = "train"
+# environments/prime/configs/redalert/rl-soviet-01.toml
+mission = "redalert.soviet-01.normal"
 reward_profile = "dense"
 recorder_mode = "none"
 max_steps = 500
@@ -144,17 +161,17 @@ rollouts_per_example = 8
 For defensive RL, point a Prime config at `protective` or a custom profile:
 
 ```toml
-split = "train"
+mission = "redalert.soviet-01.normal"
 reward_profile = "protective"
 recorder_mode = "none"
 max_steps = 500
 rollouts_per_example = 8
 ```
 
-For held-out reporting, use `test` with an eval-grade profile:
+For reporting, use an eval-grade profile:
 
 ```toml
-split = "test"
+mission = "redalert.soviet-01.normal"
 reward_profile = "terminal"
 recorder_mode = "summary_only"
 ```
@@ -163,8 +180,9 @@ recorder_mode = "summary_only"
 
 ```bash
 wargames profile validate scenarios/redalert/profiles/protective.yaml
+wargames profile validate scenarios/flightgear/profiles/standard.yaml --game flightgear
 python -m unittest tests.evaluation.test_profiles -v
 ```
 
 Validation catches duplicate entry IDs, bad `when` values, invalid dotted
-paths, invalid factory args, and invalid reward caps before a long rollout.
+paths, invalid reward arguments, and invalid reward caps before a long rollout.

@@ -8,7 +8,12 @@ from typing import Any
 from wargames.core.runtime.result import StepResult
 from wargames.evaluation.task import RunConfig, TaskSpec
 from wargames.harness.agent import PublicEvent
-from wargames.episode.serialization import breakdown_to_dict, frame_to_dict, public_value
+from wargames.episode.serialization import (
+    breakdown_to_dict,
+    frame_to_dict,
+    public_event_to_dict,
+    public_value,
+)
 from wargames.core.missions.rubric import RewardBreakdown
 
 
@@ -25,7 +30,9 @@ class Recorder:
 
     def start(self) -> None:
         self.root.mkdir(parents=True, exist_ok=True)
-        (self.root / "task.json").write_text(json.dumps(self.task.to_mapping(), indent=2, sort_keys=True), encoding="utf-8")
+        (self.root / "task.json").write_text(
+            json.dumps(self.task.to_mapping(), indent=2, sort_keys=True), encoding="utf-8"
+        )
         (self.root / "run_config.json").write_text(
             json.dumps(self.run_config.to_mapping(), indent=2, sort_keys=True),
             encoding="utf-8",
@@ -40,29 +47,44 @@ class Recorder:
 
     def record_agent(self, agent_id: str, config: dict[str, Any] | None = None) -> None:
         payload = {"id": agent_id, "config": config or {}}
-        (self.root / "agent.json").write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+        (self.root / "agent.json").write_text(
+            json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8"
+        )
 
     def record_initial_frame(self, frame: object | None) -> None:
         if self.run_config.video_mode == "frames":
             self._write_frame(0, frame)
 
-    def record_step(self, *, result: StepResult, public_event: PublicEvent, breakdown: RewardBreakdown) -> None:
+    def record_step(
+        self, *, result: StepResult, public_event: PublicEvent, breakdown: RewardBreakdown
+    ) -> None:
         if self._events is not None:
-            self._events.write(json.dumps(public_value(public_event), sort_keys=True) + "\n")
+            self._events.write(
+                json.dumps(public_event_to_dict(public_event), sort_keys=True) + "\n"
+            )
             self._events.flush()
         if self._rewards is not None:
-            payload = {"step": public_event.step, "tick": result.tick, **breakdown_to_dict(breakdown)}
+            payload = {
+                "step": public_event.step,
+                "tick": result.tick,
+                **breakdown_to_dict(breakdown),
+            }
             self._rewards.write(json.dumps(payload, sort_keys=True) + "\n")
             self._rewards.flush()
         if self._trace is not None:
             self._trace.write(json.dumps(asdict(result), sort_keys=True, default=str) + "\n")
             self._trace.flush()
-        if self.run_config.video_mode == "frames" and public_event.step % self.run_config.frame_sample_rate == 0:
+        if (
+            self.run_config.video_mode == "frames"
+            and public_event.step % self.run_config.frame_sample_rate == 0
+        ):
             self._write_frame(public_event.step + 1, result.frame)
 
     def write_summary(self, summary: dict[str, Any]) -> None:
         self.root.mkdir(parents=True, exist_ok=True)
-        (self.root / "summary.json").write_text(json.dumps(public_value(summary), indent=2, sort_keys=True), encoding="utf-8")
+        (self.root / "summary.json").write_text(
+            json.dumps(public_value(summary), indent=2, sort_keys=True), encoding="utf-8"
+        )
         end_state = {
             "run_id": summary.get("run_id"),
             "task_id": summary.get("task_id"),
@@ -73,7 +95,9 @@ class Recorder:
             "total_reward": summary.get("total_reward"),
             "breakdown": summary.get("breakdown", {}),
         }
-        (self.root / "end_state.json").write_text(json.dumps(end_state, indent=2, sort_keys=True), encoding="utf-8")
+        (self.root / "end_state.json").write_text(
+            json.dumps(end_state, indent=2, sort_keys=True), encoding="utf-8"
+        )
 
     def close(self) -> None:
         for handle in (self._events, self._rewards, self._trace):

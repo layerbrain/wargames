@@ -70,7 +70,9 @@ class SocketStateProbe(StateProbe):
 
     async def next_after(self, tick: int) -> HiddenStateSnapshot:
         async with self._updated:
-            await self._updated.wait_for(lambda: self._latest is not None and self._latest.tick > tick)
+            await self._updated.wait_for(
+                lambda: self._latest is not None and self._latest.tick > tick
+            )
             assert self._latest is not None
             return self._latest
 

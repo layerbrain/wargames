@@ -17,12 +17,15 @@ class RewardProfile:
     step_reward_max: float | None = None
     terminal_reward_weight: float = 1.0
     dense_reward_weight: float = 1.0
-    train_only: bool = False
     description: str = ""
 
-    async def score_step(self, prev: HiddenStateSnapshot, curr: HiddenStateSnapshot) -> RewardBreakdown:
+    async def score_step(
+        self, prev: HiddenStateSnapshot, curr: HiddenStateSnapshot
+    ) -> RewardBreakdown:
         breakdown = await Rubric(self._entries(self.per_step_entries)).score(prev, curr)
-        entries = {key: value * self.dense_reward_weight for key, value in breakdown.entries.items()}
+        entries = {
+            key: value * self.dense_reward_weight for key, value in breakdown.entries.items()
+        }
         total = sum(entries.values())
         if self.step_reward_min is not None:
             total = max(self.step_reward_min, total)
@@ -30,9 +33,13 @@ class RewardProfile:
             total = min(self.step_reward_max, total)
         return RewardBreakdown(total=total, entries=entries)
 
-    async def score_terminal(self, prev: HiddenStateSnapshot, curr: HiddenStateSnapshot) -> RewardBreakdown:
+    async def score_terminal(
+        self, prev: HiddenStateSnapshot, curr: HiddenStateSnapshot
+    ) -> RewardBreakdown:
         breakdown = await Rubric(self._entries(self.terminal_entries)).score(prev, curr)
-        entries = {key: value * self.terminal_reward_weight for key, value in breakdown.entries.items()}
+        entries = {
+            key: value * self.terminal_reward_weight for key, value in breakdown.entries.items()
+        }
         return RewardBreakdown(total=sum(entries.values()), entries=entries)
 
     def _entries(self, ids: tuple[str, ...]) -> tuple[RubricEntry, ...]:
@@ -40,7 +47,9 @@ class RewardProfile:
         entries = tuple(entry for entry in self.rubric.entries if entry.id in wanted)
         missing = wanted - {entry.id for entry in entries}
         if missing:
-            raise ValueError(f"profile {self.id} references missing rubric entries: {', '.join(sorted(missing))}")
+            raise ValueError(
+                f"profile {self.id} references missing rubric entries: {', '.join(sorted(missing))}"
+            )
         return entries
 
 

@@ -1,0 +1,25 @@
+{
+  "aircraft": "c172p",
+  "airport": "PHNL",
+  "description": "This tutorial starts from Daniel K. Inouye International Airport (PHNL) and finishes at the seaplane airfield located in Oahu's Keehi Lagoon, Honolulu, Hawaii in clear, still, weather. By now you should be proficient in the preflight checklist, startup proceedures, determining the appropriate taxiing route to the desired runway, takeoff, flying a pattern and landing. You will start lined up on runway 22R, takeoff on heading 223, climb at 600 feet per minute leveling off at 1000 ft., turn left 180 degree onto final heading 043 and landing on water runway 4W at PHNL. Water runway 4W/22W is parallel and immediately adjacent to land based runway 4R/22L. Pay attention to the heading bug on landing it will approximate the mooring position.",
+  "difficulty": "hard",
+  "game": "flightgear",
+  "id": "flightgear.c172p.tutorial.amphibious-landing",
+  "launch_mode": "direct",
+  "native_difficulty": "tutorial",
+  "runway": null,
+  "source": "builtin",
+  "startup_args": [
+    "--disable-freeze"
+  ],
+  "tags": [
+    "tutorial",
+    "c172p",
+    "amphibious-landing"
+  ],
+  "time_limit_ticks": 36000,
+  "timeofday": "morning",
+  "title": "Amphibious Landing",
+  "tutorial": "Amphibious Landing",
+  "tutorial_file": "amphibious-landing.xml"
+}

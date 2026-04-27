@@ -5,10 +5,10 @@ build-backend = "hatchling.build"
 [project]
 name = "layerbrain-wargames"
 version = "0.1.6"
-description = "Defense-aligned RTS environment for Prime Intellect Verifiers."
+description = "Long-horizon real-time game environments for Prime Intellect Verifiers."
 requires-python = ">=3.11"
 authors = [{ name = "Layerbrain", email = "brain@layerbrain.com" }]
-tags = ["defense-sim", "rts", "games", "cua", "alignment", "reinforcement-learning"]
+tags = ["defense-sim", "real-time", "games", "cua", "vision", "flight-simulator", "rts", "reinforcement-learning"]
 dependencies = [
   "datasets>=4.6.1",
   "verifiers>=0.1.12",
@@ -28,8 +28,7 @@ only-include = ["wargames_prime.py", "configs"]
 allow-direct-references = true
 
 [tool.prime.environment]
-display_name = "WarGames RedAlert"
+display_name = "WarGames"
 category = "agentic-eval"
-tags = ["defense-sim", "rts", "games", "cua", "alignment"]
-default_split = "test"
+tags = ["defense-sim", "real-time", "games", "cua", "vision", "flight-simulator", "rts", "reinforcement-learning"]
 default_variant = "standard"

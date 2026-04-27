@@ -7,11 +7,23 @@ from wargames.core.control.events import Target, WindowRect
 from wargames.core.errors import WindowNotFound
 
 
-async def locate_window(*, pid: int, display: str | None = None, width: int = 1280, height: int = 720) -> Target:
-    target = _locate_platform_window(pid=pid, display=display)
+async def locate_window(
+    *,
+    pid: int,
+    display: str | None = None,
+    width: int = 1280,
+    height: int = 720,
+    title: str | None = None,
+) -> Target:
+    target = _locate_platform_window(pid=pid, display=display, title=title)
     if target is not None:
         return _normalize_target(target, width=width, height=height)
-    return Target(pid=pid, window_id=None, rect=WindowRect(x=0, y=0, width=width, height=height), display=display)
+    return Target(
+        pid=pid,
+        window_id=None,
+        rect=WindowRect(x=0, y=0, width=width, height=height),
+        display=display,
+    )
 
 
 async def wait_for_window(
@@ -21,22 +33,33 @@ async def wait_for_window(
     width: int = 1280,
     height: int = 720,
     timeout: float = 30.0,
+    title: str | None = None,
 ) -> Target:
     deadline = asyncio.get_running_loop().time() + timeout
     while True:
-        target = _locate_platform_window(pid=pid, display=display)
+        target = _locate_platform_window(pid=pid, display=display, title=title)
         if target is not None:
             return _normalize_target(target, width=width, height=height)
         if asyncio.get_running_loop().time() >= deadline:
-            raise WindowNotFound(f"OpenRA window did not appear for pid {pid}")
+            raise WindowNotFound(f"window did not appear for pid {pid}")
         await asyncio.sleep(0.05)
 
 
-def _locate_platform_window(*, pid: int, display: str | None) -> Target | None:
+def _locate_platform_window(
+    *, pid: int, display: str | None, title: str | None = None
+) -> Target | None:
     for candidate in _candidate_pids(pid):
         target = _locate_x11_window(pid=candidate, display=display)
         if target is not None:
-            return Target(pid=pid, window_id=target.window_id, rect=target.rect, display=target.display)
+            return Target(
+                pid=pid, window_id=target.window_id, rect=target.rect, display=target.display
+            )
+    if title:
+        target = _locate_x11_window_by_title(title=title, display=display)
+        if target is not None:
+            return Target(
+                pid=pid, window_id=target.window_id, rect=target.rect, display=target.display
+            )
     return None
 
 
@@ -60,7 +83,7 @@ def _candidate_pids(pid: int, proc_root: Path = Path("/proc")) -> tuple[int, ...
 
 def require_window(target: Target) -> Target:
     if target.pid is None:
-        raise WindowNotFound("missing pid for OpenRA target")
+        raise WindowNotFound("missing pid for target")
     return target
 
 
@@ -69,7 +92,12 @@ def _normalize_target(target: Target, *, width: int, height: int) -> Target:
     actual_area = target.rect.width * target.rect.height
     if actual_area >= expected_area // 2:
         return target
-    return Target(pid=target.pid, window_id=None, rect=WindowRect(x=0, y=0, width=width, height=height), display=target.display)
+    return Target(
+        pid=target.pid,
+        window_id=None,
+        rect=WindowRect(x=0, y=0, width=width, height=height),
+        display=target.display,
+    )
 
 
 async def focus_window(target: Target) -> None:
@@ -104,7 +132,10 @@ def _locate_x11_window(*, pid: int, display: str | None) -> Target | None:
     except Exception:
         return None
 
-    disp = xdisplay.Display(display)
+    try:
+        disp = xdisplay.Display(display)
+    except Exception:
+        return None
     try:
         atom = disp.intern_atom("_NET_WM_PID")
         root = disp.screen().root
@@ -117,11 +148,34 @@ def _locate_x11_window(*, pid: int, display: str | None) -> Target | None:
         disp.close()
 
 
+def _locate_x11_window_by_title(*, title: str, display: str | None) -> Target | None:
+    try:
+        from Xlib import display as xdisplay  # type: ignore[import-not-found]
+    except Exception:
+        return None
+
+    try:
+        disp = xdisplay.Display(display)
+    except Exception:
+        return None
+    try:
+        root = disp.screen().root
+        candidates = _find_x11_windows_by_title(root, root, title)
+        if not candidates:
+            return None
+        window, rect = _largest_window(candidates)
+        return Target(pid=None, window_id=window.id, rect=rect, display=display)
+    finally:
+        disp.close()
+
+
 def _largest_window(candidates: list[tuple[object, WindowRect]]) -> tuple[object, WindowRect]:
     return max(candidates, key=lambda item: item[1].width * item[1].height)
 
 
-def _find_x11_windows(window: object, root: object, atom: int, pid: int) -> list[tuple[object, WindowRect]]:
+def _find_x11_windows(
+    window: object, root: object, atom: int, pid: int
+) -> list[tuple[object, WindowRect]]:
     found: list[tuple[object, WindowRect]] = []
     try:
         prop = window.get_full_property(atom, 0)  # type: ignore[attr-defined]
@@ -148,3 +202,38 @@ def _find_x11_windows(window: object, root: object, atom: int, pid: int) -> list
     for child in children:
         found.extend(_find_x11_windows(child, root, atom, pid))
     return found
+
+
+def _find_x11_windows_by_title(
+    window: object, root: object, title: str
+) -> list[tuple[object, WindowRect]]:
+    found: list[tuple[object, WindowRect]] = []
+    try:
+        name = window.get_wm_name()  # type: ignore[attr-defined]
+        if _window_title_matches(name, title):
+            geometry = window.get_geometry()  # type: ignore[attr-defined]
+            position = window.translate_coords(root, 0, 0)  # type: ignore[attr-defined]
+            found.append(
+                (
+                    window,
+                    WindowRect(
+                        x=int(position.x),
+                        y=int(position.y),
+                        width=int(geometry.width),
+                        height=int(geometry.height),
+                    ),
+                )
+            )
+    except Exception:
+        pass
+    try:
+        children = window.query_tree().children  # type: ignore[attr-defined]
+    except Exception:
+        return found
+    for child in children:
+        found.extend(_find_x11_windows_by_title(child, root, title))
+    return found
+
+
+def _window_title_matches(value: object, title: str) -> bool:
+    return isinstance(value, str) and title.casefold() in value.casefold()

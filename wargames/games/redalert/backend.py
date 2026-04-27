@@ -9,18 +9,8 @@ from pathlib import Path
 from wargames.core.backend.base import Backend, BackendSession
 from wargames.core.capture.window import NullWindowCapture, ScreenRegionCapture
 from wargames.core.config import WarGamesConfig
-from wargames.core.control.cua import (
-    ArenaAction,
-    ClickAction,
-    DoubleClickAction,
-    DragAction,
-    KeyAction,
-    MoveMouseAction,
-    ScrollAction,
-    TypeTextAction,
-    WaitAction,
-)
-from wargames.core.control.events import MouseEvent, Target, WindowRect
+from wargames.core.control.cua import ArenaAction
+from wargames.core.control.events import MouseEvent, Target
 from wargames.core.control.injector import InputInjector, XTestInjector, XdotoolInjector
 from wargames.core.control.lower import lower_cua
 from wargames.core.errors import GameNotInstalled
@@ -33,6 +23,7 @@ from wargames.games.redalert.config import RedAlertConfig
 from wargames.games.redalert.missions import (
     RedAlertMissionSpec,
     discover,
+    extract_mission_catalog,
     fallback_missions,
     load_mission_catalog,
 )
@@ -68,18 +59,16 @@ class RedAlertSession(BackendSession):
         self.probe = probe
         self.process = process
         self.config = config
-        self.capture = ScreenRegionCapture(config.frame_dir) if config.capture_frames else NullWindowCapture()
+        self.capture = (
+            ScreenRegionCapture(config.frame_dir) if config.capture_frames else NullWindowCapture()
+        )
         self._last_hidden: HiddenStateSnapshot | None = None
 
     async def step(self, action: ArenaAction) -> StepResult:
         before = await self.probe.latest()
         before_tick = before.tick if before is not None else -1
         prev = self._last_hidden or before
-        if _recenter_before_action(action):
-            await self.center_pointer()
         await self.injector.send_many(self.target, lower_cua(action, self.target.rect))
-        if _recenter_after_action(action):
-            await self.center_pointer()
         try:
             hidden = await asyncio.wait_for(self.probe.next_after(before_tick), timeout=0.5)
         except TimeoutError:
@@ -105,7 +94,11 @@ class RedAlertSession(BackendSession):
     async def observe(self) -> Observation:
         latest = await self.probe.latest()
         tick = latest.tick if latest else 0
-        frame = await self.capture.capture(self.target, tick=tick) if self.config.capture_frames else None
+        frame = (
+            await self.capture.capture(self.target, tick=tick)
+            if self.config.capture_frames
+            else None
+        )
         return Observation(frame=frame)
 
     async def center_pointer(self) -> None:
@@ -159,6 +152,14 @@ class RedAlertBackend(Backend):
     def missions(self) -> tuple[MissionSpec, ...]:
         return self._missions
 
+    def export_missions(self, output_dir: str | Path) -> tuple[Path, ...]:
+        openra_root = self.config.openra_root or _default_openra_root()
+        if not openra_root:
+            raise GameNotInstalled(
+                "Red Alert mission export needs LAYERBRAIN_WARGAMES_REDALERT_OPENRA_ROOT"
+            )
+        return extract_mission_catalog(openra_root, output_dir)
+
     def supports(self, mission: MissionSpec) -> bool:
         return isinstance(mission, RedAlertMissionSpec) and mission.game == self.game
 
@@ -185,7 +186,9 @@ class RedAlertBackend(Backend):
         command = openra_command(binary, spec, self.config)
         display = os.getenv("DISPLAY", ":99")
         env = openra_environment(self.config, probe_socket=socket_path, display=display)
-        process = await ProcessLauncher().start(command, env=env, timeout=self.config.step_timeout, id=spec.id)
+        process = await ProcessLauncher().start(
+            command, env=env, timeout=self.config.step_timeout, id=spec.id
+        )
         target = await wait_for_window(
             pid=process.pid,
             display=env.get("DISPLAY"),
@@ -195,10 +198,24 @@ class RedAlertBackend(Backend):
         )
         await focus_window(target)
         injector = self._injector_for(target)
-        await injector.send(target, MouseEvent(kind="move", x=target.rect.x + target.rect.width // 2, y=target.rect.y + target.rect.height // 2))
+        await injector.send(
+            target,
+            MouseEvent(
+                kind="move",
+                x=target.rect.x + target.rect.width // 2,
+                y=target.rect.y + target.rect.height // 2,
+            ),
+        )
         await probe.wait_connected(self.config.step_timeout)
         await probe.next()
-        await injector.send(target, MouseEvent(kind="move", x=target.rect.x + target.rect.width // 2, y=target.rect.y + target.rect.height // 2))
+        await injector.send(
+            target,
+            MouseEvent(
+                kind="move",
+                x=target.rect.x + target.rect.width // 2,
+                y=target.rect.y + target.rect.height // 2,
+            ),
+        )
         session = RedAlertSession(
             id=f"{spec.id}:{seed}",
             mission=spec,
@@ -223,9 +240,9 @@ class RedAlertBackend(Backend):
         self._sessions.clear()
 
 
-def _recenter_after_action(action: ArenaAction) -> bool:
-    return not isinstance(action, MoveMouseAction)
-
-
-def _recenter_before_action(action: ArenaAction) -> bool:
-    return isinstance(action, (WaitAction, KeyAction, TypeTextAction, ScrollAction))
+def _default_openra_root() -> str | None:
+    cache = os.getenv("LAYERBRAIN_WARGAMES_CACHE_DIR")
+    if not cache:
+        return None
+    path = Path(cache) / "games" / "redalert" / "openra"
+    return str(path) if (path / "mods" / "ra" / "mod.yaml").exists() else None
