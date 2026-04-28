@@ -2,12 +2,11 @@
 
 SuperTuxKart is the kart-racing environment in WarGames.
 
-The agent sees the race window as pixels. It controls the kart with keyboard
-and mouse events. WarGames reads kart state from inside the game for rewards:
-position, speed, lap, rank, powerups, contact state, and race progress. The
-agent does not see that hidden state.
+WarGames captures the race window as pixels, applies keyboard and mouse events,
+and reads kart state for rewards: position, speed, lap, rank, powerups,
+contact state, and race progress.
 
-![A model drives SuperTuxKart](../assets/supertuxkart-control-demo.gif)
+![SuperTuxKart control demo](../assets/supertuxkart-control-demo.gif)
 
 ## Run It
 
@@ -21,9 +20,9 @@ wargames run \
   --record summary_only
 ```
 
-The game runs inside the WarGames Docker runtime. `wargames install` builds the
-WarGames state exporter into SuperTuxKart inside the Docker cache volume. The
-official game data stays inside the runtime.
+The game runs inside the SuperTuxKart Docker runtime image. `wargames install`
+builds the WarGames state exporter into SuperTuxKart inside the SuperTuxKart
+Docker cache volume. The official game data stays inside that runtime.
 
 ## Missions
 

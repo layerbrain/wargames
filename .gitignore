@@ -38,6 +38,7 @@ environments/*/runs/
 environments/*/exports/
 local.env
 *.mp4
+!docs/assets/zeroad-control-demo.mp4
 *.log
 
 # OS and editor files

@@ -1,0 +1,22 @@
+id: standard
+game: zeroad
+description: "0 A.D. standard reward profile: grow economy, build population, damage enemy forces, and win."
+step_reward_min: -0.20
+step_reward_max: 1.00
+entries:
+  - id: delta_resources
+    fn: wargames.games.zeroad.rewards.delta_resources
+    weight: 0.001
+    when: per_step
+  - id: delta_population
+    fn: wargames.games.zeroad.rewards.delta_population
+    weight: 0.05
+    when: per_step
+  - id: enemy_damage
+    fn: wargames.games.zeroad.rewards.enemy_damage
+    weight: 0.001
+    when: per_step
+  - id: terminal
+    fn: wargames.core.missions.rewards.terminal
+    weight: 1.0
+    when: terminal

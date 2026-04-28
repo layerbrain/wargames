@@ -167,7 +167,9 @@ class RedAlertBackend(Backend):
         if self._bootstrapped:
             return
         if sys.platform != "linux":
-            raise GameNotInstalled("WarGames RedAlert runs only inside the Linux/Xvfb runtime box")
+            raise GameNotInstalled(
+                "WarGames RedAlert runs only inside its Linux/Xvfb Docker runtime"
+            )
         bootstrap_openra(self.config)
         self._bootstrapped = True
 

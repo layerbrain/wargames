@@ -2,14 +2,11 @@
 
 WarGames turns real-time games into computer-use RL environments.
 
-The agent sees the screen and sends mouse and keyboard actions. The real game
-state stays hidden and is used to score the run.
+WarGames launches the game, captures pixels, applies mouse and keyboard
+events, records the episode, and scores rewards from trusted per-game probes.
+Bring your own trainer or use the Prime RL adapter in this repo.
 
-WarGames is not a trainer. It launches the game, captures frames, applies
-actions, records the episode, and returns rewards. Bring your own trainer or
-use the Prime RL adapter in this repo.
-
-![Kimi K2.5 plays Red Alert](docs/assets/kimi-k2-redalert-demo.gif)
+![Red Alert control demo](docs/assets/redalert-control-demo.gif)
 
 ```text
                     +-----------------------------+
@@ -17,7 +14,7 @@ use the Prime RL adapter in this repo.
                     | OpenRA, FlightGear, STK, ... |
                     +--------------+--------------+
                                    |
-                 capture           |          hidden state
+                 capture           |          scoring state
             +---------------+      |      +-------------------+
             | window pixels | <----+----> | probe: units,     |
             |   1280x720    |             | flight telemetry, |
@@ -35,10 +32,9 @@ use the Prime RL adapter in this repo.
               back to game                    to your trainer
 ```
 
-The agent only ever sees the left lane: pixels and its own past actions. The
-right lane - units, cash, telemetry, objectives - never reaches the agent;
-the evaluator reads it through a per-game probe and a reward profile turns
-it into the scalar your trainer consumes.
+The screen/action lane is the controller interface. The probe lane feeds the
+evaluator, where a reward profile turns game-specific state into the scalar
+reward your trainer consumes.
 
 ## Games
 
@@ -47,12 +43,15 @@ it into the scalar your trainer consumes.
 | Red Alert | OpenRA real-time strategy | 297 | [docs/games/redalert.md](docs/games/redalert.md) |
 | FlightGear | First-person C172P flight sim | 14 | [docs/games/flightgear.md](docs/games/flightgear.md) |
 | SuperTuxKart | Real-time 3D kart racing | 63 | [docs/games/supertuxkart.md](docs/games/supertuxkart.md) |
+| 0 A.D. | Real-time ancient warfare | 3 shipped, more extractable | [docs/games/zeroad.md](docs/games/zeroad.md) |
 
 A run is four pieces: a game, a mission, a reward profile, and an agent.
 
 ## Quickstart
 
-Games run inside Docker. Nothing is installed on your host.
+Games run inside Docker. Nothing is installed on your host. Each game has its
+own runtime image and cache volume, with a small shared base image for Python,
+Xvfb, and window capture.
 
 ```bash
 git clone https://github.com/layerbrain/wargames.git
@@ -64,6 +63,7 @@ pip install -e .
 wargames install --game redalert
 wargames install --game flightgear
 wargames install --game supertuxkart
+wargames install --game zeroad
 ```
 
 Run a SuperTuxKart episode:
@@ -82,6 +82,7 @@ List what ships:
 wargames missions --game redalert
 wargames missions --game flightgear
 wargames missions --game supertuxkart
+wargames missions --game zeroad
 ```
 
 ## Run Your Own Model
@@ -136,10 +137,8 @@ Each step, the agent gets one JSON object:
 | `step_index` | Zero-based step counter. |
 | `elapsed_seconds` | Wall-clock seconds since the run started. |
 
-That is everything. Red Alert unit positions, economy, objectives, FlightGear
-telemetry, SuperTuxKart kart position, speed, lap, rank, powerups, and every
-other piece of hidden game state are read only by the evaluator and reward
-profile, never the agent.
+State used for scoring stays inside the evaluator and is not included in the
+observation payload.
 
 ## Actions
 
@@ -183,28 +182,30 @@ symbol keys, `Control`, `Shift`, `Alt`, `Meta`, `Enter`, `Escape`, `Space`,
 ## Missions
 
 A mission is exported game content - a Red Alert map, a FlightGear C172P
-tutorial, or a SuperTuxKart race track - wrapped with a difficulty, a step
-budget, a wall-clock budget, and a starting reward profile. Mission IDs look
-like `redalert.soviet-01.normal`, `flightgear.c172p.tutorial.takeoff`, or
-`supertuxkart.race.lighthouse.normal` and are the same string you pass to
+tutorial, a SuperTuxKart race track, or a 0 A.D. map - wrapped with a
+difficulty, a step budget, a wall-clock budget, and a starting reward profile.
+Mission IDs look like `redalert.soviet-01.normal`,
+`flightgear.c172p.tutorial.takeoff`, `supertuxkart.race.lighthouse.normal`, or
+`zeroad.scenario.arcadia.normal` and are the same string you pass to
 `--mission`, the WebSocket `create_session` op, and Prime RL configs.
 
 ```bash
 wargames missions --game redalert --difficulty hard
 wargames missions --game flightgear
 wargames missions --game supertuxkart
+wargames missions --game zeroad
 ```
 
 Mission JSON lives in `scenarios/<game>/missions/<difficulty>/`.
 
 ## Profiles
 
-A reward profile is the reward function for a run. It turns hidden game state
+A reward profile is the reward function for a run. It turns scoring state
 into the scalar reward your trainer sees, with per-step shaping and a final
 terminal score.
 
 The YAML format is universal, but **each game ships its own schema**: the
-hidden-state fields and reward primitives Red Alert exposes (`us.cash`,
+state fields and reward primitives Red Alert exposes (`us.cash`,
 `mission.objectives`, `delta_units_killed`, ...) are different from
 FlightGear's (`aircraft.altitude_ft`, `aircraft.crashed`, ...). Profiles for
 one game cannot be applied to another.
@@ -216,11 +217,13 @@ Shipped profiles:
 | Red Alert | `terminal`, `standard`, `dense`, `protective`, `speedrun`, `aggressive_stress_test` |
 | FlightGear | `standard` |
 | SuperTuxKart | `standard` |
+| 0 A.D. | `standard` |
 
 ```bash
 wargames profile list --game redalert
 wargames profile list --game flightgear
 wargames profile list --game supertuxkart
+wargames profile list --game zeroad
 wargames profile validate scenarios/redalert/profiles/protective.yaml
 ```
 

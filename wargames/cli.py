@@ -5,12 +5,13 @@ import asyncio
 import base64
 import json
 import os
+import re
 import shutil
 import socket
 import subprocess
 import sys
 from collections.abc import AsyncIterator, Mapping, Sequence
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -23,17 +24,55 @@ from wargames.harness.agent_loader import create_agent, list_agent_specs, load_a
 from wargames.harness.turns import events_from_payload, validate_turn
 
 _LINUX_BOX_ENV = "LAYERBRAIN_WARGAMES_IN_LINUX_BOX"
-_LINUX_BOX_IMAGE = "wargames-linux"
 _LINUX_BOX_DEFAULT_RESOLUTION = (1280, 720)
 _BOX_COMMANDS = {"boot", "control", "install", "run", "serve"}
-_INSTALLABLE_GAMES = ("redalert", "flightgear", "supertuxkart")
-_TASK_GAMES = ("redalert", "flightgear", "supertuxkart")
+_INSTALLABLE_GAMES = ("redalert", "flightgear", "supertuxkart", "zeroad")
+_TASK_GAMES = ("redalert", "flightgear", "supertuxkart", "zeroad")
 _LINUX_BOX_CACHE_MOUNT = "/opt/wargames-cache"
-_LINUX_BOX_CACHE_VOLUME = "wargames-games"
+_LINUX_BOX_BASE_IMAGE = "wargames-linux-base"
+_LINUX_BOX_BASE_DOCKERFILE = "docker/base/Dockerfile"
+
+
+@dataclass(frozen=True)
+class LinuxBoxRuntime:
+    game: str
+    image: str
+    dockerfile: str
+    cache_volume: str
+
+
+_LINUX_BOX_RUNTIMES = {
+    "redalert": LinuxBoxRuntime(
+        game="redalert",
+        image="wargames-linux-redalert",
+        dockerfile="docker/redalert/Dockerfile",
+        cache_volume="wargames-redalert",
+    ),
+    "flightgear": LinuxBoxRuntime(
+        game="flightgear",
+        image="wargames-linux-flightgear",
+        dockerfile="docker/flightgear/Dockerfile",
+        cache_volume="wargames-flightgear",
+    ),
+    "supertuxkart": LinuxBoxRuntime(
+        game="supertuxkart",
+        image="wargames-linux-supertuxkart",
+        dockerfile="docker/supertuxkart/Dockerfile",
+        cache_volume="wargames-supertuxkart",
+    ),
+    "zeroad": LinuxBoxRuntime(
+        game="zeroad",
+        image="wargames-linux-zeroad",
+        dockerfile="docker/zeroad/Dockerfile",
+        cache_volume="wargames-zeroad",
+    ),
+}
 _OPENRA_REPO = "https://github.com/OpenRA/OpenRA.git"
 _OPENRA_REF = "bleed"
 _SUPERTUXKART_REPO = "https://github.com/supertuxkart/stk-code.git"
 _SUPERTUXKART_REF = "1.4"
+_ZEROAD_REPO = "https://gitea.wildfiregames.com/0ad/0ad.git"
+_ZEROAD_REF = "v0.28.0"
 
 
 def _game(id: str) -> GameDescriptor:
@@ -47,6 +86,10 @@ def _game(id: str) -> GameDescriptor:
         return GAME
     if id == "supertuxkart":
         from wargames.games.supertuxkart import GAME
+
+        return GAME
+    if id == "zeroad":
+        from wargames.games.zeroad import GAME
 
         return GAME
     raise SystemExit(f"unknown game: {id}")
@@ -65,6 +108,10 @@ def _reward_schema(game: str) -> GameRewardSchema:
         from wargames.games.supertuxkart.reward_schema import SUPERTUXKART_REWARD_SCHEMA
 
         return SUPERTUXKART_REWARD_SCHEMA
+    if game == "zeroad":
+        from wargames.games.zeroad.reward_schema import ZEROAD_REWARD_SCHEMA
+
+        return ZEROAD_REWARD_SCHEMA
     raise SystemExit(f"unknown game: {game}")
 
 
@@ -227,6 +274,15 @@ def _is_supertuxkart_root(path: Path) -> bool:
     )
 
 
+def _is_zeroad_root(path: Path) -> bool:
+    return (
+        (path / "binaries" / "data" / "mods" / "public" / "maps").exists()
+        or (path / "data" / "mods" / "public" / "maps").exists()
+        or (path / "mods" / "public" / "maps").exists()
+        or path.name in {"pyrogenesis", "0ad"}
+    )
+
+
 def _find_flightgear_binary(root: Path | None = None) -> Path | None:
     candidates: list[Path | str | None] = [
         root if root and root.name == "fgfs" else None,
@@ -263,6 +319,30 @@ def _find_supertuxkart_binary(root: Path | None = None) -> Path | None:
     return None
 
 
+def _find_zeroad_binary(root: Path | None = None) -> Path | None:
+    candidates: list[Path | str | None] = [
+        root if root and root.is_file() and root.name in {"pyrogenesis", "0ad"} else None,
+        root / "binaries" / "system" / "pyrogenesis"
+        if root and not root.is_file()
+        else None,
+        root / "bin" / "pyrogenesis" if root and not root.is_file() else None,
+        _default_zeroad_source_root() / "binaries" / "system" / "pyrogenesis",
+        shutil.which("pyrogenesis"),
+        shutil.which("0ad"),
+        "/usr/lib/0ad/pyrogenesis",
+        "/usr/games/pyrogenesis",
+        "/usr/bin/pyrogenesis",
+        "/usr/games/0ad",
+        "/usr/bin/0ad",
+    ]
+    for candidate in candidates:
+        if candidate:
+            path = Path(candidate).expanduser()
+            if path.exists():
+                return path
+    return None
+
+
 def _flightgear_root(binary: Path, root: Path | None = None) -> Path:
     if root is not None:
         return root
@@ -286,8 +366,25 @@ def _supertuxkart_root(binary: Path, root: Path | None = None) -> Path:
     return binary.parent
 
 
+def _zeroad_root(binary: Path, root: Path | None = None) -> Path:
+    if root is not None and root.name not in {"pyrogenesis", "0ad"}:
+        return root
+    if binary.parent.name == "system" and binary.parent.parent.name == "binaries":
+        return binary.parent.parent.parent
+    share_root = Path("/usr/share/games/0ad")
+    if share_root.exists():
+        return share_root
+    if binary.parent.name == "bin":
+        return binary.parent.parent
+    return binary.parent
+
+
 def _default_supertuxkart_source_root(env: Mapping[str, str] = os.environ) -> Path:
     return _game_install_dir("supertuxkart", env) / "stk-code"
+
+
+def _default_zeroad_source_root(env: Mapping[str, str] = os.environ) -> Path:
+    return _game_install_dir("zeroad", env) / "0ad"
 
 
 def _should_run_in_linux_box(
@@ -362,6 +459,7 @@ def _runtime_resolution(env: Mapping[str, str] = os.environ) -> tuple[int, int]:
     for key in (
         "LAYERBRAIN_WARGAMES_REDALERT_OPENRA_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_SUPERTUXKART_WINDOW_SIZE",
+        "LAYERBRAIN_WARGAMES_ZEROAD_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_FLIGHTGEAR_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_XVFB_RESOLUTION",
     ):
@@ -436,23 +534,37 @@ def _image_exists(image: str) -> bool:
     )
 
 
-def _ensure_linux_box_image() -> None:
-    if shutil.which("docker") is None:
-        raise SystemExit(
-            "WarGames needs the local Linux runtime box to run game environments from this host."
-        )
-    if _image_exists(_LINUX_BOX_IMAGE):
-        return
+def _linux_box_runtime(game: str) -> LinuxBoxRuntime:
+    return _LINUX_BOX_RUNTIMES.get(game, _LINUX_BOX_RUNTIMES["redalert"])
+
+
+def _linux_box_game(args: argparse.Namespace) -> str:
+    return str(getattr(args, "game", None) or "redalert")
+
+
+def _docker_build(*, image: str, dockerfile: str) -> None:
     subprocess.run(
-        ["docker", "build", "-f", "docker/linux/Dockerfile", "-t", _LINUX_BOX_IMAGE, "."],
+        ["docker", "build", "-f", dockerfile, "-t", image, "."],
         cwd=_repo_root(),
         check=True,
     )
 
 
+def _ensure_linux_box_image(runtime: LinuxBoxRuntime) -> None:
+    if shutil.which("docker") is None:
+        raise SystemExit(
+            "WarGames needs Docker to run the per-game Linux/Xvfb runtime images."
+        )
+    if not _image_exists(_LINUX_BOX_BASE_IMAGE):
+        _docker_build(image=_LINUX_BOX_BASE_IMAGE, dockerfile=_LINUX_BOX_BASE_DOCKERFILE)
+    if not _image_exists(runtime.image):
+        _docker_build(image=runtime.image, dockerfile=runtime.dockerfile)
+
+
 def _linux_box_command(
     argv: Sequence[str],
     *,
+    runtime: LinuxBoxRuntime | None = None,
     stream_port: int | None = None,
     resolution: tuple[int, int] | None = None,
 ) -> list[str]:
@@ -461,13 +573,15 @@ def _linux_box_command(
         port = _arg_value(argv, "--port") or "8000"
         command.extend(["-p", f"127.0.0.1:{port}:{port}"])
     host_repo = _repo_root()
+    active_runtime = runtime or _linux_box_runtime(_linux_box_game_from_argv(argv))
     command.extend(["-v", f"{host_repo}:/workspace/host-wargames"])
-    command.extend(["-v", f"{_LINUX_BOX_CACHE_VOLUME}:{_LINUX_BOX_CACHE_MOUNT}"])
+    command.extend(["-v", f"{active_runtime.cache_volume}:{_LINUX_BOX_CACHE_MOUNT}"])
     command.extend(["--entrypoint", "/workspace/host-wargames/scripts/linux_box.sh"])
     env: dict[str, str] = {_LINUX_BOX_ENV: "1"}
     for key, value in os.environ.items():
         if key.startswith("LAYERBRAIN_WARGAMES_"):
             env[key] = value
+    env["LAYERBRAIN_WARGAMES_GAME"] = active_runtime.game
     active_resolution = resolution or _runtime_resolution(env)
     env["LAYERBRAIN_WARGAMES_CACHE_DIR"] = _LINUX_BOX_CACHE_MOUNT
     env.setdefault("LAYERBRAIN_WARGAMES_XVFB_RESOLUTION", _resolution_text(active_resolution))
@@ -475,10 +589,13 @@ def _linux_box_command(
     env.setdefault(
         "LAYERBRAIN_WARGAMES_REDALERT_OPENRA_WINDOW_SIZE", _resolution_text(active_resolution)
     )
-    env.setdefault("LAYERBRAIN_WARGAMES_FLIGHTGEAR_WINDOW_SIZE", _resolution_text(active_resolution))
+    env.setdefault(
+        "LAYERBRAIN_WARGAMES_FLIGHTGEAR_WINDOW_SIZE", _resolution_text(active_resolution)
+    )
     env.setdefault(
         "LAYERBRAIN_WARGAMES_SUPERTUXKART_WINDOW_SIZE", _resolution_text(active_resolution)
     )
+    env.setdefault("LAYERBRAIN_WARGAMES_ZEROAD_WINDOW_SIZE", _resolution_text(active_resolution))
     if stream_port is not None:
         env["LAYERBRAIN_WARGAMES_HOST_STREAM_URL"] = (
             f"udp://host.docker.internal:{stream_port}?pkt_size=1316"
@@ -486,6 +603,14 @@ def _linux_box_command(
     env.setdefault(
         "LAYERBRAIN_WARGAMES_REDALERT_OPENRA_SUPPORT_DIR",
         f"{_LINUX_BOX_CACHE_MOUNT}/openra-support",
+    )
+    env.setdefault(
+        "LAYERBRAIN_WARGAMES_REDALERT_OPENRA_ROOT",
+        f"{_LINUX_BOX_CACHE_MOUNT}/games/redalert/openra",
+    )
+    env.setdefault(
+        "LAYERBRAIN_WARGAMES_REDALERT_OPENRA_BINARY",
+        f"{_LINUX_BOX_CACHE_MOUNT}/games/redalert/openra/launch-game.sh",
     )
     for key, value in sorted(env.items()):
         command.extend(["-e", f"{key}={value}"])
@@ -495,7 +620,7 @@ def _linux_box_command(
         "&& exec python -m wargames "
     )
     inner += " ".join(shlex_quote(arg) for arg in _without_host_watch(argv))
-    command.extend([_LINUX_BOX_IMAGE, "bash", "-lc", inner])
+    command.extend([active_runtime.image, "bash", "-lc", inner])
     return command
 
 
@@ -510,8 +635,13 @@ def _arg_value(argv: Sequence[str], name: str) -> str | None:
         return None
 
 
+def _linux_box_game_from_argv(argv: Sequence[str]) -> str:
+    return _arg_value(argv, "--game") or "redalert"
+
+
 def _run_in_linux_box(argv: Sequence[str], args: argparse.Namespace) -> int:
-    _ensure_linux_box_image()
+    runtime = _linux_box_runtime(_linux_box_game(args))
+    _ensure_linux_box_image(runtime)
     stream_process: subprocess.Popen[bytes] | None = None
     stream_port: int | None = None
     resolution = _runtime_resolution()
@@ -521,7 +651,13 @@ def _run_in_linux_box(argv: Sequence[str], args: argparse.Namespace) -> int:
         stream_process = _start_host_stream_viewer(stream_port, resolution=resolution)
     try:
         completed = subprocess.run(
-            _linux_box_command(argv, stream_port=stream_port, resolution=resolution), check=False
+            _linux_box_command(
+                argv,
+                runtime=runtime,
+                stream_port=stream_port,
+                resolution=resolution,
+            ),
+            check=False,
         )
         return completed.returncode
     finally:
@@ -564,6 +700,51 @@ def _clone_supertuxkart_source(target: Path) -> None:
         raise SystemExit(f"SuperTuxKart clone failed with exit code {exc.returncode}") from exc
 
 
+def _clone_zeroad_source(target: Path) -> None:
+    git = shutil.which("git")
+    if git is None:
+        raise SystemExit("git is required to install 0 A.D.")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    command = [
+        git,
+        "clone",
+        "--depth",
+        "1",
+        "--branch",
+        _ZEROAD_REF,
+        _ZEROAD_REPO,
+        str(target),
+    ]
+    try:
+        subprocess.run(command, check=True)
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(f"0 A.D. clone failed with exit code {exc.returncode}") from exc
+
+
+def _sync_zeroad_lfs(source_root: Path) -> None:
+    if _zeroad_lfs_assets_ready(source_root):
+        return
+    if shutil.which("git") is None or shutil.which("git-lfs") is None:
+        raise SystemExit("git-lfs is required to install 0 A.D. runtime assets")
+    git = ["git", "-c", f"safe.directory={source_root}"]
+    commands = (
+        [*git, "lfs", "install", "--local"],
+        [*git, "lfs", "pull"],
+    )
+    for command in commands:
+        try:
+            subprocess.run(command, cwd=source_root, check=True)
+        except subprocess.CalledProcessError as exc:
+            raise SystemExit(f"0 A.D. Git LFS sync failed with exit code {exc.returncode}") from exc
+    if not _zeroad_lfs_assets_ready(source_root):
+        raise SystemExit("0 A.D. Git LFS sync did not materialize runtime assets")
+
+
+def _zeroad_lfs_assets_ready(source_root: Path) -> bool:
+    font = source_root / "binaries" / "data" / "mods" / "mod" / "fonts" / "DejaVuSansMono.ttf"
+    return font.exists() and font.stat().st_size > 100_000
+
+
 def _install_probe(openra_root: Path) -> None:
     script = _repo_root() / "scripts" / "install_probe.sh"
     try:
@@ -582,6 +763,96 @@ def _install_supertuxkart_probe(source_root: Path) -> None:
         ) from exc
 
 
+def _normalize_zeroad_premake_version(source_root: Path, *, jobs: str) -> None:
+    premake_vendor_root = source_root / "libraries" / "source" / "premake-core"
+    candidates = sorted(premake_vendor_root.glob("premake-core-*"))
+    if not candidates:
+        raise SystemExit(f"0 A.D. vendored Premake source was not built under {premake_vendor_root}")
+
+    premake_root = next((path for path in candidates if "5.0.0" in path.name), candidates[-1])
+    version = premake_root.name.removeprefix("premake-core-")
+    makefile = premake_root / "build" / "bootstrap" / "Premake5.make"
+    if not makefile.exists():
+        raise SystemExit(f"0 A.D. vendored Premake makefile is missing: {makefile}")
+
+    contents = makefile.read_text(encoding="utf-8")
+    updated = re.sub(
+        r'-DPREMAKE_VERSION=\\?"[^\\"]+\\?"',
+        f'-DPREMAKE_VERSION=\\"{version}\\"',
+        contents,
+    )
+    if updated == contents and f'-DPREMAKE_VERSION=\\"{version}\\"' not in contents:
+        raise SystemExit(f"0 A.D. vendored Premake makefile lacks PREMAKE_VERSION: {makefile}")
+    makefile.write_text(updated, encoding="utf-8")
+
+    target_binary = premake_vendor_root / "bin" / "premake5"
+    if target_binary.exists():
+        try:
+            completed = subprocess.run(
+                [str(target_binary), "--version"],
+                cwd=source_root,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+        except subprocess.CalledProcessError:
+            pass
+        else:
+            if version in completed.stdout:
+                return
+
+    shutil.rmtree(premake_root / "build" / "bootstrap" / "obj", ignore_errors=True)
+    built_binary = premake_root / "bin" / "release" / "premake5"
+    built_binary.unlink(missing_ok=True)
+    target_binary.unlink(missing_ok=True)
+    try:
+        subprocess.run(
+            ["make", "-C", "build/bootstrap", f"-j{jobs}", "config=release"],
+            cwd=premake_root,
+            check=True,
+        )
+        target_binary.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(built_binary, target_binary)
+        completed = subprocess.run(
+            [str(target_binary), "--version"],
+            cwd=source_root,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(
+            f"0 A.D. vendored Premake rebuild failed with exit code {exc.returncode}"
+        ) from exc
+
+    if version not in completed.stdout:
+        raise SystemExit(
+            "0 A.D. vendored Premake reports an incompatible version: "
+            f"{completed.stdout.strip()}"
+        )
+
+
+def _build_zeroad_source(source_root: Path) -> None:
+    jobs = str(max(1, min(os.cpu_count() or 1, 4)))
+    if shutil.which("cbindgen") is None:
+        try:
+            subprocess.run(["cargo", "install", "--locked", "cbindgen@0.29.0"], check=True)
+        except subprocess.CalledProcessError as exc:
+            raise SystemExit(f"cbindgen install failed with exit code {exc.returncode}") from exc
+    commands = (
+        ["libraries/build-source-libs.sh"],
+        ["build/workspaces/update-workspaces.sh", "--without-atlas", f"-j{jobs}"],
+        ["make", "-C", "build/workspaces/gcc", f"-j{jobs}", "pyrogenesis"],
+    )
+    for command in commands:
+        try:
+            subprocess.run(command, cwd=source_root, check=True)
+            if command[0] == "libraries/build-source-libs.sh":
+                _normalize_zeroad_premake_version(source_root, jobs=jobs)
+        except subprocess.CalledProcessError as exc:
+            raise SystemExit(f"0 A.D. build failed with exit code {exc.returncode}") from exc
+
+
 def _install_redalert(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
     openra_root = Path(args.root).expanduser() if args.root else _default_openra_root(env)
     status = "present"
@@ -591,7 +862,8 @@ def _install_redalert(args: argparse.Namespace, env: Mapping[str, str] = os.envi
         if not _is_openra_root(openra_root):
             if any(openra_root.iterdir()):
                 raise SystemExit(
-                    f"OpenRA install path exists but is not an OpenRA source checkout: {openra_root}"
+                    "OpenRA install path exists but is not an OpenRA source checkout: "
+                    f"{openra_root}"
                 )
             _clone_openra(repo=args.repo, ref=args.ref, target=openra_root)
             status = "installed"
@@ -635,8 +907,8 @@ def _install_flightgear(args: argparse.Namespace, env: Mapping[str, str] = os.en
 
     if binary is None:
         raise SystemExit(
-            "FlightGear was not found in the Linux runtime. Rebuild the WarGames Docker image "
-            "or register a container-visible install with --root."
+            "FlightGear was not found in its Docker runtime image. Rebuild the FlightGear "
+            "runtime image or register a container-visible install with --root."
         )
 
     payload = {
@@ -653,7 +925,11 @@ def _install_flightgear(args: argparse.Namespace, env: Mapping[str, str] = os.en
 
 def _install_supertuxkart(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
     root = Path(args.root).expanduser() if args.root else None
-    source_root = root if root and (root / "CMakeLists.txt").exists() else _default_supertuxkart_source_root(env)
+    source_root = (
+        root
+        if root and (root / "CMakeLists.txt").exists()
+        else _default_supertuxkart_source_root(env)
+    )
     status = "present"
 
     if not source_root.exists():
@@ -680,10 +956,48 @@ def _install_supertuxkart(args: argparse.Namespace, env: Mapping[str, str] = os.
     return 0
 
 
+def _install_zeroad(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
+    root = Path(args.root).expanduser() if args.root else None
+    source_root = (
+        root
+        if root and (root / "build" / "workspaces").exists()
+        else _default_zeroad_source_root(env)
+    )
+    status = "present"
+
+    binary = _find_zeroad_binary(root)
+    if binary is None:
+        if not source_root.exists():
+            _clone_zeroad_source(source_root)
+            status = "installed"
+        elif not (source_root / "build" / "workspaces").exists():
+            raise SystemExit(f"0 A.D. source path is not a source checkout: {source_root}")
+        _sync_zeroad_lfs(source_root)
+        _build_zeroad_source(source_root)
+        binary = _find_zeroad_binary(source_root)
+    elif (source_root / ".git").exists():
+        _sync_zeroad_lfs(source_root)
+
+    if binary is None:
+        raise SystemExit(f"0 A.D. install did not produce a binary under {source_root}")
+
+    payload = {
+        "game": "zeroad",
+        "binary": str(binary),
+        "root": str(_zeroad_root(binary, root or source_root)),
+        "source_root": str(source_root),
+        "state_interface": "upstream 0 A.D. RL HTTP interface",
+        "status": status,
+    }
+    _write_game_install_manifest("zeroad", payload, env)
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0
+
+
 async def _install(args: argparse.Namespace) -> int:
     if os.environ.get(_LINUX_BOX_ENV) != "1" and not args.root:
         raise SystemExit(
-            "game runtimes install inside the WarGames Docker runtime; "
+            "game runtimes install inside their per-game WarGames Docker image; "
             "run the normal host CLI or pass a container-visible --root"
         )
     if args.game == "redalert":
@@ -692,6 +1006,8 @@ async def _install(args: argparse.Namespace) -> int:
         return await asyncio.to_thread(_install_flightgear, args)
     if args.game == "supertuxkart":
         return await asyncio.to_thread(_install_supertuxkart, args)
+    if args.game == "zeroad":
+        return await asyncio.to_thread(_install_zeroad, args)
     raise SystemExit(f"unknown game: {args.game}")
 
 
@@ -1026,6 +1342,8 @@ async def _serve(args: argparse.Namespace) -> int:
         from wargames.games.flightgear.transport.ws import app
     elif args.game == "supertuxkart":
         from wargames.games.supertuxkart.transport.ws import app
+    elif args.game == "zeroad":
+        from wargames.games.zeroad.transport.ws import app
     else:
         raise SystemExit(f"unknown game: {args.game}")
 

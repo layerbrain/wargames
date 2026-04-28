@@ -1,0 +1,66 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.arcadia.hard",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/arcadia",
+  "map_type": "scenario",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "Ceasefire": 0,
+    "CircularMap": false,
+    "Description": "Springtime in Arcadia, Greece.",
+    "LockTeams": false,
+    "Name": "Arcadia",
+    "PlayerData": [
+      {
+        "Civ": "spart",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Player 1",
+        "Team": 1
+      },
+      {
+        "Civ": "gaul",
+        "Color": {
+          "b": 150,
+          "g": 20,
+          "r": 20
+        },
+        "Name": "Player 2",
+        "Team": 2
+      }
+    ],
+    "Preview": "arcadia.png",
+    "RelicCount": 2,
+    "RelicDuration": 10,
+    "RevealMap": false,
+    "Size": 256,
+    "TriggerScripts": [
+      "scripts/TriggerHelper.js",
+      "scripts/ConquestCommon.js",
+      "scripts/ConquestUnits.js"
+    ],
+    "VictoryConditions": [
+      "conquest_units"
+    ],
+    "WonderDuration": 10,
+    "mapName": "Arcadia",
+    "mapType": "scenario"
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest_units"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Arcadia (Hard)"
+}

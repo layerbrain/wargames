@@ -2,11 +2,10 @@
 
 Red Alert is the first WarGames environment.
 
-The agent sees the OpenRA window as pixels. It uses mouse and keyboard
-actions like a human player. WarGames reads private OpenRA state only for
-rewards.
+WarGames captures the OpenRA window as pixels, applies mouse and keyboard
+actions, and reads OpenRA state for rewards.
 
-![Kimi K2.5 plays Red Alert](../assets/kimi-k2-redalert-demo.gif)
+![Red Alert control demo](../assets/redalert-control-demo.gif)
 
 ## Run It
 
@@ -20,8 +19,8 @@ wargames run \
   --record summary_only
 ```
 
-The game runs inside the WarGames Docker runtime. OpenRA and the Red Alert
-content are cached inside the Docker volume.
+The game runs inside the Red Alert Docker runtime image. OpenRA and the Red
+Alert content are cached in the Red Alert Docker volume.
 
 ## Missions
 
