@@ -6,6 +6,8 @@ The agent sees the race window as pixels. It controls the kart with keyboard
 and mouse events. WarGames reads race metadata and process state only for
 rewards. The agent does not see that hidden state.
 
+![A model drives SuperTuxKart](../assets/supertuxkart-control-demo.gif)
+
 ## Run It
 
 ```bash
