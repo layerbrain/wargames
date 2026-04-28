@@ -1,0 +1,35 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.mediterranean-cove-2p.easy",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/mediterranean_cove_2p",
+  "map_type": "skirmish",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "A sheltered natural harbour on the Mediterranean coast provides the resources for battle.",
+    "Keywords": [],
+    "Name": "Mediterranean Coves (2)",
+    "PlayerData": [
+      {},
+      {}
+    ],
+    "Preview": "mediterranean_coves.png",
+    "VictoryConditions": [
+      "wonder"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:2",
+    "wonder"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Mediterranean Coves (2) (Easy)"
+}

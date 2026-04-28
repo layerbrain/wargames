@@ -1,0 +1,36 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.barcania-3p.hard",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/barcania_3p",
+  "map_type": "skirmish",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "A wild and wooded isle, full of forests, gold, and mystery. Mountains, seas, and thick forests make for a very dynamic and fast-paced 3-player map with lots of potential for skirmishing and guerrilla warfare as well as tough defensive fighting or aggressive maneuvers.",
+    "Keywords": [],
+    "Name": "Barcania (3)",
+    "PlayerData": [
+      {},
+      {},
+      {}
+    ],
+    "Preview": "barcania_3p.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:3",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Barcania (3) (Hard)"
+}

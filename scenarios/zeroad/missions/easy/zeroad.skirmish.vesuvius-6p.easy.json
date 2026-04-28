@@ -1,0 +1,39 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.vesuvius-6p.easy",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/vesuvius_6p",
+  "map_type": "skirmish",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Skirmish as ash lightly falls around this recently erupted volcano. The scorched landscape offers little food, though the blasted forests are still laden with useful wood.",
+    "Keywords": [],
+    "Name": "Vesuvius (6)",
+    "PlayerData": [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    "Preview": "vesuvius_6p.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:6",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Vesuvius (6) (Easy)"
+}

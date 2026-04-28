@@ -1,0 +1,45 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.team-oasis-2pv2p.easy",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/team_oasis_2pv2p",
+  "map_type": "skirmish",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "An oasis surrounded by mountains and desert. Farmlands near the water's edge provide much-needed boost in farming, but foraging and hunting are in short supply.",
+    "Keywords": [],
+    "Name": "Team Oasis (2v2)",
+    "PlayerData": [
+      {
+        "Team": 0
+      },
+      {
+        "Team": 1
+      },
+      {
+        "Team": 0
+      },
+      {
+        "Team": 1
+      }
+    ],
+    "Preview": "median_oasis_5.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Team Oasis (2v2) (Easy)"
+}

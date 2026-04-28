@@ -1,0 +1,99 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.sahel.normal",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/sahel",
+  "map_type": "scenario",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Situated Southside of the Atlas mountain range in North Africa.\n\nA somewhat open map with an abundance of food and mineral resources, while wood is somewhat scarce.",
+    "Keywords": [],
+    "LockTeams": false,
+    "Name": "Sahel",
+    "PlayerData": [
+      {
+        "Civ": "rome",
+        "Color": {
+          "b": 14,
+          "g": 14,
+          "r": 177
+        },
+        "Name": "Aulus Manlius Capitolinus",
+        "Resources": {
+          "food": 300,
+          "metal": 300,
+          "stone": 300,
+          "wood": 300
+        },
+        "Team": 0
+      },
+      {
+        "Civ": "cart",
+        "Color": {
+          "b": 199,
+          "g": 67,
+          "r": 56
+        },
+        "Name": "Hasdrubal the Fair",
+        "Resources": {
+          "food": 300,
+          "metal": 300,
+          "stone": 300,
+          "wood": 300
+        },
+        "Team": 1
+      },
+      {
+        "Civ": "pers",
+        "Color": {
+          "b": 5,
+          "g": 165,
+          "r": 50
+        },
+        "Name": "Artaxshacha II",
+        "Resources": {
+          "food": 300,
+          "metal": 300,
+          "stone": 300,
+          "wood": 300
+        },
+        "Team": 0
+      },
+      {
+        "Civ": "iber",
+        "Color": {
+          "b": 147,
+          "g": 40,
+          "r": 99
+        },
+        "Name": "Tautalus",
+        "Resources": {
+          "food": 300,
+          "metal": 300,
+          "stone": 100,
+          "wood": 300
+        },
+        "Team": 1
+      }
+    ],
+    "Preview": "sahel_scenario.png",
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Sahel (Normal)"
+}

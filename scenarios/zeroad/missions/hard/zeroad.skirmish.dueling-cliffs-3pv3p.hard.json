@@ -1,0 +1,51 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.dueling-cliffs-3pv3p.hard",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/dueling_cliffs_3pv3p",
+  "map_type": "skirmish",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "A foggy alpine landscape becomes a battleground as each team has an ally squashed precariously between two enemies. Two forest cliffs overlook the center lake, accessible from the sides of the map.",
+    "Keywords": [],
+    "Name": "Dueling Cliffs (3v3)",
+    "PlayerData": [
+      {
+        "Team": 0
+      },
+      {
+        "Team": 1
+      },
+      {
+        "Team": 0
+      },
+      {
+        "Team": 1
+      },
+      {
+        "Team": 0
+      },
+      {
+        "Team": 1
+      }
+    ],
+    "Preview": "dueling_cliffs.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:6",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Dueling Cliffs (3v3) (Hard)"
+}

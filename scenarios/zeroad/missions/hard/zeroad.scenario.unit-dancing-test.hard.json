@@ -1,0 +1,47 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.unit-dancing-test.hard",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/unit_dancing_test",
+  "map_type": "scenario",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "This map is designed to test a few different cases of 'Dancing'.",
+    "ExploredMap": true,
+    "Keywords": [
+      "trigger",
+      "demo"
+    ],
+    "Name": "Unit Dancing test",
+    "PlayerData": [
+      null,
+      {
+        "Civ": "athen"
+      },
+      {
+        "AI": null,
+        "Civ": "athen"
+      }
+    ],
+    "RevealMap": false,
+    "TriggerScripts": [
+      "scripts/TriggerHelper.js",
+      "scenarios/unit_dancing_test_triggers.js"
+    ],
+    "VictoryConditions": []
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Unit Dancing test (Hard)"
+}

@@ -1,0 +1,84 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.miletus.easy",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/miletus",
+  "map_type": "scenario",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "Description": "A sandbox scenario for one player.",
+    "Keywords": [
+      "demo"
+    ],
+    "Name": "Miletus",
+    "PlayerData": [
+      {
+        "Civ": "athen",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "Miletus",
+        "PopulationLimit": 1000,
+        "Resources": {
+          "food": 1000,
+          "metal": 1000,
+          "stone": 1000,
+          "wood": 1000
+        },
+        "StartingCamera": {
+          "Position": {
+            "x": 225.878,
+            "y": 22.3825,
+            "z": 237.098
+          },
+          "Rotation": {
+            "x": 30,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "Team": -1
+      },
+      {
+        "Civ": "rome",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Romans",
+        "StartingCamera": {
+          "Position": {
+            "x": 39.0925,
+            "y": 22.3825,
+            "z": 58.3799
+          },
+          "Rotation": {
+            "x": 30,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "Team": -1
+      }
+    ],
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Miletus (Easy)"
+}

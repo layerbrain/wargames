@@ -1,0 +1,81 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.flight-demo.normal",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/flight_demo",
+  "map_type": "scenario",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Fly some Mustangs.",
+    "Keywords": [
+      "demo"
+    ],
+    "LockTeams": false,
+    "Name": "Flight Demo",
+    "PlayerData": [
+      null,
+      {
+        "AI": "",
+        "Civ": "athen",
+        "Color": {
+          "b": 200,
+          "g": 80,
+          "r": 80
+        },
+        "Name": "Player 1",
+        "StartingCamera": {
+          "Position": {
+            "x": 288.285,
+            "y": 22.3825,
+            "z": 378.388
+          },
+          "Rotation": {
+            "x": 30,
+            "y": 0,
+            "z": 0
+          }
+        }
+      },
+      {
+        "AI": "",
+        "Civ": "athen",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Player 2",
+        "StartingCamera": {
+          "Position": {
+            "x": 776.249,
+            "y": 22.3825,
+            "z": 542.534
+          },
+          "Rotation": {
+            "x": 30,
+            "y": 0,
+            "z": 0
+          }
+        }
+      }
+    ],
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Flight Demo (Normal)"
+}

@@ -1,0 +1,85 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.sandbox-athenians.hard",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/sandbox_athenians",
+  "map_type": "scenario",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Play with the Athenians faction in a non-threatening sandbox environment.",
+    "Keywords": [
+      "demo"
+    ],
+    "LockTeams": false,
+    "Name": "Sandbox - The Athenians",
+    "PlayerData": [
+      {
+        "AI": "",
+        "Civ": "athen",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "The Athenians",
+        "Resources": {
+          "food": 100000,
+          "metal": 100000,
+          "stone": 100000,
+          "wood": 100000
+        },
+        "Team": 0
+      },
+      {
+        "AI": "",
+        "Civ": "spart",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "The Spartans",
+        "Team": -1
+      },
+      {
+        "AI": "",
+        "Civ": "pers",
+        "Color": {
+          "b": 147,
+          "g": 40,
+          "r": 99
+        },
+        "Name": "The Persians",
+        "Team": -1
+      },
+      {
+        "AI": "",
+        "Civ": "gaul",
+        "Color": {
+          "b": 75,
+          "g": 230,
+          "r": 230
+        },
+        "Name": "The Gauls",
+        "Team": -1
+      }
+    ],
+    "Preview": "fractal.png",
+    "RevealMap": true,
+    "VictoryConditions": []
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Sandbox - The Athenians (Hard)"
+}

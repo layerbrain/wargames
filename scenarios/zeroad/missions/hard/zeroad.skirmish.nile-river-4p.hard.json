@@ -1,0 +1,47 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.nile-river-4p.hard",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/nile_river_4p",
+  "map_type": "skirmish",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "An Egyptian desert map bisected by the broad Nile River. Organic resources cluster near the river, while mineral resources can be found in the desert hinterlands.",
+    "Keywords": [
+      "naval"
+    ],
+    "Name": "Nile River (4)",
+    "PlayerData": [
+      {
+        "Team": 0
+      },
+      {
+        "Team": 0
+      },
+      {
+        "Team": 1
+      },
+      {
+        "Team": 1
+      }
+    ],
+    "Preview": "nile_river.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Nile River (4) (Hard)"
+}

@@ -1,0 +1,47 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.unit-chasing-test.hard",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/unit_chasing_test",
+  "map_type": "scenario",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": false,
+    "Description": "This map is designed to test a few different cases of units chasing each other.",
+    "ExploredMap": true,
+    "Keywords": [
+      "trigger",
+      "demo"
+    ],
+    "Name": "Unit Chasing test",
+    "PlayerData": [
+      null,
+      {
+        "Civ": "athen"
+      },
+      {
+        "AI": null,
+        "Civ": "athen"
+      }
+    ],
+    "RevealMap": false,
+    "TriggerScripts": [
+      "scripts/TriggerHelper.js",
+      "scenarios/unit_chasing_test_triggers.js"
+    ],
+    "VictoryConditions": []
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Unit Chasing test (Hard)"
+}

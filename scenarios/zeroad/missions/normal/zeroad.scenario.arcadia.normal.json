@@ -11,55 +11,44 @@
   "native_difficulty": "3",
   "player_id": 1,
   "settings": {
-    "Ceasefire": 0,
     "CircularMap": false,
-    "Description": "Springtime in Arcadia, Greece.",
+    "Description": "Springtime in Arcadia, Greece. Spring rains have gorged what would otherwise be dry creek beds throughout the rest of the year, dividing the lands between two warring tribes. \n\nPlayers start on either side of a mountainous region rich in resources. Extra starting buildings help players jumpstart building their new colonies.",
+    "Keywords": [],
     "LockTeams": false,
     "Name": "Arcadia",
     "PlayerData": [
       {
         "Civ": "spart",
         "Color": {
-          "b": 20,
-          "g": 20,
-          "r": 150
+          "b": 200,
+          "g": 46,
+          "r": 46
         },
         "Name": "Player 1",
-        "Team": 1
+        "Team": -1
       },
       {
         "Civ": "gaul",
         "Color": {
-          "b": 150,
+          "b": 20,
           "g": 20,
-          "r": 20
+          "r": 150
         },
         "Name": "Player 2",
-        "Team": 2
+        "Team": -1
       }
     ],
     "Preview": "arcadia.png",
-    "RelicCount": 2,
-    "RelicDuration": 10,
     "RevealMap": false,
-    "Size": 256,
-    "TriggerScripts": [
-      "scripts/TriggerHelper.js",
-      "scripts/ConquestCommon.js",
-      "scripts/ConquestUnits.js"
-    ],
     "VictoryConditions": [
-      "conquest_units"
-    ],
-    "WonderDuration": 10,
-    "mapName": "Arcadia",
-    "mapType": "scenario"
+      "conquest"
+    ]
   },
   "source": "builtin",
   "tags": [
     "scenario",
     "players:2",
-    "conquest_units"
+    "conquest"
   ],
   "time_limit_ticks": 36000,
   "title": "Arcadia (Normal)"

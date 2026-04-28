@@ -1,0 +1,63 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.test-foundation.normal",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/test_foundation",
+  "map_type": "scenario",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "AISeed": 0,
+    "CircularMap": true,
+    "Description": "This map is designed to help artists and modders find the adequate foundation for a specific building. This map is not meant to be playable.",
+    "Keywords": [
+      "demo"
+    ],
+    "LockTeams": false,
+    "Name": "Foundation Testing Map",
+    "PlayerData": [
+      "",
+      {
+        "Civ": "athen"
+      },
+      {
+        "Civ": "cart"
+      },
+      {
+        "Civ": "gaul"
+      },
+      {
+        "Civ": "iber"
+      },
+      {
+        "Civ": "mace"
+      },
+      {
+        "Civ": "pers"
+      },
+      {
+        "Civ": "rome"
+      },
+      {
+        "Civ": "spart"
+      }
+    ],
+    "Preview": "",
+    "RevealMap": true,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:8",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Foundation Testing Map (Normal)"
+}

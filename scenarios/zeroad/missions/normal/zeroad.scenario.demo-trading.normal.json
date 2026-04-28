@@ -1,0 +1,64 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.demo-trading.normal",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/demo_trading",
+  "map_type": "scenario",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "A demonstration of the new trading feature.",
+    "Keywords": [
+      "demo"
+    ],
+    "LockTeams": false,
+    "Name": "Trading Demo",
+    "PlayerData": [
+      {
+        "Civ": "rome",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "Player 1",
+        "Team": 0
+      },
+      {
+        "Civ": "pers",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Player 2",
+        "Team": 0
+      },
+      {
+        "Civ": "cart",
+        "Color": {
+          "b": 0,
+          "g": 255,
+          "r": 255
+        },
+        "Name": "Player 3",
+        "Team": 0
+      }
+    ],
+    "RevealMap": true,
+    "VictoryConditions": []
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:3",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Trading Demo (Normal)"
+}

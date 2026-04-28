@@ -1,0 +1,37 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.obedska-bog-4p.easy",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/obedska_bog_4p",
+  "map_type": "skirmish",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "A lazy river meanders through these Serbian wetlands. Stone is scarce, but many lumps of bog iron sit waiting to be found.\n\n*This map makes heavy use of grass actors which may adversely affect performance.",
+    "Keywords": [],
+    "Name": "Obedska Bog (4)",
+    "PlayerData": [
+      {},
+      {},
+      {},
+      {}
+    ],
+    "Preview": "obedska_bog_4p.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Obedska Bog (4) (Easy)"
+}

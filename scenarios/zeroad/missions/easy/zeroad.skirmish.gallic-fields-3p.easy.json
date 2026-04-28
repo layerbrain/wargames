@@ -1,0 +1,43 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.gallic-fields-3p.easy",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/gallic_fields_3p",
+  "map_type": "skirmish",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Defend your Gallic outpost against attacks from your treacherous neighbors!\n\nEach player begins the match with a wooden palisade and some guard towers atop a low embankment.\n\nWatch out for Romans passing by!",
+    "Keywords": [
+      "trigger"
+    ],
+    "Name": "Gallic Fields (3)",
+    "PlayerData": [
+      null,
+      {},
+      {},
+      {}
+    ],
+    "Preview": "gallic_fields.png",
+    "TriggerScripts": [
+      "scripts/TriggerHelper.js",
+      "skirmishes/gallic_fields_3p.js"
+    ],
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:3",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Gallic Fields (3) (Easy)"
+}

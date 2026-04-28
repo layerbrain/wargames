@@ -1,0 +1,99 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.siwa-oasis.easy",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/siwa_oasis",
+  "map_type": "scenario",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Carthage vs. Macedon vs. Persia vs. Iberia! A large oasis acts as the hub of mountainous spokes that divide the home territories of each player.",
+    "Keywords": [],
+    "LockTeams": false,
+    "Name": "Siwa Oasis",
+    "PlayerData": [
+      {
+        "Civ": "cart",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "Player 1",
+        "Resources": {
+          "food": 400,
+          "metal": 200,
+          "stone": 200,
+          "wood": 400
+        },
+        "Team": -1
+      },
+      {
+        "Civ": "mace",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Player 2",
+        "Resources": {
+          "food": 400,
+          "metal": 200,
+          "stone": 200,
+          "wood": 400
+        },
+        "Team": -1
+      },
+      {
+        "Civ": "pers",
+        "Color": {
+          "b": 128,
+          "g": 128,
+          "r": 0
+        },
+        "Name": "Player 3",
+        "Resources": {
+          "food": 400,
+          "metal": 200,
+          "stone": 200,
+          "wood": 400
+        },
+        "Team": -1
+      },
+      {
+        "Civ": "iber",
+        "Color": {
+          "b": 6,
+          "g": 150,
+          "r": 255
+        },
+        "Name": "Player 4",
+        "Resources": {
+          "food": 400,
+          "metal": 200,
+          "stone": 200,
+          "wood": 400
+        },
+        "Team": -1
+      }
+    ],
+    "Preview": "siwa_oasis.png",
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Siwa Oasis (Easy)"
+}

@@ -1,0 +1,184 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.campaign-test-map.easy",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/campaign_test_map",
+  "map_type": "scenario",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": false,
+    "Description": "A test map for potential Strategic Campaigns.",
+    "Keywords": [
+      "demo"
+    ],
+    "LockTeams": false,
+    "Name": "Strategic Campaign Proof of Concept",
+    "PlayerData": [
+      {
+        "AI": "",
+        "Civ": "athen",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "Delian League",
+        "Resources": {
+          "food": 700,
+          "metal": 500,
+          "stone": 500,
+          "wood": 700
+        },
+        "StartingCamera": {
+          "Position": {
+            "x": 1423.85,
+            "y": 22.3825,
+            "z": 1111.44
+          },
+          "Rotation": {
+            "x": 30,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "Team": -1
+      },
+      {
+        "AI": "",
+        "Civ": "athen",
+        "Color": {
+          "b": 0,
+          "g": 128,
+          "r": 255
+        },
+        "Name": "Thebes",
+        "Resources": {
+          "food": 700,
+          "metal": 500,
+          "stone": 500,
+          "wood": 700
+        },
+        "StartingCamera": {
+          "Position": {
+            "x": 826.021,
+            "y": 22.3825,
+            "z": 573.581
+          },
+          "Rotation": {
+            "x": 30,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "Team": -1
+      },
+      {
+        "AI": "",
+        "Civ": "mace",
+        "Color": {
+          "b": 5,
+          "g": 165,
+          "r": 50
+        },
+        "Name": "Thessaly",
+        "Resources": {
+          "food": 700,
+          "metal": 500,
+          "stone": 500,
+          "wood": 700
+        },
+        "Team": -1
+      },
+      {
+        "AI": "",
+        "Civ": "athen",
+        "Color": {
+          "b": 0,
+          "g": 255,
+          "r": 255
+        },
+        "Name": "Megara",
+        "Resources": {
+          "food": 700,
+          "metal": 500,
+          "stone": 500,
+          "wood": 700
+        },
+        "Team": -1
+      },
+      {
+        "AI": "",
+        "Civ": "athen",
+        "Color": {
+          "b": 255,
+          "g": 255,
+          "r": 0
+        },
+        "Name": "Eretria",
+        "Resources": {
+          "food": 700,
+          "metal": 500,
+          "stone": 500,
+          "wood": 700
+        },
+        "Team": -1
+      },
+      {
+        "AI": "",
+        "Civ": "athen",
+        "Color": {
+          "b": 200,
+          "g": 80,
+          "r": 160
+        },
+        "Name": "Chalcis",
+        "Resources": {
+          "food": 700,
+          "metal": 500,
+          "stone": 500,
+          "wood": 700
+        },
+        "Team": -1
+      },
+      {
+        "AI": "",
+        "Civ": "spart",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Peloponnesian League",
+        "Team": -1
+      },
+      {
+        "AI": "",
+        "Civ": "athen",
+        "Color": {
+          "b": 64,
+          "g": 64,
+          "r": 64
+        },
+        "Name": "Religious Institutions",
+        "Team": -1
+      }
+    ],
+    "RevealMap": true,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:8",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Strategic Campaign Proof of Concept (Easy)"
+}

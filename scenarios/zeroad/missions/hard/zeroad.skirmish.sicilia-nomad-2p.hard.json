@@ -1,0 +1,61 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.sicilia-nomad-2p.hard",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/sicilia_nomad_2p",
+  "map_type": "skirmish",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "The large Mediterranean island of Sicily is open for conquest.\n[color=\"orange\"]Tip: docks are useful dropsite when you have no territory yet.[/color]",
+    "Keywords": [],
+    "Name": "Sicilia Nomad (2)",
+    "PlayerData": [
+      {
+        "StartingCamera": {
+          "Position": {
+            "x": 639,
+            "y": 80,
+            "z": 43
+          },
+          "Rotation": {
+            "x": 35,
+            "y": 0,
+            "z": 0
+          }
+        }
+      },
+      {
+        "StartingCamera": {
+          "Position": {
+            "x": 652,
+            "y": 80,
+            "z": 951
+          },
+          "Rotation": {
+            "x": 35,
+            "y": 0,
+            "z": 0
+          }
+        }
+      }
+    ],
+    "Preview": "sicilia.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Sicilia Nomad (2) (Hard)"
+}

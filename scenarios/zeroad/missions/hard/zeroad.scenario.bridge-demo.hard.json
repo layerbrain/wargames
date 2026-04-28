@@ -1,0 +1,53 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.bridge-demo.hard",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/bridge_demo",
+  "map_type": "scenario",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "Description": "Demo map showing how to simulate bridges in the Atlas map editor.",
+    "Keywords": [
+      "demo"
+    ],
+    "Name": "Bridge demo",
+    "PlayerData": [
+      {
+        "AI": "",
+        "Civ": "athen",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "Bridge Demo",
+        "Team": -1
+      },
+      {
+        "AI": "",
+        "Civ": "gaul",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Other",
+        "Team": -1
+      }
+    ],
+    "VictoryConditions": []
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Bridge demo (Hard)"
+}

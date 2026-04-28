@@ -1,0 +1,46 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.unit-pushing-test.normal",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/unit_pushing_test",
+  "map_type": "scenario",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": false,
+    "Description": "This map is designed to test the performance & functionality of unit pushing.",
+    "ExploredMap": true,
+    "Keywords": [
+      "trigger",
+      "demo"
+    ],
+    "Name": "Unit Pushing test",
+    "PlayerData": [
+      null,
+      {
+        "AI": ""
+      },
+      {
+        "AI": ""
+      }
+    ],
+    "RevealMap": true,
+    "TriggerScripts": [
+      "scripts/TriggerHelper.js",
+      "scenarios/unit_pushing_test.js"
+    ],
+    "VictoryConditions": []
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Unit Pushing test (Normal)"
+}

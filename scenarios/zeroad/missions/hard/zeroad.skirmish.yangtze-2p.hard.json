@@ -1,0 +1,35 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.yangtze-2p.hard",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/yangtze_2p",
+  "map_type": "skirmish",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "The Yangtze River in China. ",
+    "Keywords": [
+      "naval"
+    ],
+    "Name": "Chang Jiang (2)",
+    "PlayerData": [
+      null,
+      {},
+      {}
+    ],
+    "Preview": "yangtze_2.png"
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Chang Jiang (2) (Hard)"
+}

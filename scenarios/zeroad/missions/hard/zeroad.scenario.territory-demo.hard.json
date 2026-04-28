@@ -1,0 +1,58 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.territory-demo.hard",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/territory_demo",
+  "map_type": "scenario",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "A demo map showing the territory effects of each type of structure.",
+    "Keywords": [
+      "demo"
+    ],
+    "LockTeams": false,
+    "Name": "Territory Demo",
+    "PlayerData": [
+      {
+        "Civ": "athen"
+      },
+      {
+        "Civ": "athen"
+      },
+      {
+        "Civ": "athen"
+      },
+      {
+        "Civ": "athen"
+      },
+      {
+        "Civ": "athen"
+      },
+      {
+        "Civ": "athen"
+      },
+      {
+        "Civ": "athen"
+      },
+      {
+        "Civ": "athen"
+      }
+    ],
+    "RevealMap": false,
+    "VictoryConditions": []
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:8",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Territory Demo (Hard)"
+}

@@ -1,0 +1,57 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.tropical-island.normal",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/tropical_island",
+  "map_type": "scenario",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Multiplayer map. A tropical paradise.",
+    "Keywords": [
+      "demo"
+    ],
+    "Name": "Tropical Island",
+    "PlayerData": [
+      {
+        "AI": "",
+        "Civ": "athen",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "Player 1",
+        "Team": 0
+      },
+      {
+        "AI": "",
+        "Civ": "athen",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Player 2",
+        "Team": 1
+      }
+    ],
+    "Preview": "tropical_island.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Tropical Island (Normal)"
+}

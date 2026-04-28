@@ -27,8 +27,11 @@ volume.
 
 ## Missions
 
-WarGames ships Arcadia in easy, normal, and hard variants. You can extract a
-larger catalog from an installed 0 A.D. tree:
+WarGames ships 390 0 A.D. missions: 130 scenario and skirmish maps exported in
+easy, normal, and hard variants.
+
+Regenerate the shipped catalog from the installed 0 A.D. tree when the runtime
+version changes:
 
 ```bash
 wargames missions --game zeroad --extract
@@ -36,7 +39,8 @@ wargames missions --game zeroad
 ```
 
 Mission IDs use `zeroad.<map-type>.<map-name>.<difficulty>`, for example
-`zeroad.scenario.arcadia.normal`.
+`zeroad.scenario.arcadia.normal` or
+`zeroad.skirmish.greek-acropolis-2p.normal`.
 
 ## Live Control
 

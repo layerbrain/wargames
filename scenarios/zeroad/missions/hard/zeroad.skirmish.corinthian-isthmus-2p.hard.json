@@ -1,0 +1,40 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.corinthian-isthmus-2p.hard",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/corinthian_isthmus_2p",
+  "map_type": "skirmish",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "AISeed": 0,
+    "AllyView": false,
+    "CircularMap": true,
+    "Description": "Two Mediterranean land masses connected by a narrow spit of land, called an 'Isthmus.'",
+    "Keywords": [],
+    "LockTeams": false,
+    "Name": "Corinthian Isthmus (2)",
+    "PlayerData": [
+      null,
+      {},
+      {}
+    ],
+    "Preview": "isthmus_scenario.png",
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Corinthian Isthmus (2) (Hard)"
+}

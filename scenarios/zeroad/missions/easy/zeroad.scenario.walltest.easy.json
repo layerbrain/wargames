@@ -1,0 +1,82 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.walltest.easy",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/walltest",
+  "map_type": "scenario",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Give an interesting description of your map.",
+    "Keywords": [
+      "hidden"
+    ],
+    "LockTeams": false,
+    "Name": "WallTest",
+    "PlayerData": [
+      {
+        "Civ": "athen",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "Player 1",
+        "PopulationLimit": 100000,
+        "Resources": {
+          "food": 100000,
+          "metal": 100000,
+          "stone": 100000,
+          "wood": 100000
+        },
+        "StartingCamera": {
+          "Position": {
+            "x": 292.862,
+            "y": 22.3825,
+            "z": 252.692
+          },
+          "Rotation": {
+            "x": 35,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "Team": -1
+      },
+      {
+        "Civ": "athen",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Player 2",
+        "PopulationLimit": 2,
+        "Resources": {
+          "food": 5000,
+          "metal": 5000,
+          "stone": 5000,
+          "wood": 5000
+        },
+        "Team": -1
+      }
+    ],
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "WallTest (Easy)"
+}

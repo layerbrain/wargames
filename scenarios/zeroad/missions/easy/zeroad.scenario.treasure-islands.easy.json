@@ -1,0 +1,65 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.treasure-islands.easy",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/treasure_islands",
+  "map_type": "scenario",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "BaseHeight": 0,
+    "BaseTerrain": [
+      "medit_sea_depths"
+    ],
+    "CircularMap": true,
+    "Description": "Search treasures on small islands and on the water. Collect more treasures than your opponent to win.",
+    "Keywords": [
+      "trigger",
+      "naval"
+    ],
+    "LockTeams": false,
+    "Name": "Treasure Islands",
+    "PlayerData": [
+      {
+        "Civ": "athen",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "Player 1"
+      },
+      {
+        "Civ": "athen",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Player 2"
+      }
+    ],
+    "Preview": "cycladic_archipelago_2.png",
+    "RevealMap": false,
+    "Size": 384,
+    "TriggerScripts": [
+      "scripts/TriggerHelper.js",
+      "scenarios/treasure_islands.js"
+    ],
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Treasure Islands (Easy)"
+}

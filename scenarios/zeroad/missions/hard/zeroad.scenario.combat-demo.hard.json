@@ -1,0 +1,42 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.combat-demo.hard",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/combat_demo",
+  "map_type": "scenario",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "DefaultStance": "defensive",
+    "Description": "A combat demonstration between a small number of ranged and melee infantry units.",
+    "Keywords": [
+      "demo"
+    ],
+    "Name": "Combat Demo",
+    "PlayerData": [
+      {
+        "Civ": "athen"
+      },
+      {
+        "AI": "",
+        "Civ": "athen"
+      }
+    ],
+    "RevealMap": true,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Combat Demo (Hard)"
+}

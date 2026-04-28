@@ -1,0 +1,35 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.median-oasis-2p.easy",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/median_oasis_2p",
+  "map_type": "skirmish",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "A large oasis acts as the hub of mountainous spokes that divide the home territories of each player.",
+    "Keywords": [],
+    "Name": "Median Oasis (2)",
+    "PlayerData": [
+      {},
+      {}
+    ],
+    "Preview": "median_oasis_1v1.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Median Oasis (2) (Easy)"
+}

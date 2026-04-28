@@ -1,0 +1,59 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.azure-coast-2p.normal",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/azure_coast_2p",
+  "map_type": "scenario",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "BaseHeight": 0,
+    "BaseTerrain": "grass1_spring",
+    "CircularMap": true,
+    "Description": "Help the young Massilia to settle or expel the Greeks from Gaul.",
+    "Keywords": [],
+    "LockTeams": false,
+    "Name": "Azure Coast 2",
+    "PlayerData": [
+      {
+        "Civ": "athen",
+        "Color": {
+          "b": 200,
+          "g": 80,
+          "r": 80
+        },
+        "Name": "Greeks",
+        "Team": 0
+      },
+      {
+        "Civ": "gaul",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Celts",
+        "Team": 1
+      }
+    ],
+    "Preview": "azure_coast_2.png",
+    "RevealMap": false,
+    "Script": "new_rms_test.js",
+    "Size": 384,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Azure Coast 2 (Normal)"
+}

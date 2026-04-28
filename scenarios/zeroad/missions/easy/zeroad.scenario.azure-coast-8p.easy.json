@@ -1,0 +1,119 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.azure-coast-8p.easy",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/azure_coast_8p",
+  "map_type": "scenario",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "BaseHeight": 0,
+    "BaseTerrain": "grass1_spring",
+    "CircularMap": true,
+    "Description": "Help the young Massilia to settle or expel the Greeks from Gaul.",
+    "Keywords": [],
+    "LockTeams": true,
+    "Name": "Azure Coast 1",
+    "PlayerData": [
+      {
+        "Civ": "athen",
+        "Color": {
+          "b": 200,
+          "g": 80,
+          "r": 80
+        },
+        "Name": "Antipolis",
+        "Team": 0
+      },
+      {
+        "Civ": "athen",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Nikaia",
+        "Team": 0
+      },
+      {
+        "Civ": "athen",
+        "Color": {
+          "b": 5,
+          "g": 165,
+          "r": 50
+        },
+        "Name": "Massalia",
+        "Team": 0
+      },
+      {
+        "Civ": "athen",
+        "Color": {
+          "b": 75,
+          "g": 230,
+          "r": 230
+        },
+        "Name": "Olbia",
+        "Team": 0
+      },
+      {
+        "Civ": "gaul",
+        "Color": {
+          "b": 170,
+          "g": 170,
+          "r": 50
+        },
+        "Name": "Deciates",
+        "Team": 1
+      },
+      {
+        "Civ": "gaul",
+        "Color": {
+          "b": 200,
+          "g": 80,
+          "r": 160
+        },
+        "Name": "Salluvii",
+        "Team": 1
+      },
+      {
+        "Civ": "gaul",
+        "Color": {
+          "b": 20,
+          "g": 120,
+          "r": 235
+        },
+        "Name": "Cavares",
+        "Team": 1
+      },
+      {
+        "Civ": "gaul",
+        "Color": {
+          "b": 64,
+          "g": 64,
+          "r": 64
+        },
+        "Name": "Verguni",
+        "Team": 1
+      }
+    ],
+    "Preview": "azure_coast_1.png",
+    "RevealMap": false,
+    "Script": "new_rms_test.js",
+    "Size": 384,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:8",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Azure Coast 1 (Easy)"
+}

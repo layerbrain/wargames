@@ -1,0 +1,92 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.cinema-demo.easy",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/cinema_demo",
+  "map_type": "scenario",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "BaseHeight": 1,
+    "BaseTerrain": [
+      "desert_dirt_rocks_1",
+      "desert_dirt_cracks"
+    ],
+    "CircularMap": true,
+    "Description": "Demo map for cinematic camera movements.",
+    "Keywords": [
+      "demo"
+    ],
+    "LockTeams": false,
+    "Name": "Cinema Demo",
+    "PlayerData": [
+      null,
+      {
+        "Civ": "pers",
+        "Color": {
+          "b": 0,
+          "g": 128,
+          "r": 255
+        },
+        "Name": "Xerxes I",
+        "PopulationLimit": 1000,
+        "Resources": {
+          "food": 10000,
+          "metal": 10000,
+          "stone": 10000,
+          "wood": 10000
+        },
+        "StartingCamera": {
+          "Position": {
+            "x": 495.029,
+            "y": 21,
+            "z": 864.484
+          },
+          "Rotation": {
+            "x": 35,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "Team": 0
+      },
+      {
+        "AI": "",
+        "Civ": "sele",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "You",
+        "Team": 1
+      }
+    ],
+    "Preview": "",
+    "RevealMap": false,
+    "Script": "syria.js",
+    "Seed": 0,
+    "Size": 256,
+    "TriggerScripts": [
+      "scenarios/cinema_demo.js",
+      "scripts/TriggerHelper.js"
+    ],
+    "VictoryConditions": [
+      "conquest"
+    ],
+    "XXXXXX": "Optionally define other things here, like we would for a scenario",
+    "mapType": "random"
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Cinema Demo (Easy)"
+}

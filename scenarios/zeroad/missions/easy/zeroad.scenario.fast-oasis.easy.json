@@ -1,0 +1,98 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.fast-oasis.easy",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/fast_oasis",
+  "map_type": "scenario",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "Description": "A small desert map. Each player starts near an oasis spotted about an otherwise bleak and sandy desert that is wide open to assault and depredation.\n\nGameplay is tight and fast, with no time to stop and smell the roses.",
+    "Keywords": [],
+    "LockTeams": false,
+    "Name": "Fast Oasis",
+    "PlayerData": [
+      {
+        "Civ": "athen",
+        "Color": {
+          "b": 200,
+          "g": 80,
+          "r": 80
+        },
+        "Name": "Player 1",
+        "Resources": {
+          "food": 1000,
+          "metal": 1000,
+          "stone": 1000,
+          "wood": 1000
+        },
+        "Team": -1
+      },
+      {
+        "Civ": "iber",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Player 2",
+        "Resources": {
+          "food": 1000,
+          "metal": 1000,
+          "stone": 1000,
+          "wood": 1000
+        },
+        "Team": -1
+      },
+      {
+        "Civ": "pers",
+        "Color": {
+          "b": 5,
+          "g": 165,
+          "r": 50
+        },
+        "Name": "Player 3",
+        "Resources": {
+          "food": 1000,
+          "metal": 1000,
+          "stone": 1000,
+          "wood": 1000
+        },
+        "Team": -1
+      },
+      {
+        "Civ": "maur",
+        "Color": {
+          "b": 75,
+          "g": 230,
+          "r": 230
+        },
+        "Name": "Player 4",
+        "Resources": {
+          "food": 1000,
+          "metal": 1000,
+          "stone": 1000,
+          "wood": 1000
+        },
+        "Team": -1
+      }
+    ],
+    "Preview": "fast_oasis.png",
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Fast Oasis (Easy)"
+}

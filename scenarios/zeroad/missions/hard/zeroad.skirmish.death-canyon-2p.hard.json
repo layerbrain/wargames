@@ -1,0 +1,35 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.death-canyon-2p.hard",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/death_canyon_2p",
+  "map_type": "skirmish",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "A deep rocky canyon slicing through the desert.\n\nEach player starts their colony on a plateau on either side of the ravine.",
+    "Keywords": [],
+    "Name": "Death Canyon (2)",
+    "PlayerData": [
+      {},
+      {}
+    ],
+    "Preview": "death_canyon_1.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Death Canyon (2) (Hard)"
+}

@@ -1,0 +1,37 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.persian-highlands-4p.normal",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/persian_highlands_4p",
+  "map_type": "skirmish",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "A dry central basin rich in minerals surrounded by rocky hills and highlands.",
+    "Keywords": [],
+    "Name": "Persian Highlands (4)",
+    "PlayerData": [
+      {},
+      {},
+      {},
+      {}
+    ],
+    "Preview": "persian_highlands_skirmish.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Persian Highlands (4) (Normal)"
+}

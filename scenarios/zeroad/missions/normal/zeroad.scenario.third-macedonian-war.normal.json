@@ -1,0 +1,65 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.third-macedonian-war.normal",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/third_macedonian_war",
+  "map_type": "scenario",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "The Romans encroach upon Macedonian lands for the third and final time. Can the once-proud Macedonians prevail against the Roman juggernaut?",
+    "Keywords": [],
+    "LockTeams": true,
+    "Name": "Third Macedonian War",
+    "PlayerData": [
+      {
+        "Civ": "rome",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Lucius Aemilius Paullus",
+        "Team": 1
+      },
+      {
+        "Civ": "mace",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "Perseus of Macedon",
+        "Team": 0
+      },
+      {
+        "Civ": "athen",
+        "Color": {
+          "b": 190,
+          "g": 221,
+          "r": 13
+        },
+        "Name": "Greek Allies",
+        "Team": 1
+      }
+    ],
+    "Preview": "third_macedonian_war.png",
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:3",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Third Macedonian War (Normal)"
+}

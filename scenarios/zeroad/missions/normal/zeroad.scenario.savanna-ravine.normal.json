@@ -1,0 +1,37 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.savanna-ravine.normal",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/savanna_ravine",
+  "map_type": "scenario",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "Description": "A wide-open Savanna map with a small ravine running down the center, which is easily forded.",
+    "Name": "Savanna Ravine",
+    "PlayerData": [
+      {
+        "Civ": "athen"
+      },
+      {
+        "Civ": "gaul"
+      }
+    ],
+    "Preview": "savanna_ravine.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Savanna Ravine (Normal)"
+}

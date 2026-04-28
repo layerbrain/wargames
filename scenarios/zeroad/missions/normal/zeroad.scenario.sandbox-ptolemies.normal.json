@@ -1,0 +1,64 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.sandbox-ptolemies.normal",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/sandbox_ptolemies",
+  "map_type": "scenario",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "An islands map good for intense naval combat.",
+    "Keywords": [
+      "demo",
+      "naval"
+    ],
+    "LockTeams": false,
+    "Name": "Sandbox - The Ptolemaic Egyptians",
+    "PlayerData": [
+      {
+        "AI": "",
+        "Civ": "ptol",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "Ptolemaios A' Soter",
+        "Resources": {
+          "food": 10000,
+          "metal": 10000,
+          "stone": 10000,
+          "wood": 10000
+        },
+        "Team": -1
+      },
+      {
+        "AI": "",
+        "Civ": "maur",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Kautilya",
+        "Team": -1
+      }
+    ],
+    "Preview": "cycladic_archipelago_6.png",
+    "RevealMap": false,
+    "VictoryConditions": []
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Sandbox - The Ptolemaic Egyptians (Normal)"
+}

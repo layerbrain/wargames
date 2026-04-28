@@ -1,0 +1,64 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.sandbox-carthaginians.hard",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/sandbox_carthaginians",
+  "map_type": "scenario",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Explore the Carthaginian Buildings and Units.",
+    "Keywords": [
+      "demo"
+    ],
+    "LockTeams": false,
+    "Name": "Sandbox - The Carthaginians",
+    "PlayerData": [
+      {
+        "AI": "",
+        "Civ": "cart",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "Carthage",
+        "PopulationLimit": 10000,
+        "Resources": {
+          "food": 10000,
+          "metal": 10000,
+          "stone": 10000,
+          "wood": 10000
+        },
+        "Team": -1
+      },
+      {
+        "AI": "",
+        "Civ": "athen",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Creeps",
+        "Team": -1
+      }
+    ],
+    "Preview": "sandbox_carthaginians.png",
+    "RevealMap": false,
+    "VictoryConditions": []
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Sandbox - The Carthaginians (Hard)"
+}

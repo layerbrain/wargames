@@ -1,0 +1,56 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.ship-combat-demo.hard",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/ship_combat_demo",
+  "map_type": "scenario",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "AISeed": 0,
+    "AllyView": false,
+    "CircularMap": true,
+    "Description": "Ship Combat Demo.",
+    "Keywords": [],
+    "LockTeams": false,
+    "Name": "Ship Combat Demo",
+    "PlayerData": [
+      null,
+      {
+        "Civ": "brit",
+        "Color": {
+          "b": 255,
+          "g": 128,
+          "r": 0
+        },
+        "PopulationLimit": 500
+      },
+      {
+        "Civ": "pers",
+        "Color": {
+          "b": 0,
+          "g": 0,
+          "r": 206
+        },
+        "PopulationLimit": 500
+      }
+    ],
+    "Preview": "",
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest_units"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest_units"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Ship Combat Demo (Hard)"
+}

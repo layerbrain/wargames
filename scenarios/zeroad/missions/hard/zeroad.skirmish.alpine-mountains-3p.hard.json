@@ -1,0 +1,36 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.alpine-mountains-3p.hard",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/alpine_mountains_3p",
+  "map_type": "skirmish",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "A map filled with impassable mountains and a great number of natural resources.",
+    "Keywords": [],
+    "Name": "Alpine Mountains (3)",
+    "PlayerData": [
+      {},
+      {},
+      {}
+    ],
+    "Preview": "alpine_mountains.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:3",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Alpine Mountains (3) (Hard)"
+}

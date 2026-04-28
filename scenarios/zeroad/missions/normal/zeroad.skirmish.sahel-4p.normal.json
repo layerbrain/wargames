@@ -1,0 +1,37 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.sahel-4p.normal",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/sahel_4p",
+  "map_type": "skirmish",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Situated Southside of the Atlas mountain range in North Africa.\n\nA somewhat open map with an abundance of animals and mineral resources, while wood is scarce.",
+    "Keywords": [],
+    "Name": "Sahel (4)",
+    "PlayerData": [
+      {},
+      {},
+      {},
+      {}
+    ],
+    "Preview": "sahel_scenario.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Sahel (4) (Normal)"
+}

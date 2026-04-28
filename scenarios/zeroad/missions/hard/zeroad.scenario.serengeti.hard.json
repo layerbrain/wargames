@@ -1,0 +1,71 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.serengeti.hard",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/serengeti",
+  "map_type": "scenario",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "Description": "The African serengeti has herds of animals criss crossing the plain. Mineral wealth is bountiful and wood is in full supply.",
+    "Name": "Serengeti 1",
+    "PlayerData": [
+      {
+        "Civ": "cart",
+        "Color": {
+          "b": 192,
+          "g": 128,
+          "r": 0
+        },
+        "Name": "Carthage",
+        "Team": 0
+      },
+      {
+        "Civ": "iber",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Iberia",
+        "Team": 0
+      },
+      {
+        "Civ": "spart",
+        "Color": {
+          "b": 5,
+          "g": 165,
+          "r": 50
+        },
+        "Name": "Greece",
+        "Team": 1
+      },
+      {
+        "Civ": "pers",
+        "Color": {
+          "b": 159,
+          "g": 26,
+          "r": 96
+        },
+        "Name": "Persia",
+        "Team": 1
+      }
+    ],
+    "Preview": "serengeti_1.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Serengeti 1 (Hard)"
+}

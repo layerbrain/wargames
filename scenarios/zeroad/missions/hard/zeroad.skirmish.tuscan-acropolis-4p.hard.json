@@ -1,0 +1,45 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.tuscan-acropolis-4p.hard",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/tuscan_acropolis_4p",
+  "map_type": "skirmish",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Four factions find themselves perched safely atop large rocky plateaus.\n\nScout the lands to find free treasures and to secure new resources.",
+    "Keywords": [],
+    "Name": "Tuscan Acropolis (4)",
+    "PlayerData": [
+      {
+        "Team": 0
+      },
+      {
+        "Team": 0
+      },
+      {
+        "Team": 1
+      },
+      {
+        "Team": 1
+      }
+    ],
+    "Preview": "tuscan_acropolis.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Tuscan Acropolis (4) (Hard)"
+}

@@ -1,0 +1,87 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.sandbox-macedonians.easy",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/sandbox_macedonians",
+  "map_type": "scenario",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Play with the Macedonians faction in a non-threatening sandbox environment.",
+    "Keywords": [
+      "demo"
+    ],
+    "LockTeams": false,
+    "Name": "Sandbox - The Macedonians",
+    "PlayerData": [
+      {
+        "AI": "",
+        "Civ": "mace",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "The Macedonians",
+        "Resources": {
+          "food": 100000,
+          "metal": 100000,
+          "stone": 100000,
+          "wood": 100000
+        },
+        "Team": 0
+      },
+      {
+        "AI": "",
+        "Civ": "spart",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "The Spartans",
+        "Team": 0
+      },
+      {
+        "AI": "",
+        "Civ": "pers",
+        "Color": {
+          "b": 147,
+          "g": 40,
+          "r": 99
+        },
+        "Name": "The Persians",
+        "Team": -1
+      },
+      {
+        "AI": "",
+        "Civ": "gaul",
+        "Color": {
+          "b": 75,
+          "g": 230,
+          "r": 230
+        },
+        "Name": "The Gauls",
+        "Team": -1
+      }
+    ],
+    "Preview": "sandbox-themacks.png",
+    "RevealMap": true,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Sandbox - The Macedonians (Easy)"
+}

@@ -1,0 +1,35 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.butana-steppe-2p.normal",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/butana_steppe_2p",
+  "map_type": "skirmish",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "South of the Sahara, East of the Nile, lies a semi-arid region today known as the Butana Steppe.",
+    "Keywords": [],
+    "Name": "Island of Mero\u00eb (2)",
+    "PlayerData": [
+      {},
+      {}
+    ],
+    "Preview": "butana_steppe_2p.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Island of Mero\u00eb (2) (Normal)"
+}

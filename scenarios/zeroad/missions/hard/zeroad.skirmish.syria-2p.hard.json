@@ -1,0 +1,36 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.syria-2p.hard",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/syria_2p",
+  "map_type": "skirmish",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "A barren land with little wood and few animals. Treasures dot the landscape and will be essential to early growth.\n\nThe player who sets up a profitable trade caravan earliest may gain a decisive advantage.",
+    "Keywords": [],
+    "Name": "Coele-Syria (2)",
+    "PlayerData": [
+      null,
+      {},
+      {}
+    ],
+    "Preview": "coele-syria_2p.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Coele-Syria (2) (Hard)"
+}

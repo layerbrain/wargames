@@ -1,0 +1,42 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.sporades-islands-2p.hard",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/sporades_islands_2p",
+  "map_type": "skirmish",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "AISeed": 0,
+    "AllyView": false,
+    "CircularMap": true,
+    "Description": "An islands map designed for intense naval combat.",
+    "Keywords": [
+      "naval"
+    ],
+    "LockTeams": false,
+    "Name": "Sporades Islands (2)",
+    "PlayerData": [
+      null,
+      {},
+      {}
+    ],
+    "Preview": "sporades_islands_2p.png",
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest_civic_centers"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:2",
+    "conquest_civic_centers"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Sporades Islands (2) (Hard)"
+}

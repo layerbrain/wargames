@@ -1,0 +1,37 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.gambia-river-3p.normal",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/gambia_river_3p",
+  "map_type": "skirmish",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "All players start on one bank of the river, with minimal harvestable metal. Across the Gambia River is a savanna with many deposits of metal to be claimed. \n\n(Warning: Large map. Good computer specs recommended)",
+    "Keywords": [],
+    "Name": "Gambia River (3)",
+    "PlayerData": [
+      null,
+      {},
+      {},
+      {}
+    ],
+    "Preview": "gambia_river_scenario.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:3",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Gambia River (3) (Normal)"
+}

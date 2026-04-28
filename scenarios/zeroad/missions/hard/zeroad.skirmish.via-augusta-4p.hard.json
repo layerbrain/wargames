@@ -1,0 +1,38 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.via-augusta-4p.hard",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/via_augusta_4p",
+  "map_type": "skirmish",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "All Roads Lead To Rome. Via Julia Augusta a Roman road built in 13 BC.",
+    "Keywords": [],
+    "Name": "Via Augusta (4)",
+    "PlayerData": [
+      null,
+      {},
+      {},
+      {},
+      {}
+    ],
+    "Preview": "via_augusta.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Via Augusta (4) (Hard)"
+}

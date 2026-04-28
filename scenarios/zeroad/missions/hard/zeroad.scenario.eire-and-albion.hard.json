@@ -1,0 +1,66 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.eire-and-albion.hard",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/eire_and_albion",
+  "map_type": "scenario",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "A demo map of the British Isles, created with the assistance of a height map.",
+    "Keywords": [
+      "demo"
+    ],
+    "LockTeams": false,
+    "Name": "Eire and Albion (British Isles)",
+    "PlayerData": [
+      {
+        "Civ": "brit",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "Player 1",
+        "Resources": {
+          "food": 100000,
+          "metal": 100000,
+          "stone": 100000,
+          "wood": 100000
+        },
+        "Team": -1
+      },
+      {
+        "Civ": "rome",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Player 2",
+        "Resources": {
+          "food": 100000,
+          "metal": 100000,
+          "stone": 100000,
+          "wood": 100000
+        },
+        "Team": -1
+      }
+    ],
+    "RevealMap": true,
+    "VictoryConditions": []
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Eire and Albion (British Isles) (Hard)"
+}

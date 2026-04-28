@@ -1,0 +1,79 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.azure-coast-4p.normal",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/azure_coast_4p",
+  "map_type": "scenario",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "BaseHeight": 0,
+    "BaseTerrain": "grass1_spring",
+    "CircularMap": true,
+    "Description": "Help the young Massilia to settle or expel the Greeks from Gaul.",
+    "Keywords": [],
+    "LockTeams": true,
+    "Name": "Azure Coast 3",
+    "PlayerData": [
+      {
+        "Civ": "athen",
+        "Color": {
+          "b": 200,
+          "g": 80,
+          "r": 80
+        },
+        "Name": "East",
+        "Team": 0
+      },
+      {
+        "Civ": "athen",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "West",
+        "Team": 0
+      },
+      {
+        "Civ": "gaul",
+        "Color": {
+          "b": 5,
+          "g": 165,
+          "r": 50
+        },
+        "Name": "South",
+        "Team": 1
+      },
+      {
+        "Civ": "gaul",
+        "Color": {
+          "b": 75,
+          "g": 230,
+          "r": 230
+        },
+        "Name": "North",
+        "Team": 1
+      }
+    ],
+    "Preview": "azure_coast_3.png",
+    "RevealMap": false,
+    "Script": "new_rms_test.js",
+    "Size": 384,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Azure Coast 3 (Normal)"
+}

@@ -1,0 +1,35 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.greek-acropolis-2p.hard",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/greek_acropolis_2p",
+  "map_type": "skirmish",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Two factions find themselves perched safely atop large rocky plateaus.\n\nScout the lands to find free treasures and to secure new resources.",
+    "Keywords": [],
+    "Name": "Greek Acropolis (2)",
+    "PlayerData": [
+      {},
+      {}
+    ],
+    "Preview": "acropolis_3.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Greek Acropolis (2) (Hard)"
+}

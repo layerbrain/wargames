@@ -1,0 +1,37 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.neareastern-badlands-4p.normal",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/neareastern_badlands_4p",
+  "map_type": "skirmish",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "The 'Cappadocia' region of Central-Eastern Anatolia.\n\nAll players start on the Western end of the map, with a vast unclaimed wilderness lying open before them ripe for conquest and depredation.\n\nStone and Metal resources are in abundance, especially Stone, but Wood is somewhat scarce.",
+    "Keywords": [],
+    "Name": "Neareastern Badlands (4)",
+    "PlayerData": [
+      {},
+      {},
+      {},
+      {}
+    ],
+    "Preview": "neareastern_badlands_2.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Neareastern Badlands (4) (Normal)"
+}

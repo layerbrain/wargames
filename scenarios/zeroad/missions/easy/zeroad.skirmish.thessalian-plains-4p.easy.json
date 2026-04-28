@@ -1,0 +1,37 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.thessalian-plains-4p.easy",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/thessalian_plains_4p",
+  "map_type": "skirmish",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "The rolling Thessalian plain is traversed with narrow streams, easily forded. Wide-open spaces allow for massive expansion, while each player starts the match safe atop a large plateau.",
+    "Keywords": [],
+    "Name": "Thessalian Plains (4)",
+    "PlayerData": [
+      {},
+      {},
+      {},
+      {}
+    ],
+    "Preview": "boeotian_plains.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Thessalian Plains (4) (Easy)"
+}

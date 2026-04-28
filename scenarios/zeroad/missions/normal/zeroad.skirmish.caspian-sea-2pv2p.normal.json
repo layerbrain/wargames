@@ -1,0 +1,46 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.caspian-sea-2pv2p.normal",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/caspian_sea_2pv2p",
+  "map_type": "skirmish",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Two teams face off across a long, very large saltwater lake.\n\nFishing can be had in the central lake. The map is also well-endowed with Stone and Metal deposits.",
+    "Keywords": [],
+    "Name": "Caspian Sea (2v2)",
+    "PlayerData": [
+      null,
+      {
+        "Team": 0
+      },
+      {
+        "Team": 1
+      },
+      {
+        "Team": 0
+      },
+      {
+        "Team": 1
+      }
+    ],
+    "Preview": "caspian_sea_skirmish_2v2.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Caspian Sea (2v2) (Normal)"
+}

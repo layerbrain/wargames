@@ -1,0 +1,41 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.combat-demo-huge.easy",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/combat_demo_huge",
+  "map_type": "scenario",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "Description": "1296 units. Extremely slow (we need more optimization).",
+    "Keywords": [
+      "demo"
+    ],
+    "Name": "Combat Demo (Huge)",
+    "PlayerData": [
+      {
+        "Civ": "athen"
+      },
+      {
+        "AI": "",
+        "Civ": "athen"
+      }
+    ],
+    "RevealMap": true,
+    "VictoryCondition": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Combat Demo (Huge) (Easy)"
+}

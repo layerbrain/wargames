@@ -1,0 +1,91 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.polynesia.easy",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/polynesia",
+  "map_type": "scenario",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Demo map for new fancy water effects.",
+    "Keywords": [
+      "demo"
+    ],
+    "LockTeams": false,
+    "Name": "Polynesia",
+    "PlayerData": [
+      {
+        "AI": "",
+        "Civ": "maur",
+        "Color": {
+          "b": 51,
+          "g": 133,
+          "r": 45
+        },
+        "Name": "Samoa",
+        "Resources": {
+          "food": 300,
+          "wood": 300
+        },
+        "StartingCamera": {
+          "Position": {
+            "x": 287.118,
+            "y": 37.1866,
+            "z": 278.418
+          },
+          "Rotation": {
+            "x": -145,
+            "y": -31.4613,
+            "z": 180
+          }
+        },
+        "Team": -1
+      },
+      {
+        "AI": "",
+        "Civ": "maur",
+        "Color": {
+          "b": 175,
+          "g": 64,
+          "r": 42
+        },
+        "Name": "Vanuatu",
+        "Resources": {
+          "food": 300,
+          "wood": 300
+        },
+        "StartingCamera": {
+          "Position": {
+            "x": 521.029,
+            "y": 37.5531,
+            "z": 416.769
+          },
+          "Rotation": {
+            "x": -145,
+            "y": 76.6264,
+            "z": 180
+          }
+        },
+        "Team": -1
+      }
+    ],
+    "Preview": "polynesia.png",
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Polynesia (Easy)"
+}

@@ -43,7 +43,7 @@ reward your trainer consumes.
 | Red Alert | OpenRA real-time strategy | 297 | [docs/games/redalert.md](docs/games/redalert.md) |
 | FlightGear | First-person C172P flight sim | 14 | [docs/games/flightgear.md](docs/games/flightgear.md) |
 | SuperTuxKart | Real-time 3D kart racing | 63 | [docs/games/supertuxkart.md](docs/games/supertuxkart.md) |
-| 0 A.D. | Real-time ancient warfare | 3 shipped, more extractable | [docs/games/zeroad.md](docs/games/zeroad.md) |
+| 0 A.D. | Real-time ancient warfare | 390 | [docs/games/zeroad.md](docs/games/zeroad.md) |
 
 A run is four pieces: a game, a mission, a reward profile, and an agent.
 

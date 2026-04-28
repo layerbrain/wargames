@@ -1,0 +1,54 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.the-massacre-of-delphi.normal",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/the_massacre_of_delphi",
+  "map_type": "scenario",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "Description": "The Celts invade Greece. Fight through the central valley or cut through the rich highlands in order to secure the lands around Delphi!",
+    "Keywords": [],
+    "LockTeams": false,
+    "Name": "Massacre of Delphi",
+    "PlayerData": [
+      {
+        "Civ": "gaul",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "Player 1",
+        "Team": -1
+      },
+      {
+        "Civ": "athen",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Player 2",
+        "Team": -1
+      }
+    ],
+    "Preview": "massacre_of_delphi.png",
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Massacre of Delphi (Normal)"
+}

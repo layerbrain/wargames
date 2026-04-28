@@ -1,4 +1,5 @@
 import json
+from collections import Counter
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest import TestCase
@@ -11,9 +12,13 @@ from wargames.games.zeroad.missions import (
 
 
 class ZeroADMissionTests(TestCase):
-    def test_loads_shipped_arcadia_missions(self) -> None:
+    def test_loads_shipped_mission_catalog(self) -> None:
         missions = load_mission_catalog("scenarios/zeroad/missions")
-        self.assertEqual(len(missions), 3)
+        self.assertEqual(len(missions), 390)
+        self.assertEqual(
+            Counter({"easy": 130, "normal": 130, "hard": 130}),
+            Counter(mission.difficulty for mission in missions),
+        )
 
         by_id = {mission.id: mission for mission in missions}
         mission = by_id["zeroad.scenario.arcadia.normal"]
@@ -22,7 +27,7 @@ class ZeroADMissionTests(TestCase):
         self.assertEqual(mission.map_type, "scenario")
         self.assertEqual(mission.native_difficulty, "3")
         self.assertEqual(mission.ai_difficulty, 3)
-        self.assertIn("conquest_units", mission.tags)
+        self.assertIn("conquest", mission.tags)
 
     def test_scenario_config_normalizes_seeds_ai_and_triggers(self) -> None:
         mission = {
@@ -39,7 +44,7 @@ class ZeroADMissionTests(TestCase):
         self.assertEqual(settings["PlayerData"][0]["AI"], "")
         self.assertEqual(settings["PlayerData"][1]["AI"], "petra")
         self.assertEqual(settings["PlayerData"][1]["AIDiff"], 3)
-        self.assertIn("scripts/ConquestUnits.js", settings["TriggerScripts"])
+        self.assertIn("scripts/Conquest.js", settings["TriggerScripts"])
 
     def test_exports_playable_maps_from_zeroad_data(self) -> None:
         with TemporaryDirectory() as temp_dir:

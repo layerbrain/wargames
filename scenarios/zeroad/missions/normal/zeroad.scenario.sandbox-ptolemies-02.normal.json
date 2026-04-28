@@ -1,0 +1,70 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.sandbox-ptolemies-02.normal",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/sandbox_ptolemies_02",
+  "map_type": "scenario",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Play with the Ptolemaic Egyptians in a non-threatening sandbox setting.",
+    "Keywords": [
+      "demo"
+    ],
+    "LockTeams": false,
+    "Name": "Sandbox - The Ptolemaic Egyptians 2",
+    "PlayerData": [
+      {
+        "AI": "",
+        "Civ": "ptol",
+        "Name": "Ptolemy \"Savior\"",
+        "Resources": {
+          "food": 50000,
+          "metal": 50000,
+          "stone": 50000,
+          "wood": 50000
+        },
+        "Team": 0
+      },
+      {
+        "AI": "",
+        "Civ": "rome",
+        "Name": "Romans",
+        "Team": 1
+      },
+      {
+        "AI": "",
+        "Civ": "sele",
+        "Color": {
+          "b": 0,
+          "g": 0,
+          "r": 0
+        },
+        "Name": "Seleucids",
+        "Team": 2
+      },
+      {
+        "AI": "",
+        "Civ": "cart",
+        "Name": "Libyans",
+        "Team": 3
+      }
+    ],
+    "Preview": "nile_river.png",
+    "RevealMap": false,
+    "VictoryConditions": []
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Sandbox - The Ptolemaic Egyptians 2 (Normal)"
+}

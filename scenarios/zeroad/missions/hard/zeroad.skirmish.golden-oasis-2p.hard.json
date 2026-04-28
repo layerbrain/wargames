@@ -1,0 +1,35 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.golden-oasis-2p.hard",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/golden_oasis_2p",
+  "map_type": "skirmish",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Players start around a small oasis in the center of the map which holds much of the available wood on the map.\n\nElsewhere, in the hinterlands, lies great riches, in the form of large deposits of gold and other metals.",
+    "Keywords": [],
+    "Name": "Gold Oasis (2)",
+    "PlayerData": [
+      {},
+      {}
+    ],
+    "Preview": "gold_oasis_1.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Gold Oasis (2) (Hard)"
+}

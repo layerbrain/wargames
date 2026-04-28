@@ -1,0 +1,43 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.shipattacks.normal",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/shipattacks",
+  "map_type": "scenario",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Move ships around. Attack other ships.",
+    "Keywords": [
+      "demo"
+    ],
+    "LockTeams": false,
+    "Name": "Ships Demo",
+    "PlayerData": [
+      {
+        "Civ": "athen"
+      },
+      {
+        "AI": "",
+        "Civ": "athen"
+      }
+    ],
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Ships Demo (Normal)"
+}

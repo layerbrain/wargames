@@ -1,0 +1,44 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.acropolis-bay-2p.easy",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/acropolis_bay_2p",
+  "map_type": "skirmish",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "AISeed": 0,
+    "AllyView": false,
+    "CircularMap": true,
+    "Description": "Each player starts the match atop a large flat plateau, otherwise known as an acropolis.\n\nTo the East lies a large bay with fishing opportunities. To the West is a rugged hinterland with an unclaimed acropolis commanding the valley below.",
+    "Keywords": [],
+    "LockTeams": false,
+    "Name": "Acropolis Bay (2)",
+    "PlayerData": [
+      "",
+      {
+        "Name": "Player 1"
+      },
+      {
+        "Name": "Player 2"
+      }
+    ],
+    "Preview": "acropolis_bay.png",
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest_civic_centers"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:2",
+    "conquest_civic_centers"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Acropolis Bay (2) (Easy)"
+}

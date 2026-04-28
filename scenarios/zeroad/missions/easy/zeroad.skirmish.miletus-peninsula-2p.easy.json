@@ -1,0 +1,36 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.miletus-peninsula-2p.easy",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/miletus_peninsula_2p",
+  "map_type": "skirmish",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Each player starts the match atop a large flat plateau, otherwise known as an acropolis.\n\nTo the East lies a large bay with fishing opportunities. To the West is an unclaimed acropolis overlooking the Aegean Sea.",
+    "Keywords": [],
+    "Name": "Miletus Peninsula (2)",
+    "PlayerData": [
+      null,
+      {},
+      {}
+    ],
+    "Preview": "miletus_peninsula_2p.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Miletus Peninsula (2) (Easy)"
+}

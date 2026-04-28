@@ -1,0 +1,55 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.default.easy",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/_default",
+  "map_type": "scenario",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Give an interesting description of your map.",
+    "Name": "Unnamed map",
+    "PlayerData": [
+      {
+        "Civ": "han"
+      },
+      {
+        "Civ": "cart"
+      },
+      {
+        "Civ": "gaul"
+      },
+      {
+        "Civ": "iber"
+      },
+      {
+        "Civ": "pers"
+      },
+      {
+        "Civ": "ptol"
+      },
+      {
+        "Civ": "rome"
+      },
+      {
+        "Civ": "spart"
+      }
+    ],
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:8",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Unnamed map (Easy)"
+}

@@ -1,0 +1,55 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.belgian-bog-night.hard",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/belgian_bog_night",
+  "map_type": "scenario",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Two Celtic tribes face off across a large bog at night.",
+    "Keywords": [],
+    "LockTeams": false,
+    "Name": "Belgian Bog Night",
+    "PlayerData": [
+      {
+        "Civ": "brit",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "Player 1",
+        "Team": -1
+      },
+      {
+        "Civ": "gaul",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Player 2",
+        "Team": -1
+      }
+    ],
+    "Preview": "belgian_bog_night.png",
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Belgian Bog Night (Hard)"
+}

@@ -1,0 +1,42 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.gorge.easy",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/gorge",
+  "map_type": "scenario",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "A riparian gorge meanders its way through the South lands of Gaul.",
+    "Keywords": [
+      "hidden"
+    ],
+    "LockTeams": false,
+    "Name": "Gorge",
+    "PlayerData": [
+      {
+        "Civ": "pers"
+      },
+      {
+        "Civ": "cart"
+      }
+    ],
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Gorge (Easy)"
+}

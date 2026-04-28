@@ -1,0 +1,48 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.unit-motion-integration-test.hard",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/unit_motion_integration_test",
+  "map_type": "scenario",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "This map is designed to test some basic unit movement cases. It will involve unitAI, unitMotion and the relevant pathfinders and thus acts as an integrated test map. Look for things such as stuck units, wrong animations, and weird pathing.",
+    "Keywords": [
+      "trigger",
+      "demo"
+    ],
+    "Name": "Unit Motion Integration Test",
+    "PlayerData": [
+      null,
+      {
+        "Civ": "athen"
+      },
+      {
+        "AI": "",
+        "Civ": "athen"
+      }
+    ],
+    "RevealMap": true,
+    "TriggerScripts": [
+      "scripts/TriggerHelper.js",
+      "scenarios/unit_motion_integration_test.js"
+    ],
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Unit Motion Integration Test (Hard)"
+}

@@ -1,0 +1,40 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.we-are-legion.hard",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/we_are_legion",
+  "map_type": "scenario",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "A quick battle demo map using Roman legionaries.",
+    "Keywords": [
+      "demo"
+    ],
+    "Name": "We Are Legion",
+    "PlayerData": [
+      {
+        "Civ": "athen"
+      },
+      {
+        "Civ": "rome"
+      }
+    ],
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "We Are Legion (Hard)"
+}

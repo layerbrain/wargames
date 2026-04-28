@@ -1,0 +1,50 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.cycladic-archipelago-2p.normal",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/cycladic_archipelago_2p",
+  "map_type": "skirmish",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "BaseHeight": 0,
+    "BaseTerrain": [
+      "medit_sea_depths"
+    ],
+    "CircularMap": true,
+    "Description": "A \"small island\"-style map set in the Aegean Sea.",
+    "Keywords": [
+      "naval"
+    ],
+    "LockTeams": false,
+    "Name": "Cycladic Archipelago (2 players)",
+    "PlayerData": [
+      null,
+      {
+        "Name": "Player 1"
+      },
+      {
+        "Name": "Player 2"
+      }
+    ],
+    "Preview": "cycladic_archipelago_2.png",
+    "RevealMap": false,
+    "Seed": 0,
+    "Size": 384,
+    "VictoryConditions": [
+      "conquest_civic_centers"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:2",
+    "conquest_civic_centers"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Cycladic Archipelago (2 players) (Normal)"
+}

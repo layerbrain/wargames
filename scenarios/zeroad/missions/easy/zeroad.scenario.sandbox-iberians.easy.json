@@ -1,0 +1,66 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.sandbox-iberians.easy",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/sandbox_iberians",
+  "map_type": "scenario",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "BaseHeight": 0,
+    "BaseTerrain": [
+      "medit_rocks_grass"
+    ],
+    "CircularMap": true,
+    "Description": "A demo map for the Iberians.",
+    "Keywords": [
+      "demo"
+    ],
+    "Name": "Sandbox - The Iberians",
+    "PlayerData": [
+      {
+        "AI": "",
+        "Civ": "iber",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "Player 1",
+        "Resources": {
+          "food": 9990,
+          "metal": 9990,
+          "stone": 9990,
+          "wood": 9990
+        },
+        "Team": -1
+      },
+      {
+        "AI": "",
+        "Civ": "athen",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Player 2",
+        "Team": -1
+      }
+    ],
+    "Preview": "sandbox_iberians.png",
+    "Size": 192,
+    "VictoryConditions": []
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Sandbox - The Iberians (Easy)"
+}

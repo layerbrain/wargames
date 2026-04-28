@@ -1,0 +1,41 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.pathfinding-demo.normal",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/pathfinding_demo",
+  "map_type": "scenario",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "DefaultStance": "defensive",
+    "Description": "A map for testing unit movement algorithms.",
+    "Keywords": [
+      "demo"
+    ],
+    "Name": "Pathfinding Demo",
+    "PlayerData": [
+      {
+        "AI": "",
+        "Civ": "athen"
+      },
+      {
+        "AI": "",
+        "Civ": "brit"
+      }
+    ],
+    "RevealMap": true,
+    "VictoryConditions": []
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Pathfinding Demo (Normal)"
+}

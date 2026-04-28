@@ -1,0 +1,77 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.the-persian-gates.normal",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/the_persian_gates",
+  "map_type": "scenario",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "\"It has always been the Greek Dream to go East.\"\n\n\"Beware such pride. The East has a way of swallowing men and their dreams.\"\n\nWill Alexander push his way through The Persian Gates and fulfill his destiny, or will Ariobarzanes defend the rugged ancient land of Persis against a foreign invader?",
+    "Keywords": [
+      "hidden"
+    ],
+    "LockTeams": true,
+    "Name": "The Persian Gates",
+    "PlayerData": [
+      {
+        "Civ": "mace",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Alexandros Megas",
+        "Team": 0
+      },
+      {
+        "Civ": "mace",
+        "Color": {
+          "b": 53,
+          "g": 129,
+          "r": 230
+        },
+        "Name": "Krateros",
+        "Team": 0
+      },
+      {
+        "Civ": "pers",
+        "Color": {
+          "b": 128,
+          "g": 128,
+          "r": 0
+        },
+        "Name": "Ariobarzanes",
+        "Team": 1
+      },
+      {
+        "Civ": "pers",
+        "Color": {
+          "b": 147,
+          "g": 40,
+          "r": 99
+        },
+        "Name": "Persians",
+        "Team": 1
+      }
+    ],
+    "Preview": "the_persian_gates.png",
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "The Persian Gates (Normal)"
+}

@@ -1,0 +1,77 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.sandbox-seleucids.hard",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/sandbox_seleucids",
+  "map_type": "scenario",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "BaseHeight": 1,
+    "BaseTerrain": [
+      "medit_dirt",
+      "medit_dirt_b",
+      "medit_dirt_c"
+    ],
+    "CircularMap": true,
+    "Description": "A sandbox scenario for players to try out the Seleucid civilisation.",
+    "Keywords": [
+      "demo"
+    ],
+    "LockTeams": false,
+    "Name": "Sandbox - The Seleucids",
+    "PlayerData": [
+      {
+        "AI": "",
+        "Civ": "sele",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "The Seleucids",
+        "Resources": {
+          "food": 13000,
+          "metal": 13000,
+          "stone": 13000,
+          "wood": 13000
+        },
+        "Team": -1
+      },
+      {
+        "AI": "",
+        "Civ": "ptol",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "The Ptolemies",
+        "Resources": {
+          "food": 300,
+          "metal": 300,
+          "stone": 300,
+          "wood": 300
+        },
+        "Team": -1
+      }
+    ],
+    "Preview": "sandbox-theseleucids.png",
+    "RevealMap": false,
+    "Script": "oasis.js",
+    "Size": 256,
+    "VictoryConditions": []
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Sandbox - The Seleucids (Hard)"
+}

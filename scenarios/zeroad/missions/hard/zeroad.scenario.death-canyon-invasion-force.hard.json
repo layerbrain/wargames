@@ -1,0 +1,96 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.death-canyon-invasion-force.hard",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/death_canyon_invasion_force",
+  "map_type": "scenario",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "A deep rocky canyon slicing through the desert. Good for multiplayer.\n\n2 teams of 2 players. 1 player on each team starts with a base and resources. The other player starts with only a large army to assist their teammate.",
+    "Keywords": [],
+    "LockTeams": true,
+    "Name": "Death Canyon - Invasion Force",
+    "PlayerData": [
+      {
+        "Civ": "rome",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "Player 1",
+        "Resources": {
+          "food": 300,
+          "metal": 300,
+          "stone": 300,
+          "wood": 300
+        },
+        "Team": 0
+      },
+      {
+        "Civ": "rome",
+        "Color": {
+          "b": 220,
+          "g": 99,
+          "r": 166
+        },
+        "Name": "Invasion Force",
+        "PopulationLimit": 1,
+        "Resources": {
+          "stone": 2500
+        },
+        "Team": 0
+      },
+      {
+        "Civ": "cart",
+        "Color": {
+          "b": 5,
+          "g": 165,
+          "r": 50
+        },
+        "Name": "Player 3",
+        "Resources": {
+          "food": 300,
+          "metal": 300,
+          "stone": 300,
+          "wood": 300
+        },
+        "Team": 1
+      },
+      {
+        "Civ": "iber",
+        "Color": {
+          "b": 75,
+          "g": 230,
+          "r": 230
+        },
+        "Name": "Invasion Force",
+        "PopulationLimit": 1,
+        "Team": 1
+      }
+    ],
+    "Preview": "death_canyon_invasion_force.png",
+    "RevealMap": false,
+    "TriggerScripts": [
+      "scripts/TriggerHelper.js",
+      "scenarios/death_canyon_invasion_force_triggers.js"
+    ],
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Death Canyon - Invasion Force (Hard)"
+}

@@ -1,0 +1,42 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.deccan-plateau-2p.normal",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/deccan_plateau_2p",
+  "map_type": "skirmish",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Two players square off across the heavily forested Deccan Plateau of central India.\n\nEach player starts the match with a free farmstead and free storehouse.\n\nVirgin resources lie to the lowlands on either side of the plateau. The lowlands also offer opportunity for expansion and strategic maneuvering.",
+    "Keywords": [],
+    "LockTeams": false,
+    "Name": "Deccan Plateau (2)",
+    "PlayerData": [
+      null,
+      {
+        "Name": "Player 1"
+      },
+      {
+        "Name": "Player 2"
+      }
+    ],
+    "Preview": "deccan_plateau_01.png",
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest_civic_centers"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:2",
+    "conquest_civic_centers"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Deccan Plateau (2) (Normal)"
+}

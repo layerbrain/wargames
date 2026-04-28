@@ -1,0 +1,55 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.multiplayer-demo.easy",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/multiplayer_demo",
+  "map_type": "scenario",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "Description": "Small map with lots of resources and some water, for testing gameplay in non-competitive multiplayer matches.",
+    "Keywords": [
+      "demo"
+    ],
+    "Name": "Multiplayer Demo",
+    "PlayerData": [
+      {
+        "Civ": "athen"
+      },
+      {
+        "Civ": "athen"
+      },
+      {
+        "Civ": "athen"
+      },
+      {
+        "Civ": "athen"
+      },
+      {
+        "Civ": "athen"
+      },
+      {
+        "Civ": "athen"
+      },
+      {
+        "Civ": "athen"
+      },
+      {
+        "Civ": "athen"
+      }
+    ],
+    "VictoryConditions": []
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:8",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Multiplayer Demo (Easy)"
+}

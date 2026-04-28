@@ -1,0 +1,87 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.battle-for-the-tiber.hard",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/battle_for_the_tiber",
+  "map_type": "scenario",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Rome battles against the Etruscan city of Veii for control of the Tiber River basin.",
+    "Keywords": [],
+    "LockTeams": false,
+    "Name": "Battle for the Tiber",
+    "PlayerData": [
+      {
+        "Civ": "rome",
+        "Color": {
+          "b": 39,
+          "g": 39,
+          "r": 131
+        },
+        "Name": "Rome",
+        "Resources": {
+          "food": 250,
+          "metal": 250,
+          "stone": 250,
+          "wood": 250
+        },
+        "Team": 0
+      },
+      {
+        "Civ": "rome",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "Veii",
+        "Resources": {
+          "food": 250,
+          "metal": 250,
+          "stone": 250,
+          "wood": 250
+        },
+        "Team": 1
+      },
+      {
+        "Civ": "gaul",
+        "Color": {
+          "b": 5,
+          "g": 165,
+          "r": 50
+        },
+        "Name": "Gallic Invaders",
+        "Team": 2
+      },
+      {
+        "Civ": "gaul",
+        "Color": {
+          "b": 75,
+          "g": 230,
+          "r": 230
+        },
+        "Name": "Gallic Invaders",
+        "Team": 3
+      }
+    ],
+    "Preview": "battle_for_the_tiber.png",
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Battle for the Tiber (Hard)"
+}

@@ -1,0 +1,71 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 5,
+  "difficulty": "hard",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.gold-rush.hard",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/gold_rush",
+  "map_type": "scenario",
+  "native_difficulty": "5",
+  "player_id": 1,
+  "settings": {
+    "Description": "A wide-open map with a central rocky region rich in Minerals (Metal Resource). This map may be played if the other more detailed maps cause uncomfortable lag.",
+    "Name": "Gold Rush",
+    "PlayerData": [
+      {
+        "Civ": "cart",
+        "Color": {
+          "b": 200,
+          "g": 46,
+          "r": 46
+        },
+        "Name": "Player 1",
+        "Team": -1
+      },
+      {
+        "Civ": "brit",
+        "Color": {
+          "b": 20,
+          "g": 20,
+          "r": 150
+        },
+        "Name": "Player 2",
+        "Team": -1
+      },
+      {
+        "Civ": "mace",
+        "Color": {
+          "b": 5,
+          "g": 165,
+          "r": 50
+        },
+        "Name": "Player 3",
+        "Team": -1
+      },
+      {
+        "Civ": "iber",
+        "Color": {
+          "b": 75,
+          "g": 230,
+          "r": 230
+        },
+        "Name": "Player 4",
+        "Team": -1
+      }
+    ],
+    "Preview": "gold_rush.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:4",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Gold Rush (Hard)"
+}

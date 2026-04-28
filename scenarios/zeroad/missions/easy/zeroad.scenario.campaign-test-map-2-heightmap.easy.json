@@ -1,0 +1,67 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.campaign-test-map-2-heightmap.easy",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/campaign_test_map_2_heightmap",
+  "map_type": "scenario",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "",
+    "Keywords": [
+      "demo",
+      "hidden"
+    ],
+    "LockTeams": false,
+    "Name": "Campaign Map - Test",
+    "PlayerData": [
+      {
+        "AI": "",
+        "Civ": "athen"
+      },
+      {
+        "AI": "",
+        "Civ": "spart"
+      },
+      {
+        "AI": "",
+        "Civ": "athen"
+      },
+      {
+        "AI": "",
+        "Civ": "athen"
+      },
+      {
+        "AI": "",
+        "Civ": "athen"
+      },
+      {
+        "AI": "",
+        "Civ": "athen"
+      },
+      {
+        "AI": "",
+        "Civ": "pers"
+      },
+      {
+        "AI": "",
+        "Civ": "mace"
+      }
+    ],
+    "RevealMap": true,
+    "VictoryConditions": []
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:8",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Campaign Map - Test (Easy)"
+}

@@ -1,0 +1,38 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 2,
+  "difficulty": "easy",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.skirmish.sahyadri-buttes-5p.easy",
+  "launch_mode": "rl",
+  "map": "maps/skirmishes/sahyadri_buttes_5p",
+  "map_type": "skirmish",
+  "native_difficulty": "2",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "The diverse rainforests nestled in the Sahyadri mountain range of the west coast of India. It goes without saying, wood is abundant.\n\nIberian players do not get full circuit walls, but 5 strategically placed wall towers.\n\nWARNING: This map uses a lot of floral actors on account of being a rainforest. Expect a drop in framerate, this is taxing on most mid range computers.",
+    "Keywords": [],
+    "Name": "Sahyadri Buttes (5)",
+    "PlayerData": [
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    "Preview": "sahyadri_buttes_5p.png",
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "skirmish",
+    "players:5",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Sahyadri Buttes (5) (Easy)"
+}

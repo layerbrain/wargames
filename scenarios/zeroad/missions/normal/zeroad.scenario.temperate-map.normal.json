@@ -1,0 +1,42 @@
+{
+  "ai": "petra",
+  "ai_difficulty": 3,
+  "difficulty": "normal",
+  "game": "zeroad",
+  "game_speed": 1.0,
+  "id": "zeroad.scenario.temperate-map.normal",
+  "launch_mode": "rl",
+  "map": "maps/scenarios/temperate_map",
+  "map_type": "scenario",
+  "native_difficulty": "3",
+  "player_id": 1,
+  "settings": {
+    "CircularMap": true,
+    "Description": "Give an interesting description of your map.",
+    "Keywords": [
+      "hidden"
+    ],
+    "LockTeams": false,
+    "Name": "Base Temperate Map",
+    "PlayerData": [
+      {
+        "Civ": "athen"
+      },
+      {
+        "Civ": "athen"
+      }
+    ],
+    "RevealMap": false,
+    "VictoryConditions": [
+      "conquest"
+    ]
+  },
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "players:2",
+    "conquest"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Base Temperate Map (Normal)"
+}
