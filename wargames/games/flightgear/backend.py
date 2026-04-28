@@ -7,7 +7,6 @@ import subprocess
 import sys
 import uuid
 from pathlib import Path
-from types import SimpleNamespace
 
 from wargames.core.backend.base import Backend, BackendSession
 from wargames.core.capture.window import NullWindowCapture, ScreenRegionCapture
@@ -37,6 +36,7 @@ from wargames.games.flightgear.process import (
     locate_fgfs,
     read_flightgear_property,
 )
+from wargames.games.flightgear.world import AircraftState, FlightGearWorld, MissionState
 from wargames.games.redalert.window import focus_window, wait_for_window
 
 
@@ -121,11 +121,9 @@ class FlightGearSession(BackendSession):
 
     def _snapshot(self, *, finished: bool, failed: bool) -> HiddenStateSnapshot:
         telemetry = _read_telemetry(self.config)
-        world = SimpleNamespace(
-            mission=SimpleNamespace(
-                finished=finished, failed=failed or telemetry["crashed"] is True
-            ),
-            aircraft=SimpleNamespace(
+        world = FlightGearWorld(
+            mission=MissionState(finished=finished, failed=failed or telemetry["crashed"] is True),
+            aircraft=AircraftState(
                 id=self.mission.aircraft,
                 airport=self.mission.airport,
                 runway=self.mission.runway,

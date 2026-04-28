@@ -1,0 +1,20 @@
+{
+  "difficulty": "hard",
+  "game": "supertuxkart",
+  "id": "supertuxkart.race.olivermath.hard",
+  "kart": "tux",
+  "laps": 6,
+  "launch_mode": "direct",
+  "mode": "normal",
+  "native_difficulty": "2",
+  "num_karts": 9,
+  "reverse": false,
+  "source": "builtin",
+  "tags": [
+    "race",
+    "olivermath"
+  ],
+  "time_limit_ticks": 43200,
+  "title": "Oliver's Math Class (Hard)",
+  "track": "olivermath"
+}

@@ -33,17 +33,17 @@ wargames/core/
 defines the universal CUA tool schema and strict parser used by transports and
 harnesses.
 
-## Red Alert
+## Game Packages
 
-Red Alert lives under `wargames/games/redalert/`.
+Each game lives under `wargames/games/<game>/`.
 
-- `backend.py` launches OpenRA, wires input/capture/probe, and returns primitive
+- `backend.py` launches the game, wires input/capture/probe, and returns primitive
   observations/results.
-- `missions.py` discovers OpenRA campaign and skirmish maps.
-- `lobby.py` manages 2-8 player lobby setup and readiness.
-- `openra/` contains the C# state-export trait and build patch.
+- `missions.py` discovers the shipped game content and exports WarGames missions.
+- `profiles.py` loads reward profiles from `scenarios/<game>/profiles/`.
+- `process.py` builds the game command and runtime environment.
 
-OpenRA is launched windowed with a fixed size. Linux correctness uses Xvfb +
+Games are launched windowed with a fixed size. Linux correctness uses Xvfb +
 XTEST, so the visible pointer is the virtual Xvfb pointer, not the user's real
 desktop cursor.
 
@@ -55,17 +55,15 @@ WarGames normalizes difficulty to:
 easy, normal, hard, extra_hard
 ```
 
-Games only emit levels they actually support. Red Alert currently emits
-`easy`, `normal`, and `hard` for campaign missions that expose those native map
-options; skirmish maps default to `normal`.
+Games only emit levels they actually support.
 
 Extraction writes JSON manifests under:
 
 ```text
-scenarios/redalert/missions/easy/
-scenarios/redalert/missions/normal/
-scenarios/redalert/missions/hard/
-scenarios/redalert/missions/extra_hard/
+scenarios/<game>/missions/easy/
+scenarios/<game>/missions/normal/
+scenarios/<game>/missions/hard/
+scenarios/<game>/missions/extra_hard/
 ```
 
 ## WebSocket Modes

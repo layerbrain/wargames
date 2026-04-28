@@ -1,0 +1,20 @@
+{
+  "difficulty": "normal",
+  "game": "supertuxkart",
+  "id": "supertuxkart.race.lighthouse.normal",
+  "kart": "tux",
+  "laps": 4,
+  "launch_mode": "direct",
+  "mode": "normal",
+  "native_difficulty": "1",
+  "num_karts": 6,
+  "reverse": false,
+  "source": "builtin",
+  "tags": [
+    "race",
+    "lighthouse"
+  ],
+  "time_limit_ticks": 28800,
+  "title": "Around the Lighthouse (Normal)",
+  "track": "lighthouse"
+}

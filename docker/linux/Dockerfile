@@ -10,6 +10,7 @@ RUN apt-get update \
         bash \
         build-essential \
         ca-certificates \
+        cmake \
         curl \
         dotnet-sdk-8.0 \
         ffmpeg \
@@ -17,20 +18,36 @@ RUN apt-get update \
         flightgear \
         git \
         imagemagick \
+        libbluetooth-dev \
+        libcurl4-openssl-dev \
+        libenet-dev \
         libfreetype6 \
+        libfreetype6-dev \
         libgl1 \
+        libharfbuzz-dev \
+        libjpeg-dev \
         liblua5.1-0 \
+        libmbedtls-dev \
+        libogg-dev \
         libopenal1 \
+        libopenal-dev \
+        libpng-dev \
+        libsdl2-dev \
+        libssl-dev \
+        libvorbis-dev \
         libxrandr2 \
         libsdl2-2.0-0 \
         openbox \
+        pkg-config \
         python3 \
         python3-pip \
         python3-venv \
+        supertuxkart \
         unzip \
         x11-utils \
         xdotool \
         xvfb \
+        zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update \

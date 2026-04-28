@@ -255,6 +255,11 @@ def _game_runtime(game: str) -> tuple[GameDescriptor, ConfigFactory]:
         from wargames.games.flightgear.config import FlightGearConfig
 
         return FLIGHTGEAR_GAME, FlightGearConfig.from_env
+    if game == "supertuxkart":
+        from wargames.games.supertuxkart import GAME as SUPERTUXKART_GAME
+        from wargames.games.supertuxkart.config import SuperTuxKartConfig
+
+        return SUPERTUXKART_GAME, SuperTuxKartConfig.from_env
     raise ValueError(f"unknown game: {game}")
 
 

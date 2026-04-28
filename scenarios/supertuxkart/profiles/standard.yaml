@@ -1,0 +1,26 @@
+id: standard
+game: supertuxkart
+description: "SuperTuxKart standard reward profile: make forward progress, drive fast, pass karts, and finish."
+step_reward_min: -0.20
+step_reward_max: 1.00
+entries:
+  - id: delta_progress
+    fn: wargames.games.supertuxkart.rewards.delta_progress
+    weight: 2.0
+    when: per_step
+  - id: speed
+    fn: wargames.games.supertuxkart.rewards.speed
+    weight: 0.01
+    when: per_step
+  - id: rank_gain
+    fn: wargames.games.supertuxkart.rewards.rank_gain
+    weight: 0.25
+    when: per_step
+  - id: off_road_penalty
+    fn: wargames.games.supertuxkart.rewards.off_road_penalty
+    weight: 0.05
+    when: per_step
+  - id: terminal
+    fn: wargames.core.missions.rewards.terminal
+    weight: 1.0
+    when: terminal

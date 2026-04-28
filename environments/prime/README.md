@@ -20,11 +20,13 @@ Configs:
 - `environments/prime/configs/redalert/rl-soviet-01.toml`: Red Alert RL run
 - `environments/prime/configs/flightgear/eval-c172p-takeoff.toml`: FlightGear eval run
 - `environments/prime/configs/flightgear/rl-c172p-takeoff.toml`: FlightGear RL run
+- `environments/prime/configs/supertuxkart/eval-lighthouse.toml`: SuperTuxKart eval run
+- `environments/prime/configs/supertuxkart/rl-lighthouse.toml`: SuperTuxKart RL run
 
 Reward profiles are the behavior dial. Set `reward_profile = "dense"` for
 general Red Alert warmup, `reward_profile = "protective"` to prioritize
 friendly-force preservation and collateral avoidance, or point at a custom
-profile in `scenarios/redalert/profiles/`.
+profile in `scenarios/<game>/profiles/`.
 
 ```toml
 game = "redalert"

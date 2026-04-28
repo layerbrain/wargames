@@ -1,0 +1,20 @@
+{
+  "difficulty": "easy",
+  "game": "supertuxkart",
+  "id": "supertuxkart.race.volcano-island.easy",
+  "kart": "tux",
+  "laps": 1,
+  "launch_mode": "direct",
+  "mode": "normal",
+  "native_difficulty": "0",
+  "num_karts": 3,
+  "reverse": false,
+  "source": "builtin",
+  "tags": [
+    "race",
+    "volcano_island"
+  ],
+  "time_limit_ticks": 7200,
+  "title": "Volcan Island (Easy)",
+  "track": "volcano_island"
+}
