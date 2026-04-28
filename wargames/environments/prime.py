@@ -260,6 +260,11 @@ def _game_runtime(game: str) -> tuple[GameDescriptor, ConfigFactory]:
         from wargames.games.supertuxkart.config import SuperTuxKartConfig
 
         return SUPERTUXKART_GAME, SuperTuxKartConfig.from_env
+    if game == "zeroad":
+        from wargames.games.zeroad import GAME as ZEROAD_GAME
+        from wargames.games.zeroad.config import ZeroADConfig
+
+        return ZEROAD_GAME, ZeroADConfig.from_env
     raise ValueError(f"unknown game: {game}")
 
 

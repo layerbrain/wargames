@@ -1,9 +1,9 @@
 # Reward Profiles
 
 Reward profiles are the training and evaluation contract. A profile says which
-hidden-state measurements become reward, when they are emitted, and how strongly
-they count. Agents see pixels plus their own public action history; the profile
-runs inside the trusted environment after each action.
+trusted game-state measurements become reward, when they are emitted, and how
+strongly they count. Profiles run inside the trusted environment after each
+action.
 
 Profiles live in `scenarios/<game>/profiles/*.yaml`. Missions reference them by
 ID through `reward_profile`. Prime RL, Prime eval, and the local runner all use
@@ -86,8 +86,8 @@ entries:
 
 ## Red Alert Reward Fields
 
-These are the hidden-state fields available to Red Alert reward code. They are
-never shown to the model.
+These are the trusted game-state fields available to Red Alert reward code.
+They are used by evaluation and are separate from the observation payload.
 
 | Field | Direction | Meaning |
 |---|---|---|
@@ -125,7 +125,7 @@ never shown to the model.
 
 ## FlightGear Reward Fields
 
-FlightGear profiles use the same profile format, but the hidden state is
+FlightGear profiles use the same profile format, but the state source is
 aircraft telemetry.
 
 | Field | Direction | Meaning |
@@ -162,6 +162,28 @@ race setup and process lifecycle state.
 The shipped SuperTuxKart profile starts sparse with `terminal`. Add shaping
 entries only after declaring the primitive in
 `wargames/games/supertuxkart/reward_schema.py`.
+
+## 0 A.D. Reward Fields
+
+0 A.D. profiles use the same profile format. The shipped adapter exposes
+player economy, population, enemy players, full entity state, and terminal
+victory/defeat.
+
+| Field | Direction | Meaning |
+|---|---|---|
+| `mission.finished` | maximize | Victory state. |
+| `mission.failed` | minimize | Defeat state. |
+| `mission.elapsed_seconds` | minimize | Elapsed game seconds. |
+| `us.population` | maximize | Player population. |
+| `us.population_limit` | track | Player population cap. |
+| `us.resources` | maximize | Player resource stockpile. |
+| `us.enemy_units_killed` | maximize | Enemy units killed by the player. |
+| `entities` | track | Full-state entity data from 0 A.D. |
+| `enemies` | track | Active enemy player state. |
+
+The shipped 0 A.D. profile includes `delta_resources`, `delta_population`,
+`enemy_damage`, and `terminal`. Add shaping entries only after declaring the
+primitive in `wargames/games/zeroad/reward_schema.py`.
 
 ## Eval And RL
 
@@ -200,6 +222,7 @@ recorder_mode = "summary_only"
 wargames profile validate scenarios/redalert/profiles/protective.yaml
 wargames profile validate scenarios/flightgear/profiles/standard.yaml --game flightgear
 wargames profile validate scenarios/supertuxkart/profiles/standard.yaml --game supertuxkart
+wargames profile validate scenarios/zeroad/profiles/standard.yaml --game zeroad
 python -m unittest tests.evaluation.test_profiles -v
 ```
 

@@ -177,7 +177,7 @@ class FlightGearBackend(Backend):
             return
         if sys.platform != "linux":
             raise GameNotInstalled(
-                "WarGames FlightGear runs only inside the Linux/Xvfb runtime box"
+                "WarGames FlightGear runs only inside its Linux/Xvfb Docker runtime"
             )
         bootstrap_flightgear(self.config)
         self._bootstrapped = True

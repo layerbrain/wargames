@@ -2,11 +2,10 @@
 
 FlightGear is the first flight simulator in WarGames.
 
-The agent sees the cockpit as pixels. It controls the plane with keyboard
-and mouse actions. WarGames reads FlightGear telemetry only for rewards.
-The agent does not see that telemetry.
+WarGames captures the cockpit as pixels, applies keyboard and mouse controls,
+and reads FlightGear telemetry for rewards.
 
-![A model controls a Cessna 172P in FlightGear](../assets/flightgear-c172p-control-demo.gif)
+![FlightGear control demo](../assets/flightgear-c172p-control-demo.gif)
 
 ## Run It
 
@@ -20,8 +19,8 @@ wargames run \
   --record summary_only
 ```
 
-The game runs inside the WarGames Docker runtime. FlightGear data is cached
-inside the Docker volume.
+The game runs inside the FlightGear Docker runtime image. FlightGear data is
+cached in the FlightGear Docker volume.
 
 ## Missions
 

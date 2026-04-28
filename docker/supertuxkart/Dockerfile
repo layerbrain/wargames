@@ -1,57 +1,28 @@
-FROM ubuntu:24.04
-
-ENV DEBIAN_FRONTEND=noninteractive
-ENV DISPLAY=:99
-ENV LAYERBRAIN_WARGAMES_DISPLAY_MODE=xvfb
-ENV PATH=/workspace/wargames/venv/bin:/usr/games:$PATH
+FROM wargames-linux-base
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        bash \
         build-essential \
-        ca-certificates \
         cmake \
-        curl \
-        dotnet-sdk-8.0 \
-        ffmpeg \
-        file \
-        flightgear \
-        git \
-        imagemagick \
         libbluetooth-dev \
         libcurl4-openssl-dev \
         libenet-dev \
-        libfreetype6 \
         libfreetype6-dev \
-        libgl1 \
         libharfbuzz-dev \
+        libgl1 \
         libjpeg-dev \
         liblua5.1-0 \
         libmbedtls-dev \
         libogg-dev \
-        libopenal1 \
         libopenal-dev \
         libpng-dev \
         libsdl2-dev \
         libssl-dev \
         libvorbis-dev \
         libxrandr2 \
-        libsdl2-2.0-0 \
-        openbox \
         pkg-config \
-        python3 \
-        python3-pip \
-        python3-venv \
         supertuxkart \
-        unzip \
-        x11-utils \
-        xdotool \
-        xvfb \
         zlib1g-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends dbus-x11 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace/wargames
@@ -60,7 +31,8 @@ COPY . .
 RUN python3 -m venv venv \
     && . venv/bin/activate \
     && pip install --upgrade pip \
-    && pip install -e ".[server]"
+    && pip install -e ".[server]" \
+    && chown -R wargames:wargames /workspace/wargames
 
 ENTRYPOINT ["scripts/linux_box.sh"]
 CMD ["bash"]

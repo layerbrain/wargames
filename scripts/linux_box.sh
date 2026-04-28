@@ -14,6 +14,19 @@ trap cleanup EXIT
 
 export DISPLAY="${LAYERBRAIN_WARGAMES_XVFB_DISPLAY:-:99}"
 screen="${LAYERBRAIN_WARGAMES_XVFB_SCREEN:-1280x720x24}"
+game="${LAYERBRAIN_WARGAMES_GAME:-redalert}"
+cache_dir="${LAYERBRAIN_WARGAMES_CACHE_DIR:-}"
+
+prepare_runtime_cache() {
+  if id wargames >/dev/null 2>&1 && [ -n "$cache_dir" ]; then
+    mkdir -p "$cache_dir"
+    local owner
+    owner="$(stat -c '%U' "$cache_dir" 2>/dev/null || true)"
+    if [ "$owner" != "wargames" ]; then
+      chown -R wargames:wargames "$cache_dir"
+    fi
+  fi
+}
 
 install_ra_quick_content() {
   local support_dir="${LAYERBRAIN_WARGAMES_REDALERT_OPENRA_SUPPORT_DIR:-/tmp/wargames/openra-support}"
@@ -90,7 +103,9 @@ if [ -n "${LAYERBRAIN_WARGAMES_HOST_STREAM_URL:-}" ]; then
   child_pids+=("$!")
 fi
 
-if [ "${LAYERBRAIN_WARGAMES_BOOTSTRAP_OPENRA:-1}" = "1" ] && [ -n "${LAYERBRAIN_WARGAMES_REDALERT_OPENRA_ROOT:-}" ]; then
+if [ "$game" = "redalert" ] \
+  && [ "${LAYERBRAIN_WARGAMES_BOOTSTRAP_OPENRA:-1}" = "1" ] \
+  && [ -n "${LAYERBRAIN_WARGAMES_REDALERT_OPENRA_ROOT:-}" ]; then
   openra_root="$LAYERBRAIN_WARGAMES_REDALERT_OPENRA_ROOT"
   if [ -f "$openra_root/Makefile" ] && [ -x "$openra_root/launch-game.sh" ]; then
     platform="linux-x64"
@@ -109,11 +124,11 @@ if [ "${LAYERBRAIN_WARGAMES_BOOTSTRAP_OPENRA:-1}" = "1" ] && [ -n "${LAYERBRAIN_
   fi
 fi
 
-if [ "${LAYERBRAIN_WARGAMES_BOOTSTRAP_RA_CONTENT:-1}" = "1" ] \
-  && [[ " $* " != *" --game flightgear "* ]] \
-  && [[ " $* " != *" --game supertuxkart "* ]]; then
+if [ "$game" = "redalert" ] && [ "${LAYERBRAIN_WARGAMES_BOOTSTRAP_RA_CONTENT:-1}" = "1" ]; then
   install_ra_quick_content
 fi
+
+prepare_runtime_cache
 
 if [ "$#" -eq 0 ]; then
   exec bash

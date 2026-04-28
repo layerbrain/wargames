@@ -23,7 +23,7 @@ def locate_supertuxkart(config: SuperTuxKartConfig) -> str:
     for candidate in candidates:
         if candidate and Path(candidate).exists():
             return candidate
-    raise GameNotInstalled("SuperTuxKart binary was not found in the Linux runtime")
+    raise GameNotInstalled("SuperTuxKart binary was not found in its Docker runtime")
 
 
 def supertuxkart_environment(

@@ -23,7 +23,7 @@ def locate_fgfs(config: FlightGearConfig) -> str:
     for candidate in candidates:
         if candidate and Path(candidate).exists():
             return candidate
-    raise GameNotInstalled("FlightGear fgfs binary was not found in the Linux runtime")
+    raise GameNotInstalled("FlightGear fgfs binary was not found in its Docker runtime")
 
 
 def flightgear_environment(

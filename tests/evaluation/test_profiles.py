@@ -14,6 +14,8 @@ from wargames.games.supertuxkart.profiles import (
     register_profiles as register_supertuxkart_profiles,
 )
 from wargames.games.supertuxkart.reward_schema import SUPERTUXKART_REWARD_SCHEMA
+from wargames.games.zeroad.profiles import register_profiles as register_zeroad_profiles
+from wargames.games.zeroad.reward_schema import ZEROAD_REWARD_SCHEMA
 
 
 class RewardProfileTests(unittest.TestCase):
@@ -88,3 +90,9 @@ class RewardProfileTests(unittest.TestCase):
 
         self.assertEqual(["standard"], [profile.id for profile in loaded])
         SUPERTUXKART_REWARD_SCHEMA.validate_primitive("terminal")
+
+    def test_zeroad_profiles_are_loaded_from_shipped_yaml(self) -> None:
+        loaded = register_zeroad_profiles()
+
+        self.assertEqual(["standard"], [profile.id for profile in loaded])
+        ZEROAD_REWARD_SCHEMA.validate_primitive("enemy_damage")
