@@ -12,6 +12,7 @@ class SuperTuxKartConfig(WarGamesConfig):
     root: str | None = None
     window_size: tuple[int, int] = (1280, 720)
     missions_dir: str = "scenarios/supertuxkart/missions"
+    state_interval_ticks: int = 2
     step_timeout: float = 60.0
 
     @classmethod
@@ -25,6 +26,7 @@ class SuperTuxKartConfig(WarGamesConfig):
             "root": "LAYERBRAIN_WARGAMES_SUPERTUXKART_ROOT",
             "window_size": "LAYERBRAIN_WARGAMES_SUPERTUXKART_WINDOW_SIZE",
             "missions_dir": "LAYERBRAIN_WARGAMES_SUPERTUXKART_MISSIONS_DIR",
+            "state_interval_ticks": "LAYERBRAIN_WARGAMES_SUPERTUXKART_STATE_INTERVAL_TICKS",
         }
         for key, env_name in mapping.items():
             value = os.getenv(env_name)
@@ -33,6 +35,8 @@ class SuperTuxKartConfig(WarGamesConfig):
             if key == "window_size":
                 width, _, height = value.replace("x", ",").partition(",")
                 game_values[key] = (int(width.strip()), int(height.strip()))
+            elif key == "state_interval_ticks":
+                game_values[key] = int(value)
             else:
                 game_values[key] = value
         return cls(**base, **game_values)

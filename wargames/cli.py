@@ -32,6 +32,8 @@ _LINUX_BOX_CACHE_MOUNT = "/opt/wargames-cache"
 _LINUX_BOX_CACHE_VOLUME = "wargames-games"
 _OPENRA_REPO = "https://github.com/OpenRA/OpenRA.git"
 _OPENRA_REF = "bleed"
+_SUPERTUXKART_REPO = "https://github.com/supertuxkart/stk-code.git"
+_SUPERTUXKART_REF = "1.4"
 
 
 def _game(id: str) -> GameDescriptor:
@@ -244,7 +246,11 @@ def _find_flightgear_binary(root: Path | None = None) -> Path | None:
 def _find_supertuxkart_binary(root: Path | None = None) -> Path | None:
     candidates: list[Path | str | None] = [
         root if root and root.name == "supertuxkart" else None,
+        root / "cmake_build" / "bin" / "supertuxkart"
+        if root and (root / "CMakeLists.txt").exists()
+        else None,
         root / "bin" / "supertuxkart" if root and root.name != "supertuxkart" else None,
+        _default_supertuxkart_source_root() / "cmake_build" / "bin" / "supertuxkart",
         shutil.which("supertuxkart"),
         "/usr/games/supertuxkart",
         "/usr/bin/supertuxkart",
@@ -267,6 +273,10 @@ def _flightgear_root(binary: Path, root: Path | None = None) -> Path:
 
 def _supertuxkart_root(binary: Path, root: Path | None = None) -> Path:
     if root is not None and root.name != "supertuxkart":
+        if (root / "CMakeLists.txt").exists():
+            share_root = Path("/usr/share/games/supertuxkart")
+            if share_root.exists():
+                return share_root
         return root
     share_root = Path("/usr/share/games/supertuxkart")
     if share_root.exists():
@@ -274,6 +284,10 @@ def _supertuxkart_root(binary: Path, root: Path | None = None) -> Path:
     if binary.parent.name == "bin":
         return binary.parent.parent
     return binary.parent
+
+
+def _default_supertuxkart_source_root(env: Mapping[str, str] = os.environ) -> Path:
+    return _game_install_dir("supertuxkart", env) / "stk-code"
 
 
 def _should_run_in_linux_box(
@@ -529,12 +543,43 @@ def _clone_openra(*, repo: str, ref: str, target: Path) -> None:
         raise SystemExit(f"OpenRA clone failed with exit code {exc.returncode}") from exc
 
 
+def _clone_supertuxkart_source(target: Path) -> None:
+    git = shutil.which("git")
+    if git is None:
+        raise SystemExit("git is required to install SuperTuxKart")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    command = [
+        git,
+        "clone",
+        "--depth",
+        "1",
+        "--branch",
+        _SUPERTUXKART_REF,
+        _SUPERTUXKART_REPO,
+        str(target),
+    ]
+    try:
+        subprocess.run(command, check=True)
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(f"SuperTuxKart clone failed with exit code {exc.returncode}") from exc
+
+
 def _install_probe(openra_root: Path) -> None:
     script = _repo_root() / "scripts" / "install_probe.sh"
     try:
         subprocess.run([str(script), str(openra_root)], check=True)
     except subprocess.CalledProcessError as exc:
         raise SystemExit(f"WarGames probe build failed with exit code {exc.returncode}") from exc
+
+
+def _install_supertuxkart_probe(source_root: Path) -> None:
+    script = _repo_root() / "scripts" / "install_supertuxkart_probe.sh"
+    try:
+        subprocess.run([str(script), str(source_root)], check=True)
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(
+            f"WarGames SuperTuxKart state exporter build failed with exit code {exc.returncode}"
+        ) from exc
 
 
 def _install_redalert(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
@@ -608,23 +653,26 @@ def _install_flightgear(args: argparse.Namespace, env: Mapping[str, str] = os.en
 
 def _install_supertuxkart(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
     root = Path(args.root).expanduser() if args.root else None
-    if root is not None and not _is_supertuxkart_root(root):
-        raise SystemExit(f"SuperTuxKart root does not contain game data: {root}")
-
-    binary = _find_supertuxkart_binary(root)
+    source_root = root if root and (root / "CMakeLists.txt").exists() else _default_supertuxkart_source_root(env)
     status = "present"
 
+    if not source_root.exists():
+        _clone_supertuxkart_source(source_root)
+        status = "installed"
+    elif not (source_root / "CMakeLists.txt").exists():
+        raise SystemExit(f"SuperTuxKart source path is not a source checkout: {source_root}")
+
+    _install_supertuxkart_probe(source_root)
+    binary = _find_supertuxkart_binary(source_root)
     if binary is None:
-        raise SystemExit(
-            "SuperTuxKart was not found in the Linux runtime. Rebuild the WarGames Docker image "
-            "or register a container-visible install with --root."
-        )
+        raise SystemExit(f"SuperTuxKart build did not produce a binary under {source_root}")
 
     payload = {
         "game": "supertuxkart",
         "binary": str(binary),
-        "root": str(_supertuxkart_root(binary, root)),
-        "state_interface": "window pixels plus process lifecycle",
+        "root": str(_supertuxkart_root(binary, source_root)),
+        "source_root": str(source_root),
+        "state_interface": "WarGames in-process kart state exporter",
         "status": status,
     }
     _write_game_install_manifest("supertuxkart", payload, env)

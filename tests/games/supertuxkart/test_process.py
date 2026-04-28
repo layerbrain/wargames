@@ -53,9 +53,20 @@ class SuperTuxKartProcessTests(TestCase):
         with patch.dict(
             "os.environ", {"LAYERBRAIN_WARGAMES_CACHE_DIR": "/opt/wargames-cache"}, clear=True
         ):
-            env = supertuxkart_environment(SuperTuxKartConfig(), display=":99")
+            env = supertuxkart_environment(
+                SuperTuxKartConfig(), state_path="/tmp/stk.jsonl", display=":99"
+            )
 
         self.assertEqual(env["DISPLAY"], ":99")
         self.assertEqual(env["HOME"], "/opt/wargames-cache/games/supertuxkart/home")
         self.assertEqual(env["XDG_DATA_HOME"], "/opt/wargames-cache/games/supertuxkart/xdg-data")
         self.assertEqual(env["IRR_DEVICE_TYPE"], "x11")
+        self.assertEqual(env["SUPERTUXKART_DATADIR"], "/usr/share/games/supertuxkart")
+
+    def test_environment_passes_state_export_pipe(self) -> None:
+        env = supertuxkart_environment(
+            SuperTuxKartConfig(state_interval_ticks=3), state_path="/tmp/stk.jsonl", display=":99"
+        )
+
+        self.assertEqual(env["WARGAMES_STK_STATE_PATH"], "/tmp/stk.jsonl")
+        self.assertEqual(env["WARGAMES_STK_STATE_INTERVAL_TICKS"], "3")

@@ -3,8 +3,9 @@
 SuperTuxKart is the kart-racing environment in WarGames.
 
 The agent sees the race window as pixels. It controls the kart with keyboard
-and mouse events. WarGames reads race metadata and process state only for
-rewards. The agent does not see that hidden state.
+and mouse events. WarGames reads kart state from inside the game for rewards:
+position, speed, lap, rank, powerups, contact state, and race progress. The
+agent does not see that hidden state.
 
 ![A model drives SuperTuxKart](../assets/supertuxkart-control-demo.gif)
 
@@ -20,8 +21,9 @@ wargames run \
   --record summary_only
 ```
 
-The game runs inside the WarGames Docker runtime. SuperTuxKart and its data
-come from the Linux runtime image.
+The game runs inside the WarGames Docker runtime. `wargames install` builds the
+WarGames state exporter into SuperTuxKart inside the Docker cache volume. The
+official game data stays inside the runtime.
 
 ## Missions
 
@@ -68,22 +70,27 @@ Useful controls:
 
 ## Rewards
 
-Rewards are scored from hidden SuperTuxKart mission state after each action.
+Rewards are scored from hidden SuperTuxKart state after each action.
 
 Useful signals:
 
 | Signal | Why it matters |
 |---|---|
-| Mission complete / failed | Main outcome. |
-| Track | Identifies which race is running. |
-| Laps and kart count | Tracks the race setup. |
-| Elapsed ticks | Measures time spent in the race. |
+| `player.progress` | Forward movement around the full race. |
+| `player.speed` | Whether the kart is actually driving. |
+| `player.rank` | Passing or losing places. |
+| `player.lap` | Lap completion. |
+| `player.x/y/z` | World position. |
+| `player.on_road` | Whether the kart is still on the road. |
+| `player.powerup` | Held item. |
+| `karts` | Player and opponent state. |
+| `mission.finished` / `mission.failed` | Final outcome. |
 
 Profiles:
 
 | Profile | Use |
 |---|---|
-| `standard` | Complete the race without process failure |
+| `standard` | Make progress, drive fast, pass karts, stay on road, and finish |
 
 ```bash
 wargames profile list --game supertuxkart

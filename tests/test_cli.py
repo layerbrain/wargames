@@ -145,16 +145,19 @@ class CLITests(TestCase):
     def test_install_supertuxkart_remembers_registered_app(self) -> None:
         with TemporaryDirectory() as temp_dir:
             env = {"LAYERBRAIN_WARGAMES_CACHE_DIR": str(Path(temp_dir) / "cache")}
-            root = Path(temp_dir) / "supertuxkart-root"
-            _write_supertuxkart_app(root)
+            root = Path(temp_dir) / "stk-code"
+            binary = root / "cmake_build" / "bin" / "supertuxkart"
+            binary.parent.mkdir(parents=True)
+            binary.write_text("#!/usr/bin/env bash\n", encoding="utf-8")
+            (root / "CMakeLists.txt").write_text("project(stk)\n", encoding="utf-8")
             args = SimpleNamespace(root=str(root))
 
-            with redirect_stdout(StringIO()):
+            with patch("wargames.cli._install_supertuxkart_probe"), redirect_stdout(StringIO()):
                 self.assertEqual(_install_supertuxkart(args, env), 0)
 
             manifest = Path(temp_dir) / "cache" / "games" / "supertuxkart" / "install.json"
-            self.assertIn("supertuxkart", manifest.read_text(encoding="utf-8"))
-            self.assertEqual(_find_supertuxkart_binary(root), root / "bin" / "supertuxkart")
+            self.assertIn("WarGames in-process kart state exporter", manifest.read_text(encoding="utf-8"))
+            self.assertEqual(_find_supertuxkart_binary(root), binary)
 
     def test_linux_box_command_does_not_forward_model_keys(self) -> None:
         with patch.dict(

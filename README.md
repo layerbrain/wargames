@@ -20,8 +20,9 @@ use the Prime RL adapter in this repo.
                  capture           |          hidden state
             +---------------+      |      +-------------------+
             | window pixels | <----+----> | probe: units,     |
-            |   1280x720    |             | fuel, objectives  |
-            +-------+-------+             +---------+---------+
+            |   1280x720    |             | flight telemetry, |
+            +-------+-------+             | kart state        |
+                                           +---------+---------+
                     |                               |
                     v                               v
               +-----------+                  +-------------+
@@ -136,8 +137,9 @@ Each step, the agent gets one JSON object:
 | `elapsed_seconds` | Wall-clock seconds since the run started. |
 
 That is everything. Red Alert unit positions, economy, objectives, FlightGear
-telemetry, SuperTuxKart race metadata, and every other piece of hidden game
-state are read only by the evaluator and reward profile, never the agent.
+telemetry, SuperTuxKart kart position, speed, lap, rank, powerups, and every
+other piece of hidden game state are read only by the evaluator and reward
+profile, never the agent.
 
 ## Actions
 
