@@ -8,27 +8,30 @@ actions as any other agent: `move_mouse`, `mouse_down`, `mouse_up`, `key_down`,
 ```bash
 # from the WarGames repo root
 uv pip install -e ./environments/prime
+```
 
+Run any shipped eval config:
+
+```bash
 prime eval run wargames \
-  --config environments/prime/configs/redalert/eval-soviet-01.toml \
+  --config environments/prime/configs/freeciv/eval-earth-small.toml \
   -n 1 -r 1
 ```
 
-Configs:
+## Configs
 
-- `environments/prime/configs/redalert/eval-soviet-01.toml`: Red Alert eval run
-- `environments/prime/configs/redalert/rl-soviet-01.toml`: Red Alert RL run
-- `environments/prime/configs/flightgear/eval-c172p-takeoff.toml`: FlightGear eval run
-- `environments/prime/configs/flightgear/rl-c172p-takeoff.toml`: FlightGear RL run
-- `environments/prime/configs/supertuxkart/eval-lighthouse.toml`: SuperTuxKart eval run
-- `environments/prime/configs/supertuxkart/rl-lighthouse.toml`: SuperTuxKart RL run
-- `environments/prime/configs/freeciv/eval-earth-small.toml`: Freeciv eval run
-- `environments/prime/configs/freeciv/rl-earth-small.toml`: Freeciv RL run
+| Game | Eval config | RL config |
+|---|---|---|
+| Red Alert | `environments/prime/configs/redalert/eval-soviet-01.toml` | `environments/prime/configs/redalert/rl-soviet-01.toml` |
+| FlightGear | `environments/prime/configs/flightgear/eval-c172p-takeoff.toml` | `environments/prime/configs/flightgear/rl-c172p-takeoff.toml` |
+| SuperTuxKart | `environments/prime/configs/supertuxkart/eval-lighthouse.toml` | `environments/prime/configs/supertuxkart/rl-lighthouse.toml` |
+| 0 A.D. | `environments/prime/configs/zeroad/eval-arcadia.toml` | `environments/prime/configs/zeroad/rl-arcadia.toml` |
+| Freeciv | `environments/prime/configs/freeciv/eval-earth-small.toml` | `environments/prime/configs/freeciv/rl-earth-small.toml` |
 
-Reward profiles are the behavior dial. Set `reward_profile = "dense"` for
-general Red Alert warmup, `reward_profile = "protective"` to prioritize
-friendly-force preservation and collateral avoidance, or point at a custom
-profile in `scenarios/<game>/profiles/`.
+Reward profiles are the behavior dial. Every game ships a `standard` profile;
+Red Alert also ships `dense`, `protective`, `terminal`, `speedrun`, and
+`aggressive_stress_test`. You can point `reward_profile` at any profile in
+`scenarios/<game>/profiles/`.
 
 ```toml
 game = "redalert"
