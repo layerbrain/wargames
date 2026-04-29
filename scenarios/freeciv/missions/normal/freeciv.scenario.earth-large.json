@@ -1,0 +1,22 @@
+{
+  "ai_level": "normal",
+  "description": "Overhead 160x90 map of the Earth.",
+  "difficulty": "normal",
+  "game": "freeciv",
+  "id": "freeciv.scenario.earth-large",
+  "launch_mode": "client-server",
+  "native_difficulty": "Normal",
+  "player_name": "wargames",
+  "players": 91,
+  "ruleset": "classic",
+  "scenario_file": "earth-large.sav.gz",
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "classic",
+    "players:91"
+  ],
+  "time_limit_ticks": 36000,
+  "timeout_seconds": 3600,
+  "title": "Earth (classic/large)"
+}

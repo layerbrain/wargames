@@ -1,0 +1,22 @@
+{
+  "ai_level": "hard",
+  "description": "Europe 1900\n\nAn attempt at an historically accurate recreation of the Great Powers of Europe just prior to the outbreak of the First World War.\n\nWARNING: Each AI controlled player will spend a long time on its moves during turn change.\n\n(update: 28.07.2016)",
+  "difficulty": "hard",
+  "game": "freeciv",
+  "id": "freeciv.scenario.europe-1900-wwi",
+  "launch_mode": "client-server",
+  "native_difficulty": "Hard",
+  "player_name": "wargames",
+  "players": 27,
+  "ruleset": "classic",
+  "scenario_file": "europe_1900_WWI.sav.gz",
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "classic",
+    "players:27"
+  ],
+  "time_limit_ticks": 36000,
+  "timeout_seconds": 3600,
+  "title": "Europe 1900"
+}

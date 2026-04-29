@@ -55,6 +55,22 @@ class PrimeConformanceTests(unittest.IsolatedAsyncioTestCase):
             all(row["info"]["task_spec"]["max_steps"] == 9 for row in env.get_dataset())
         )
 
+    def test_load_environment_selects_freeciv_tasks(self) -> None:
+        env = load_environment(
+            game="freeciv",
+            mission="freeciv.scenario.earth-small",
+            reward_profile="standard",
+            max_steps=11,
+        )
+
+        self.assertIsInstance(env, vf.MultiTurnEnv)
+        self.assertTrue(
+            all(row["info"]["task_spec"]["game"] == "freeciv" for row in env.get_dataset())
+        )
+        self.assertTrue(
+            all(row["info"]["task_spec"]["max_steps"] == 11 for row in env.get_dataset())
+        )
+
     async def test_setup_response_cleanup_drive_episode_controller(self) -> None:
         game = GameDescriptor(
             id="redalert", backend_cls=FakeRedAlertBackend, config_cls=RedAlertConfig

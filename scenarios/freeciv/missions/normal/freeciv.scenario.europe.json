@@ -1,0 +1,22 @@
+{
+  "ai_level": "normal",
+  "description": "Overhead 177x100 map of Europe.",
+  "difficulty": "normal",
+  "game": "freeciv",
+  "id": "freeciv.scenario.europe",
+  "launch_mode": "client-server",
+  "native_difficulty": "Normal",
+  "player_name": "wargames",
+  "players": 37,
+  "ruleset": "classic",
+  "scenario_file": "europe.sav.gz",
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "classic",
+    "players:37"
+  ],
+  "time_limit_ticks": 36000,
+  "timeout_seconds": 3600,
+  "title": "Europe (classic/giant)"
+}

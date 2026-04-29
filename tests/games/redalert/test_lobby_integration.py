@@ -4,7 +4,7 @@ from unittest import TestCase
 
 from fastapi.testclient import TestClient
 
-from tests.games.redalert.doubles import make_test_backend
+from tests.games.redalert.doubles import TEST_MISSIONS, make_test_backend
 from wargames.core.transport.ws import build_ws_app
 from wargames.games.redalert import GAME
 from wargames.games.redalert.lobby import RedAlertLobby
@@ -24,7 +24,7 @@ class LobbyIntegrationTests(TestCase):
         client = TestClient(app)
         with client.websocket_connect("/ws") as a, client.websocket_connect("/ws") as b:
             a.send_json(
-                {"op": "create_lobby", "mission": "redalert.skirmish.oasis", "seed": 0, "slots": 2}
+                {"op": "create_lobby", "mission": TEST_MISSIONS[1].id, "seed": 0, "slots": 2}
             )
             created = a.receive_json()
             self.assertEqual(created["event"], "lobby_created")

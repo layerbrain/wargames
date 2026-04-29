@@ -27,12 +27,12 @@ def _slug(value: str) -> str:
     return value or "map"
 
 
-def _read_title(map_yaml: str, fallback: str) -> str:
+def _read_title(map_yaml: str, default_title: str) -> str:
     for line in map_yaml.splitlines():
         stripped = line.strip()
         if stripped.startswith("Title:"):
-            return stripped.partition(":")[2].strip().strip("'\"") or fallback
-    return fallback
+            return stripped.partition(":")[2].strip().strip("'\"") or default_title
+    return default_title
 
 
 def _side_tags(map_name: str) -> tuple[str, ...]:
@@ -226,33 +226,6 @@ def load_mission_catalog(path: str | Path) -> tuple[RedAlertMissionSpec, ...]:
             )
         )
     return tuple(missions)
-
-
-def fallback_missions() -> tuple[RedAlertMissionSpec, ...]:
-    return (
-        RedAlertMissionSpec(
-            id="redalert.soviet-01.normal",
-            title="Soviet Mission 1 (Normal)",
-            game="redalert",
-            source="builtin",
-            map="soviet-01",
-            difficulty="normal",
-            native_difficulty="normal",
-            tags=("campaign", "soviet"),
-        ),
-        RedAlertMissionSpec(
-            id="redalert.skirmish.oasis",
-            title="Oasis",
-            game="redalert",
-            source="skirmish",
-            map="oasis",
-            difficulty="normal",
-            native_difficulty="normal",
-            tags=("skirmish",),
-            player_slots=8,
-            min_players=2,
-        ),
-    )
 
 
 def extract_mission_catalog(openra_root: str | Path, output_dir: str | Path) -> tuple[Path, ...]:

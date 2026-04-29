@@ -11,12 +11,15 @@ from wargames.cli import (
     _build_zeroad_source,
     _default_openra_root,
     _default_zeroad_source_root,
+    _find_freeciv_client_binary,
+    _find_freeciv_server_binary,
     _find_openra_root,
     _find_supertuxkart_binary,
     _find_zeroad_binary,
     _host_openra_support_dir,
     _ensure_linux_box_image,
     _install_flightgear,
+    _install_freeciv,
     _install_redalert,
     _install_supertuxkart,
     _install_zeroad,
@@ -57,12 +60,22 @@ def _write_zeroad_app(root: Path) -> Path:
     return binary
 
 
+def _write_freeciv_app(root: Path) -> tuple[Path, Path]:
+    server = root / "usr" / "games" / "freeciv-server"
+    client = root / "usr" / "games" / "freeciv-gtk3.22"
+    server.parent.mkdir(parents=True)
+    server.write_text("#!/usr/bin/env bash\n", encoding="utf-8")
+    client.write_text("#!/usr/bin/env bash\n", encoding="utf-8")
+    return server, client
+
+
 class CLITests(TestCase):
     def test_parser_exposes_commands(self) -> None:
         parser = build_parser()
         self.assertEqual(parser.parse_args(["install", "--game", "redalert"]).command, "install")
         self.assertEqual(parser.parse_args(["missions"]).command, "missions")
         self.assertEqual(parser.parse_args(["missions", "--game", "flightgear"]).game, "flightgear")
+        self.assertEqual(parser.parse_args(["missions", "--game", "freeciv"]).game, "freeciv")
         self.assertEqual(
             parser.parse_args(
                 ["run", "--game", "flightgear", "--mission", "m", "--agent", "a"]
@@ -87,6 +100,7 @@ class CLITests(TestCase):
             parser.parse_args(["install", "--game", "supertuxkart"]).game, "supertuxkart"
         )
         self.assertEqual(parser.parse_args(["install", "--game", "zeroad"]).game, "zeroad")
+        self.assertEqual(parser.parse_args(["install", "--game", "freeciv"]).game, "freeciv")
 
     def test_host_runs_primitive_redalert_commands_in_linux_box(self) -> None:
         parser = build_parser()
@@ -196,6 +210,21 @@ class CLITests(TestCase):
             self.assertIn("upstream 0 A.D. RL HTTP interface", manifest.read_text(encoding="utf-8"))
             self.assertEqual(_find_zeroad_binary(root), binary)
 
+    def test_install_freeciv_remembers_registered_app(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            env = {"LAYERBRAIN_WARGAMES_CACHE_DIR": str(Path(temp_dir) / "cache")}
+            root = Path(temp_dir) / "freeciv"
+            server, client = _write_freeciv_app(root)
+            args = SimpleNamespace(root=str(root))
+
+            with redirect_stdout(StringIO()):
+                self.assertEqual(_install_freeciv(args, env), 0)
+
+            manifest = Path(temp_dir) / "cache" / "games" / "freeciv" / "install.json"
+            self.assertIn("Freeciv server save snapshots", manifest.read_text(encoding="utf-8"))
+            self.assertEqual(_find_freeciv_server_binary(root), server)
+            self.assertEqual(_find_freeciv_client_binary(root), client)
+
     def test_linux_box_command_does_not_forward_model_keys(self) -> None:
         with patch.dict(
             "os.environ",
@@ -217,6 +246,7 @@ class CLITests(TestCase):
         self.assertIn("LAYERBRAIN_WARGAMES_FLIGHTGEAR_WINDOW_SIZE=1280x720", joined)
         self.assertIn("LAYERBRAIN_WARGAMES_SUPERTUXKART_WINDOW_SIZE=1280x720", joined)
         self.assertIn("LAYERBRAIN_WARGAMES_ZEROAD_WINDOW_SIZE=1280x720", joined)
+        self.assertIn("LAYERBRAIN_WARGAMES_FREECIV_WINDOW_SIZE=1280x720", joined)
         self.assertIn("--entrypoint /workspace/host-wargames/scripts/linux_box.sh", joined)
 
     def test_linux_box_install_uses_docker_volume_cache(self) -> None:
@@ -233,6 +263,7 @@ class CLITests(TestCase):
             "flightgear": ("wargames-linux-flightgear", "wargames-flightgear"),
             "supertuxkart": ("wargames-linux-supertuxkart", "wargames-supertuxkart"),
             "zeroad": ("wargames-linux-zeroad", "wargames-zeroad"),
+            "freeciv": ("wargames-linux-freeciv", "wargames-freeciv"),
         }
         for game, (image, volume) in cases.items():
             with self.subTest(game=game):

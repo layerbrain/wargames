@@ -185,6 +185,28 @@ The shipped 0 A.D. profile includes `delta_resources`, `delta_population`,
 `enemy_damage`, and `terminal`. Add shaping entries only after declaring the
 primitive in `wargames/games/zeroad/reward_schema.py`.
 
+## Freeciv Reward Fields
+
+Freeciv profiles use the same profile format. The shipped adapter exposes
+authoritative server save state after each action.
+
+| Field | Direction | Meaning |
+|---|---|---|
+| `mission.finished` | maximize | Victory state. |
+| `mission.failed` | minimize | Defeat state. |
+| `game.turn` | track | Freeciv turn number. |
+| `game.year` | track | Calendar year. |
+| `us.gold` | maximize | Player treasury. |
+| `us.city_count` | maximize | Player cities. |
+| `us.unit_count` | maximize | Player units. |
+| `us.known_tiles` | maximize | Known map tiles from exploration. |
+| `us.science_rate` | track | Science tax allocation percentage. |
+| `enemies` | track | Alive opponent player state. |
+
+The shipped Freeciv profile includes `delta_city_count`, `delta_unit_count`,
+`delta_gold`, `delta_known_tiles`, and `terminal`. Add shaping entries only
+after declaring the primitive in `wargames/games/freeciv/reward_schema.py`.
+
 ## Eval And RL
 
 Use dense shaping for training and sparse or mild profiles for reporting.
@@ -223,6 +245,7 @@ wargames profile validate scenarios/redalert/profiles/protective.yaml
 wargames profile validate scenarios/flightgear/profiles/standard.yaml --game flightgear
 wargames profile validate scenarios/supertuxkart/profiles/standard.yaml --game supertuxkart
 wargames profile validate scenarios/zeroad/profiles/standard.yaml --game zeroad
+wargames profile validate scenarios/freeciv/profiles/standard.yaml --game freeciv
 python -m unittest tests.evaluation.test_profiles -v
 ```
 

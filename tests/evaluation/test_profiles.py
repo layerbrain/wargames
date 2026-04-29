@@ -8,6 +8,8 @@ from pathlib import Path
 from wargames.evaluation.profile_loader import load_profile_yaml
 from wargames.games.flightgear.profiles import register_profiles as register_flightgear_profiles
 from wargames.games.flightgear.reward_schema import FLIGHTGEAR_REWARD_SCHEMA
+from wargames.games.freeciv.profiles import register_profiles as register_freeciv_profiles
+from wargames.games.freeciv.reward_schema import FREECIV_REWARD_SCHEMA
 from wargames.games.redalert.profiles import profiles
 from wargames.games.redalert.reward_schema import REDALERT_REWARD_SCHEMA
 from wargames.games.supertuxkart.profiles import (
@@ -96,3 +98,9 @@ class RewardProfileTests(unittest.TestCase):
 
         self.assertEqual(["standard"], [profile.id for profile in loaded])
         ZEROAD_REWARD_SCHEMA.validate_primitive("enemy_damage")
+
+    def test_freeciv_profiles_are_loaded_from_shipped_yaml(self) -> None:
+        loaded = register_freeciv_profiles()
+
+        self.assertEqual(["standard"], [profile.id for profile in loaded])
+        FREECIV_REWARD_SCHEMA.validate_primitive("delta_known_tiles")

@@ -48,6 +48,18 @@ class SuperTuxKartMissionTests(TestCase):
             exported = load_mission_catalog(Path(temp_dir) / "out")
             self.assertEqual(len(exported), 3)
 
+    def test_extract_does_not_clear_catalog_when_no_tracks_are_found(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            output = Path(temp_dir) / "out"
+            stale = output / "normal" / "supertuxkart.race.lighthouse.normal.json"
+            stale.parent.mkdir(parents=True)
+            stale.write_text('{"id": "keep"}\n', encoding="utf-8")
+
+            written = extract_mission_catalog(Path(temp_dir) / "missing", output)
+
+            self.assertEqual(written, ())
+            self.assertTrue(stale.exists())
+
 
 def _track(
     tracks: Path,

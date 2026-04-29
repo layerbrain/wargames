@@ -5,5 +5,5 @@ length prefixes and msgpack payloads. The OpenRA trait connects to
 `$PROBE_SOCK`, writes one frame per game tick, and Python decodes each payload
 into `RedAlertWorld`.
 
-The probe is hidden state. Agents receive pixels and text only; rubrics and
-traces consume `HiddenStateSnapshot`.
+The probe feeds reward and trace snapshots. Runtime clients use the standard
+observation and action protocol.

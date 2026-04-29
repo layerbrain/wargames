@@ -1,0 +1,26 @@
+id: standard
+game: freeciv
+description: "Freeciv standard reward profile: explore, found cities, grow units and gold, and win."
+step_reward_min: -0.10
+step_reward_max: 1.00
+entries:
+  - id: delta_city_count
+    fn: wargames.games.freeciv.rewards.delta_city_count
+    weight: 1.0
+    when: per_step
+  - id: delta_unit_count
+    fn: wargames.games.freeciv.rewards.delta_unit_count
+    weight: 0.2
+    when: per_step
+  - id: delta_gold
+    fn: wargames.games.freeciv.rewards.delta_gold
+    weight: 0.01
+    when: per_step
+  - id: delta_known_tiles
+    fn: wargames.games.freeciv.rewards.delta_known_tiles
+    weight: 0.02
+    when: per_step
+  - id: terminal
+    fn: wargames.core.missions.rewards.terminal
+    weight: 1.0
+    when: terminal

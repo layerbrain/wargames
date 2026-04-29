@@ -9,11 +9,32 @@ from wargames.core.runtime.observation import Observation
 from wargames.core.runtime.result import MissionSummary, StepResult
 from wargames.core.world.probe import HiddenStateSnapshot
 from wargames.games.redalert.config import RedAlertConfig
-from wargames.games.redalert.missions import RedAlertMissionSpec, fallback_missions
+from wargames.games.redalert.missions import RedAlertMissionSpec
 from wargames.games.redalert.world import MissionState, Player, RedAlertWorld
 
 PNG_1X1 = (
     "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII="
+)
+
+TEST_MISSIONS = (
+    RedAlertMissionSpec(
+        id="redalert.soviet-01.normal",
+        title="Soviet Mission 1 (Normal)",
+        game="redalert",
+        source="mock",
+        map="soviet-01",
+        tags=("campaign", "soviet"),
+    ),
+    RedAlertMissionSpec(
+        id="redalert.skirmish.test-arena",
+        title="Test Arena",
+        game="redalert",
+        source="mock",
+        map="test-arena",
+        player_slots=8,
+        min_players=2,
+        tags=("skirmish",),
+    ),
 )
 
 
@@ -94,7 +115,7 @@ class FakeRedAlertBackend(Backend):
         self.sessions: list[FakeRedAlertSession] = []
 
     def missions(self) -> tuple[MissionSpec, ...]:
-        return fallback_missions()
+        return TEST_MISSIONS
 
     def supports(self, mission: MissionSpec) -> bool:
         return isinstance(mission, RedAlertMissionSpec)

@@ -43,13 +43,17 @@ def discover(root: str | Path) -> tuple[SuperTuxKartMissionSpec, ...]:
 
 
 def extract_mission_catalog(root: str | Path, output_dir: str | Path) -> tuple[Path, ...]:
+    missions = discover(root)
+    if not missions:
+        return ()
+
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
     for stale in out.glob("*/*.json"):
         stale.unlink()
 
     written: list[Path] = []
-    for mission in discover(root):
+    for mission in missions:
         path = out / mission.difficulty / f"{mission.id}.json"
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(

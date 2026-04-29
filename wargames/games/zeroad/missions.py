@@ -29,43 +29,6 @@ _CONQUEST_TRIGGER_SCRIPTS = {
     ],
 }
 
-_ARCADIA_SETTINGS: dict[str, Any] = {
-    "Name": "Arcadia",
-    "Description": "Springtime in Arcadia, Greece.",
-    "Preview": "arcadia.png",
-    "RevealMap": False,
-    "LockTeams": False,
-    "CircularMap": False,
-    "VictoryConditions": ["conquest_units"],
-    "TriggerScripts": [
-        "scripts/TriggerHelper.js",
-        "scripts/ConquestCommon.js",
-        "scripts/ConquestUnits.js",
-    ],
-    "mapName": "Arcadia",
-    "mapType": "scenario",
-    "Ceasefire": 0,
-    "WonderDuration": 10,
-    "RelicDuration": 10,
-    "RelicCount": 2,
-    "Size": 256,
-    "PlayerData": [
-        {
-            "Name": "Player 1",
-            "Civ": "spart",
-            "Color": {"r": 150, "g": 20, "b": 20},
-            "Team": 1,
-        },
-        {
-            "Name": "Player 2",
-            "Civ": "gaul",
-            "Color": {"r": 20, "g": 20, "b": 150},
-            "Team": 2,
-        },
-    ],
-}
-
-
 @dataclass(frozen=True)
 class ZeroADMissionSpec(MissionSpec):
     map: str = ""
@@ -157,28 +120,6 @@ def load_mission_catalog(path: str | Path) -> tuple[ZeroADMissionSpec, ...]:
             )
         )
     return tuple(missions)
-
-
-def fallback_missions() -> tuple[ZeroADMissionSpec, ...]:
-    return tuple(_arcadia_variant(difficulty) for difficulty in ZEROAD_DIFFICULTIES)
-
-
-def _arcadia_variant(difficulty: MissionDifficulty) -> ZeroADMissionSpec:
-    settings = _DIFFICULTY_SETTINGS[difficulty]
-    return ZeroADMissionSpec(
-        id=f"zeroad.scenario.arcadia.{difficulty}",
-        title=f"Arcadia ({difficulty.replace('_', ' ').title()})",
-        game="zeroad",
-        source="builtin",
-        difficulty=difficulty,
-        native_difficulty=str(settings["native"]),
-        tags=("scenario", "players:2", "conquest_units"),
-        time_limit_ticks=36_000,
-        map="maps/scenarios/arcadia",
-        map_type="scenario",
-        settings=copy.deepcopy(_ARCADIA_SETTINGS),
-        ai_difficulty=int(settings["ai_difficulty"]),
-    )
 
 
 def _mission_variants(map_data: dict[str, Any]) -> list[ZeroADMissionSpec]:
