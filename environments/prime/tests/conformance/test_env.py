@@ -55,6 +55,22 @@ class PrimeConformanceTests(unittest.IsolatedAsyncioTestCase):
             all(row["info"]["task_spec"]["max_steps"] == 9 for row in env.get_dataset())
         )
 
+    def test_load_environment_selects_zeroad_tasks(self) -> None:
+        env = load_environment(
+            game="zeroad",
+            mission="zeroad.scenario.arcadia.normal",
+            reward_profile="standard",
+            max_steps=10,
+        )
+
+        self.assertIsInstance(env, vf.MultiTurnEnv)
+        self.assertTrue(
+            all(row["info"]["task_spec"]["game"] == "zeroad" for row in env.get_dataset())
+        )
+        self.assertTrue(
+            all(row["info"]["task_spec"]["max_steps"] == 10 for row in env.get_dataset())
+        )
+
     def test_load_environment_selects_freeciv_tasks(self) -> None:
         env = load_environment(
             game="freeciv",

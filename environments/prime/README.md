@@ -22,6 +22,8 @@ Configs:
 - `environments/prime/configs/flightgear/rl-c172p-takeoff.toml`: FlightGear RL run
 - `environments/prime/configs/supertuxkart/eval-lighthouse.toml`: SuperTuxKart eval run
 - `environments/prime/configs/supertuxkart/rl-lighthouse.toml`: SuperTuxKart RL run
+- `environments/prime/configs/zeroad/eval-arcadia.toml`: 0 A.D. eval run
+- `environments/prime/configs/zeroad/rl-arcadia.toml`: 0 A.D. RL run
 - `environments/prime/configs/freeciv/eval-earth-small.toml`: Freeciv eval run
 - `environments/prime/configs/freeciv/rl-earth-small.toml`: Freeciv RL run
 
