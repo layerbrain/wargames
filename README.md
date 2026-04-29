@@ -452,16 +452,24 @@ wargames run \
 
 ## Prime RL
 
-The Prime Intellect Verifiers adapter is `layerbrain/wargames`. Configs live
-under `environments/prime/configs/<game>/`. Eval and RL configs are split:
+The Prime Intellect Verifiers adapter is `layerbrain/wargames`. Prime configs
+live under `environments/prime/configs/<game>/`.
 
 ```bash
 uv pip install -e ./environments/prime
 
 prime eval run wargames \
-  --config environments/prime/configs/redalert/eval-soviet-01.toml \
+  --config environments/prime/configs/freeciv/eval-earth-small.toml \
   -n 1 -r 1
 ```
+
+| Game | Eval config | RL config |
+|---|---|---|
+| Red Alert | `environments/prime/configs/redalert/eval-soviet-01.toml` | `environments/prime/configs/redalert/rl-soviet-01.toml` |
+| FlightGear | `environments/prime/configs/flightgear/eval-c172p-takeoff.toml` | `environments/prime/configs/flightgear/rl-c172p-takeoff.toml` |
+| SuperTuxKart | `environments/prime/configs/supertuxkart/eval-lighthouse.toml` | `environments/prime/configs/supertuxkart/rl-lighthouse.toml` |
+| 0 A.D. | `environments/prime/configs/zeroad/eval-arcadia.toml` | `environments/prime/configs/zeroad/rl-arcadia.toml` |
+| Freeciv | `environments/prime/configs/freeciv/eval-earth-small.toml` | `environments/prime/configs/freeciv/rl-earth-small.toml` |
 
 The `reward_profile` TOML field is the RL behavior dial - point it at any
 profile under `scenarios/<game>/profiles/` (or a custom one). Set
