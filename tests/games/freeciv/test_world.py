@@ -60,6 +60,7 @@ class FreeCivWorldTests(TestCase):
             game="freeciv",
             source="builtin",
             time_limit_ticks=200,
+            scenario_file="test.sav.gz",
         )
 
         world = world_from_save_text(SAVE_TEXT, mission)
@@ -76,7 +77,13 @@ class FreeCivWorldTests(TestCase):
         self.assertFalse(world.mission.failed)
 
     def test_marks_defeat_when_player_is_dead(self) -> None:
-        mission = FreeCivMissionSpec(id="freeciv.test", title="T", game="freeciv", source="builtin")
+        mission = FreeCivMissionSpec(
+            id="freeciv.test",
+            title="T",
+            game="freeciv",
+            source="builtin",
+            scenario_file="test.sav.gz",
+        )
         text = SAVE_TEXT.replace("is_alive=TRUE", "is_alive=FALSE", 1)
 
         world = world_from_save_text(text, mission)

@@ -24,8 +24,8 @@ from wargames.core.world.probe import HiddenStateSnapshot
 from wargames.games.freeciv.config import FreeCivConfig
 from wargames.games.freeciv.missions import (
     FreeCivMissionSpec,
+    discover,
     extract_mission_catalog,
-    fallback_missions,
     load_mission_catalog,
 )
 from wargames.games.freeciv.process import (
@@ -159,13 +159,20 @@ class FreeCivBackend(Backend):
 
     def _discover_missions(self) -> tuple[FreeCivMissionSpec, ...]:
         catalog = load_mission_catalog(self.config.missions_dir)
-        return catalog or fallback_missions()
+        if catalog:
+            return catalog
+        root = self.config.root or "/usr/share/games/freeciv"
+        return discover(root)
 
     def missions(self) -> tuple[MissionSpec, ...]:
         return self._missions
 
     def export_missions(self, output_dir: str | Path) -> tuple[Path, ...]:
-        return extract_mission_catalog(output_dir)
+        root = self.config.root or "/usr/share/games/freeciv"
+        written = extract_mission_catalog(root, output_dir)
+        if not written:
+            raise GameNotInstalled(f"Freeciv scenarios were not found under {root}")
+        return written
 
     def supports(self, mission: MissionSpec) -> bool:
         return isinstance(mission, FreeCivMissionSpec) and mission.game == self.game

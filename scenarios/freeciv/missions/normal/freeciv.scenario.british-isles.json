@@ -1,0 +1,22 @@
+{
+  "ai_level": "normal",
+  "description": "Overhead 73x81 map of the British Isles.",
+  "difficulty": "normal",
+  "game": "freeciv",
+  "id": "freeciv.scenario.british-isles",
+  "launch_mode": "client-server",
+  "native_difficulty": "Normal",
+  "player_name": "wargames",
+  "players": 5,
+  "ruleset": "classic",
+  "scenario_file": "british-isles.sav.gz",
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "classic",
+    "players:5"
+  ],
+  "time_limit_ticks": 36000,
+  "timeout_seconds": 3600,
+  "title": "British Isles (classic/medium)"
+}

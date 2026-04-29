@@ -1,0 +1,22 @@
+{
+  "ai_level": "normal",
+  "description": "Overhead 140x90 map of France.",
+  "difficulty": "normal",
+  "game": "freeciv",
+  "id": "freeciv.scenario.france",
+  "launch_mode": "client-server",
+  "native_difficulty": "Normal",
+  "player_name": "wargames",
+  "players": 27,
+  "ruleset": "classic",
+  "scenario_file": "france.sav.gz",
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "classic",
+    "players:27"
+  ],
+  "time_limit_ticks": 36000,
+  "timeout_seconds": 3600,
+  "title": "France (classic/large)"
+}

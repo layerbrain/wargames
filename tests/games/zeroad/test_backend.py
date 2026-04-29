@@ -27,6 +27,10 @@ class ZeroADBackendTests(TestCase):
     def test_visible_frame_rejects_missing_file(self) -> None:
         self.assertFalse(_has_visible_pixels(Path("/missing"), "/usr/bin/identify"))
 
+    def test_no_fallback_missions_without_catalog_or_runtime_data(self) -> None:
+        backend = ZeroADBackend(ZeroADConfig(missions_dir="/missing", root="/missing"))
+        self.assertEqual(backend.missions(), ())
+
     def test_default_injector_is_xdotool(self) -> None:
         backend = ZeroADBackend(ZeroADConfig())
         target = Target(pid=1, window_id=2, rect=WindowRect(0, 0, 100, 100), display=":99")

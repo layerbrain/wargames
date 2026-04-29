@@ -24,7 +24,6 @@ from wargames.games.redalert.missions import (
     RedAlertMissionSpec,
     discover,
     extract_mission_catalog,
-    fallback_missions,
     load_mission_catalog,
 )
 from wargames.games.redalert.probe import SocketStateProbe
@@ -147,7 +146,7 @@ class RedAlertBackend(Backend):
         catalog = load_mission_catalog(self.config.extracted_missions_dir)
         if catalog:
             return catalog
-        return fallback_missions()
+        return ()
 
     def missions(self) -> tuple[MissionSpec, ...]:
         return self._missions

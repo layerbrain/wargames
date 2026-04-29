@@ -1,0 +1,22 @@
+{
+  "ai_level": "normal",
+  "description": "Overhead 116x100 map of North America (conical projection).",
+  "difficulty": "normal",
+  "game": "freeciv",
+  "id": "freeciv.scenario.north-america",
+  "launch_mode": "client-server",
+  "native_difficulty": "Normal",
+  "player_name": "wargames",
+  "players": 12,
+  "ruleset": "classic",
+  "scenario_file": "north_america.sav.gz",
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "classic",
+    "players:12"
+  ],
+  "time_limit_ticks": 36000,
+  "timeout_seconds": 3600,
+  "title": "North America (classic/medium)"
+}

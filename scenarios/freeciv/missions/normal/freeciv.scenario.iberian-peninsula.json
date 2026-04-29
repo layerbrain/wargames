@@ -1,0 +1,22 @@
+{
+  "ai_level": "normal",
+  "description": "Overhead 136x100 map of the Iberian Peninsula (modern-day Spain and Portugal).",
+  "difficulty": "normal",
+  "game": "freeciv",
+  "id": "freeciv.scenario.iberian-peninsula",
+  "launch_mode": "client-server",
+  "native_difficulty": "Normal",
+  "player_name": "wargames",
+  "players": 20,
+  "ruleset": "classic",
+  "scenario_file": "iberian-peninsula.sav.gz",
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "classic",
+    "players:20"
+  ],
+  "time_limit_ticks": 36000,
+  "timeout_seconds": 3600,
+  "title": "Iberian Peninsula (classic/large)"
+}

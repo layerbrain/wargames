@@ -1,0 +1,21 @@
+{
+  "ai_level": "easy",
+  "description": "Play this tutorial scenario to get an introduction to Freeciv. This is intended for single-player games. It uses the default (civ2civ3) rules.",
+  "difficulty": "easy",
+  "game": "freeciv",
+  "id": "freeciv.scenario.tutorial",
+  "launch_mode": "client-server",
+  "native_difficulty": "Easy",
+  "player_name": "wargames",
+  "players": 0,
+  "ruleset": "civ2civ3",
+  "scenario_file": "tutorial.sav.gz",
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "civ2civ3"
+  ],
+  "time_limit_ticks": 36000,
+  "timeout_seconds": 3600,
+  "title": "Tutorial"
+}

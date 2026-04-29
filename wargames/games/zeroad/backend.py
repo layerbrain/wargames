@@ -27,7 +27,6 @@ from wargames.games.zeroad.missions import (
     ZeroADMissionSpec,
     discover,
     extract_mission_catalog,
-    fallback_missions,
     load_mission_catalog,
 )
 from wargames.games.zeroad.process import (
@@ -149,7 +148,7 @@ class ZeroADBackend(Backend):
             discovered = discover(self.config.root)
             if discovered:
                 return discovered
-        return fallback_missions()
+        return ()
 
     def missions(self) -> tuple[MissionSpec, ...]:
         return self._missions

@@ -12,9 +12,9 @@ from wargames.games.redalert.world import MissionState, Player, RedAlertWorld
 
 
 class RedAlertBackendTests(TestCase):
-    def test_fallback_missions_exist_without_openra(self) -> None:
-        backend = RedAlertBackend(RedAlertConfig())
-        self.assertIn("redalert.soviet-01.normal", [mission.id for mission in backend.missions()])
+    def test_no_fallback_missions_without_catalog_or_runtime_data(self) -> None:
+        backend = RedAlertBackend(RedAlertConfig(extracted_missions_dir="/missing"))
+        self.assertEqual(backend.missions(), ())
 
     def test_default_injector_is_working_xdotool_path(self) -> None:
         backend = RedAlertBackend(RedAlertConfig())

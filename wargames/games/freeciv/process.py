@@ -108,6 +108,28 @@ def locate_freeciv_client(config: FreeCivConfig) -> str:
     raise GameNotInstalled("Freeciv GTK client binary was not found in its Docker runtime")
 
 
+def locate_freeciv_scenario(config: FreeCivConfig, mission: FreeCivMissionSpec) -> str:
+    scenario = Path(mission.scenario_file)
+    if scenario.is_absolute() and scenario.exists():
+        return str(scenario)
+
+    roots = [Path(config.root)] if config.root else []
+    roots.extend([Path("/usr/share/games/freeciv"), Path("/usr")])
+    candidates: list[Path] = []
+    for root in roots:
+        candidates.extend(
+            [
+                root / scenario,
+                root / "scenarios" / scenario,
+                root / "share" / "games" / "freeciv" / "scenarios" / scenario,
+            ]
+        )
+    for candidate in candidates:
+        if candidate.exists():
+            return str(candidate)
+    raise GameNotInstalled(f"Freeciv scenario was not found: {mission.scenario_file}")
+
+
 def freeciv_environment(config: FreeCivConfig, *, display: str | None = None) -> Mapping[str, str]:
     env: dict[str, str] = {
         "GDK_BACKEND": "x11",
@@ -181,9 +203,8 @@ def freeciv_server_command(
         "--exit-on-end",
         "--debug",
         "n",
-        "--ruleset",
-        mission.ruleset,
     ]
+    command.extend(["--file", locate_freeciv_scenario(config, mission)])
     return _wrap_runtime_user(command)
 
 

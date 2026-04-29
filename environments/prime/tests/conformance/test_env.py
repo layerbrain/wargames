@@ -58,7 +58,7 @@ class PrimeConformanceTests(unittest.IsolatedAsyncioTestCase):
     def test_load_environment_selects_freeciv_tasks(self) -> None:
         env = load_environment(
             game="freeciv",
-            mission="freeciv.duel.tiny.easy",
+            mission="freeciv.scenario.earth-small",
             reward_profile="standard",
             max_steps=11,
         )

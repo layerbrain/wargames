@@ -44,7 +44,7 @@ reward your trainer consumes.
 | FlightGear | First-person C172P flight sim | 14 | [docs/games/flightgear.md](docs/games/flightgear.md) |
 | SuperTuxKart | Real-time 3D kart racing | 63 | [docs/games/supertuxkart.md](docs/games/supertuxkart.md) |
 | 0 A.D. | Real-time ancient warfare | 390 | [docs/games/zeroad.md](docs/games/zeroad.md) |
-| Freeciv | Low-memory turn-based empire strategy | 30 | [docs/games/freeciv.md](docs/games/freeciv.md) |
+| Freeciv | Low-memory turn-based empire strategy | 12 | [docs/games/freeciv.md](docs/games/freeciv.md) |
 
 A run is four pieces: a game, a mission, a reward profile, and an agent.
 
@@ -185,11 +185,11 @@ symbol keys, `Control`, `Shift`, `Alt`, `Meta`, `Enter`, `Escape`, `Space`,
 ## Missions
 
 A mission is exported game content - a Red Alert map, a FlightGear C172P
-tutorial, a SuperTuxKart race track, a 0 A.D. map, or a curated Freeciv setup -
+tutorial, a SuperTuxKart race track, a 0 A.D. map, or a Freeciv scenario -
 wrapped with a difficulty, a step budget, a wall-clock budget, and a starting reward profile.
 Mission IDs look like `redalert.soviet-01.normal`,
 `flightgear.c172p.tutorial.takeoff`, `supertuxkart.race.lighthouse.normal`,
-`zeroad.scenario.arcadia.normal`, or `freeciv.duel.tiny.easy` and are the same string you pass to
+`zeroad.scenario.arcadia.normal`, or `freeciv.scenario.earth-small` and are the same string you pass to
 `--mission`, the WebSocket `create_session` op, and Prime RL configs.
 
 ```bash
@@ -200,7 +200,9 @@ wargames missions --game zeroad
 wargames missions --game freeciv
 ```
 
-Mission JSON lives in `scenarios/<game>/missions/<difficulty>/`.
+Mission JSON lives in `scenarios/<game>/missions/<difficulty>/`. Catalogs are
+generated from installed game assets; when no game assets are available, the
+game reports no missions.
 
 ## Profiles
 

@@ -1,0 +1,21 @@
+{
+  "ai_level": "easy",
+  "description": "Overhead 114x100 map of Italy.",
+  "difficulty": "easy",
+  "game": "freeciv",
+  "id": "freeciv.scenario.italy",
+  "launch_mode": "client-server",
+  "native_difficulty": "Easy",
+  "player_name": "wargames",
+  "players": 0,
+  "ruleset": "classic",
+  "scenario_file": "italy.sav.gz",
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "classic"
+  ],
+  "time_limit_ticks": 36000,
+  "timeout_seconds": 3600,
+  "title": "Italy (classic/medium)"
+}

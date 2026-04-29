@@ -1,10 +1,10 @@
 from unittest import IsolatedAsyncioTestCase, TestCase
 
-from tests.games.redalert.doubles import make_test_backend
+from tests.games.redalert.doubles import TEST_MISSIONS, make_test_backend
 from wargames.core.errors import LobbyStateError
 from wargames.games.redalert.config import RedAlertConfig
 from wargames.games.redalert.lobby import RedAlertLobby
-from wargames.games.redalert.missions import RedAlertMissionSpec, fallback_missions
+from wargames.games.redalert.missions import RedAlertMissionSpec
 
 
 def _mission(slots: int = 2) -> RedAlertMissionSpec:
@@ -68,7 +68,7 @@ class RedAlertLobbyStartTests(IsolatedAsyncioTestCase):
     async def test_lobby_starts_eight_sessions_with_injected_backend(self) -> None:
         lobby = RedAlertLobby(
             config=RedAlertConfig(),
-            mission=fallback_missions()[1],
+            mission=TEST_MISSIONS[1],
             seed=1,
             backend_factory=make_test_backend,
         )

@@ -1,0 +1,22 @@
+{
+  "ai_level": "normal",
+  "description": "Overhead 88x100 map of Japan (Mercator projection).",
+  "difficulty": "normal",
+  "game": "freeciv",
+  "id": "freeciv.scenario.japan",
+  "launch_mode": "client-server",
+  "native_difficulty": "Normal",
+  "player_name": "wargames",
+  "players": 8,
+  "ruleset": "classic",
+  "scenario_file": "japan.sav.gz",
+  "source": "builtin",
+  "tags": [
+    "scenario",
+    "classic",
+    "players:8"
+  ],
+  "time_limit_ticks": 36000,
+  "timeout_seconds": 3600,
+  "title": "Japan (classic/medium)"
+}
