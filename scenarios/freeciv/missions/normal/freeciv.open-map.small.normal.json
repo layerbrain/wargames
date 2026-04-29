@@ -1,0 +1,26 @@
+{
+  "ai_level": "normal",
+  "difficulty": "normal",
+  "game": "freeciv",
+  "generator": "FRACTAL",
+  "id": "freeciv.open-map.small.normal",
+  "launch_mode": "client-server",
+  "map_size": 5,
+  "native_difficulty": "normal",
+  "player_name": "wargames",
+  "players": 4,
+  "ruleset": "civ2civ3",
+  "server_settings": {},
+  "source": "builtin",
+  "tags": [
+    "turn_based",
+    "strategy",
+    "wide_map",
+    "players:4"
+  ],
+  "time_limit_ticks": 300,
+  "timeout_seconds": 3600,
+  "title": "Open Map",
+  "xsize": 64,
+  "ysize": 44
+}

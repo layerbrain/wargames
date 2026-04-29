@@ -1,0 +1,28 @@
+{
+  "ai_level": "hard",
+  "difficulty": "hard",
+  "game": "freeciv",
+  "generator": "FRACTAL",
+  "id": "freeciv.expansion-pressure.standard.hard",
+  "launch_mode": "client-server",
+  "map_size": 6,
+  "native_difficulty": "hard",
+  "player_name": "wargames",
+  "players": 6,
+  "ruleset": "civ2civ3",
+  "server_settings": {
+    "startunits": "ccwxx"
+  },
+  "source": "builtin",
+  "tags": [
+    "turn_based",
+    "strategy",
+    "expansion",
+    "players:6"
+  ],
+  "time_limit_ticks": 380,
+  "timeout_seconds": 3600,
+  "title": "Expansion Pressure",
+  "xsize": 72,
+  "ysize": 50
+}

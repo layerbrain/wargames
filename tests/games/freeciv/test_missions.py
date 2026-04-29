@@ -10,9 +10,9 @@ class FreeCivMissionTests(TestCase):
     def test_loads_shipped_mission_catalog(self) -> None:
         missions = load_mission_catalog("scenarios/freeciv/missions")
 
-        self.assertEqual(len(missions), 6)
+        self.assertEqual(len(missions), 30)
         self.assertEqual(
-            Counter({"easy": 2, "normal": 2, "hard": 2}),
+            Counter({"easy": 10, "normal": 10, "hard": 10}),
             Counter(mission.difficulty for mission in missions),
         )
 
@@ -44,6 +44,6 @@ class FreeCivMissionTests(TestCase):
         with TemporaryDirectory() as temp_dir:
             written = extract_mission_catalog(Path(temp_dir) / "out")
 
-            self.assertEqual(len(written), 6)
+            self.assertEqual(len(written), 30)
             loaded = load_mission_catalog(Path(temp_dir) / "out")
-            self.assertEqual(len(loaded), 6)
+            self.assertEqual(len(loaded), 30)

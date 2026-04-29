@@ -28,7 +28,7 @@ cache volume.
 
 ## Missions
 
-WarGames ships six Freeciv missions across easy, normal, and hard difficulties.
+WarGames ships 30 Freeciv missions across easy, normal, and hard difficulties.
 They are curated for long-horizon strategy while keeping map sizes small enough
 for low runtime memory.
 
@@ -36,10 +36,34 @@ for low runtime memory.
 |---|---|---|
 | `freeciv.duel.tiny.easy` | easy | Tiny two-player duel |
 | `freeciv.builder.tiny.easy` | easy | Small builder opening with extra start units |
+| `freeciv.scout-contact.tiny.easy` | easy | Two-player exploration opener |
+| `freeciv.settler-race.tiny.easy` | easy | Fast settlement race |
+| `freeciv.coastal-opening.tiny.easy` | easy | Coastal expansion start |
+| `freeciv.frontier-three.small.easy` | easy | Three-player frontier map |
+| `freeciv.research-start.small.easy` | easy | Early research advantage |
+| `freeciv.expansion-small.easy` | easy | Small expansion race |
+| `freeciv.sparse-duel.small.easy` | easy | Wider two-player exploration |
+| `freeciv.compact-three.tiny.easy` | easy | Compact three-player opener |
 | `freeciv.continents.small.normal` | normal | Four-player exploration game |
 | `freeciv.science.small.normal` | normal | Four-player science-focused opening |
+| `freeciv.frontier.small.normal` | normal | Three-player frontier game |
+| `freeciv.trade-triangle.small.normal` | normal | Three-player economy start |
+| `freeciv.four-way-contact.small.normal` | normal | Four-player contact map |
+| `freeciv.republic-race.small.normal` | normal | Government and science race |
+| `freeciv.long-game.small.normal` | normal | Longer small-map game |
+| `freeciv.open-map.small.normal` | normal | Wider four-player map |
+| `freeciv.compact-four.small.normal` | normal | Compact four-player pressure |
+| `freeciv.builder-four.small.normal` | normal | Four-player builder opening |
 | `freeciv.crowded-empire.hard` | hard | Six-player crowded empire game |
 | `freeciv.domination.standard.hard` | hard | Seven-player standard domination game |
+| `freeciv.seven-fronts.standard.hard` | hard | Seven-player contact pressure |
+| `freeciv.science-pressure.standard.hard` | hard | Six-player science pressure |
+| `freeciv.expansion-pressure.standard.hard` | hard | Expansion under pressure |
+| `freeciv.survival-small.hard` | hard | Small crowded survival map |
+| `freeciv.recovery-small.hard` | hard | Lean recovery start |
+| `freeciv.wide-standard.hard` | hard | Wider six-player map |
+| `freeciv.compact-brawl.hard` | hard | Compact seven-player brawl |
+| `freeciv.marathon-standard.hard` | hard | Long-horizon standard game |
 
 Mission JSON lives in `scenarios/freeciv/missions/<difficulty>/`.
 

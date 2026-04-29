@@ -1,0 +1,26 @@
+{
+  "ai_level": "hard",
+  "difficulty": "hard",
+  "game": "freeciv",
+  "generator": "FRACTAL",
+  "id": "freeciv.seven-fronts.standard.hard",
+  "launch_mode": "client-server",
+  "map_size": 6,
+  "native_difficulty": "hard",
+  "player_name": "wargames",
+  "players": 7,
+  "ruleset": "civ2civ3",
+  "server_settings": {},
+  "source": "builtin",
+  "tags": [
+    "turn_based",
+    "strategy",
+    "contact",
+    "players:7"
+  ],
+  "time_limit_ticks": 360,
+  "timeout_seconds": 3600,
+  "title": "Seven Fronts",
+  "xsize": 72,
+  "ysize": 50
+}

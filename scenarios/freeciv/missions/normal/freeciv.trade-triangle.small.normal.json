@@ -1,0 +1,28 @@
+{
+  "ai_level": "normal",
+  "difficulty": "normal",
+  "game": "freeciv",
+  "generator": "FRACTAL",
+  "id": "freeciv.trade-triangle.small.normal",
+  "launch_mode": "client-server",
+  "map_size": 5,
+  "native_difficulty": "normal",
+  "player_name": "wargames",
+  "players": 3,
+  "ruleset": "civ2civ3",
+  "server_settings": {
+    "techlevel": 1
+  },
+  "source": "builtin",
+  "tags": [
+    "turn_based",
+    "strategy",
+    "economy",
+    "players:3"
+  ],
+  "time_limit_ticks": 280,
+  "timeout_seconds": 3600,
+  "title": "Trade Triangle",
+  "xsize": 60,
+  "ysize": 42
+}
