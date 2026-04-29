@@ -1,0 +1,26 @@
+{
+  "ai_level": "hard",
+  "difficulty": "hard",
+  "game": "freeciv",
+  "generator": "FRACTAL",
+  "id": "freeciv.crowded-empire.hard",
+  "launch_mode": "client-server",
+  "map_size": 5,
+  "native_difficulty": "hard",
+  "player_name": "wargames",
+  "players": 6,
+  "ruleset": "civ2civ3",
+  "server_settings": {},
+  "source": "builtin",
+  "tags": [
+    "turn_based",
+    "strategy",
+    "crowded",
+    "players:6"
+  ],
+  "time_limit_ticks": 320,
+  "timeout_seconds": 3600,
+  "title": "Crowded Empire",
+  "xsize": 60,
+  "ysize": 44
+}

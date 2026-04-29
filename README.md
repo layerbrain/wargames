@@ -11,7 +11,7 @@ Bring your own trainer or use the Prime RL adapter in this repo.
 ```text
                     +-----------------------------+
                     |        Game process         |
-                    | OpenRA, FlightGear, STK, ... |
+                    | OpenRA, FlightGear, STK, Freeciv |
                     +--------------+--------------+
                                    |
                  capture           |          scoring state
@@ -44,6 +44,7 @@ reward your trainer consumes.
 | FlightGear | First-person C172P flight sim | 14 | [docs/games/flightgear.md](docs/games/flightgear.md) |
 | SuperTuxKart | Real-time 3D kart racing | 63 | [docs/games/supertuxkart.md](docs/games/supertuxkart.md) |
 | 0 A.D. | Real-time ancient warfare | 390 | [docs/games/zeroad.md](docs/games/zeroad.md) |
+| Freeciv | Low-memory turn-based empire strategy | 6 | [docs/games/freeciv.md](docs/games/freeciv.md) |
 
 A run is four pieces: a game, a mission, a reward profile, and an agent.
 
@@ -64,6 +65,7 @@ wargames install --game redalert
 wargames install --game flightgear
 wargames install --game supertuxkart
 wargames install --game zeroad
+wargames install --game freeciv
 ```
 
 Run a SuperTuxKart episode:
@@ -83,6 +85,7 @@ wargames missions --game redalert
 wargames missions --game flightgear
 wargames missions --game supertuxkart
 wargames missions --game zeroad
+wargames missions --game freeciv
 ```
 
 ## Run Your Own Model
@@ -182,11 +185,11 @@ symbol keys, `Control`, `Shift`, `Alt`, `Meta`, `Enter`, `Escape`, `Space`,
 ## Missions
 
 A mission is exported game content - a Red Alert map, a FlightGear C172P
-tutorial, a SuperTuxKart race track, or a 0 A.D. map - wrapped with a
-difficulty, a step budget, a wall-clock budget, and a starting reward profile.
+tutorial, a SuperTuxKart race track, a 0 A.D. map, or a curated Freeciv setup -
+wrapped with a difficulty, a step budget, a wall-clock budget, and a starting reward profile.
 Mission IDs look like `redalert.soviet-01.normal`,
-`flightgear.c172p.tutorial.takeoff`, `supertuxkart.race.lighthouse.normal`, or
-`zeroad.scenario.arcadia.normal` and are the same string you pass to
+`flightgear.c172p.tutorial.takeoff`, `supertuxkart.race.lighthouse.normal`,
+`zeroad.scenario.arcadia.normal`, or `freeciv.duel.tiny.easy` and are the same string you pass to
 `--mission`, the WebSocket `create_session` op, and Prime RL configs.
 
 ```bash
@@ -194,6 +197,7 @@ wargames missions --game redalert --difficulty hard
 wargames missions --game flightgear
 wargames missions --game supertuxkart
 wargames missions --game zeroad
+wargames missions --game freeciv
 ```
 
 Mission JSON lives in `scenarios/<game>/missions/<difficulty>/`.
@@ -218,12 +222,14 @@ Shipped profiles:
 | FlightGear | `standard` |
 | SuperTuxKart | `standard` |
 | 0 A.D. | `standard` |
+| Freeciv | `standard` |
 
 ```bash
 wargames profile list --game redalert
 wargames profile list --game flightgear
 wargames profile list --game supertuxkart
 wargames profile list --game zeroad
+wargames profile list --game freeciv
 wargames profile validate scenarios/redalert/profiles/protective.yaml
 ```
 

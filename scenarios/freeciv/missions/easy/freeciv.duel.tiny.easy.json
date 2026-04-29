@@ -1,0 +1,26 @@
+{
+  "ai_level": "easy",
+  "difficulty": "easy",
+  "game": "freeciv",
+  "generator": "FRACTAL",
+  "id": "freeciv.duel.tiny.easy",
+  "launch_mode": "client-server",
+  "map_size": 4,
+  "native_difficulty": "easy",
+  "player_name": "wargames",
+  "players": 2,
+  "ruleset": "civ2civ3",
+  "server_settings": {},
+  "source": "builtin",
+  "tags": [
+    "turn_based",
+    "strategy",
+    "players:2",
+    "tiny"
+  ],
+  "time_limit_ticks": 120,
+  "timeout_seconds": 3600,
+  "title": "Tiny Duel",
+  "xsize": 40,
+  "ysize": 30
+}

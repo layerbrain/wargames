@@ -2,10 +2,7 @@
 
 WarGames keeps reward computation outside the runtime. `Rubric` and
 `RubricEntry` remain available as evaluator utilities: each entry receives the
-previous and current hidden snapshots and returns a scalar. WebSocket clients
-receive only frames and action results; hidden state and reward attribution stay
-in trusted in-process harnesses.
+previous and current game snapshots and returns a scalar reward.
 
 See [`docs/reward_profiles.md`](reward_profiles.md) for the full YAML schema,
-all Red Alert reward fields, built-in primitives, and Prime RL training
-examples.
+per-game reward fields, built-in primitives, and Prime RL training examples.

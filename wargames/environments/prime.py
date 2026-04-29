@@ -265,6 +265,11 @@ def _game_runtime(game: str) -> tuple[GameDescriptor, ConfigFactory]:
         from wargames.games.zeroad.config import ZeroADConfig
 
         return ZEROAD_GAME, ZeroADConfig.from_env
+    if game == "freeciv":
+        from wargames.games.freeciv import GAME as FREECIV_GAME
+        from wargames.games.freeciv.config import FreeCivConfig
+
+        return FREECIV_GAME, FreeCivConfig.from_env
     raise ValueError(f"unknown game: {game}")
 
 

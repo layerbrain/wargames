@@ -1,0 +1,5 @@
+game = "freeciv"
+mission = "freeciv.duel.tiny.easy"
+reward_profile = "standard"
+recorder_mode = "full"
+max_steps = 512

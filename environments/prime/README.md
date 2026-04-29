@@ -22,6 +22,8 @@ Configs:
 - `environments/prime/configs/flightgear/rl-c172p-takeoff.toml`: FlightGear RL run
 - `environments/prime/configs/supertuxkart/eval-lighthouse.toml`: SuperTuxKart eval run
 - `environments/prime/configs/supertuxkart/rl-lighthouse.toml`: SuperTuxKart RL run
+- `environments/prime/configs/freeciv/eval-duel.toml`: Freeciv eval run
+- `environments/prime/configs/freeciv/rl-duel.toml`: Freeciv RL run
 
 Reward profiles are the behavior dial. Set `reward_profile = "dense"` for
 general Red Alert warmup, `reward_profile = "protective"` to prioritize

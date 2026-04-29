@@ -26,8 +26,8 @@ from wargames.harness.turns import events_from_payload, validate_turn
 _LINUX_BOX_ENV = "LAYERBRAIN_WARGAMES_IN_LINUX_BOX"
 _LINUX_BOX_DEFAULT_RESOLUTION = (1280, 720)
 _BOX_COMMANDS = {"boot", "control", "install", "run", "serve"}
-_INSTALLABLE_GAMES = ("redalert", "flightgear", "supertuxkart", "zeroad")
-_TASK_GAMES = ("redalert", "flightgear", "supertuxkart", "zeroad")
+_INSTALLABLE_GAMES = ("redalert", "flightgear", "supertuxkart", "zeroad", "freeciv")
+_TASK_GAMES = ("redalert", "flightgear", "supertuxkart", "zeroad", "freeciv")
 _LINUX_BOX_CACHE_MOUNT = "/opt/wargames-cache"
 _LINUX_BOX_BASE_IMAGE = "wargames-linux-base"
 _LINUX_BOX_BASE_DOCKERFILE = "docker/base/Dockerfile"
@@ -66,6 +66,12 @@ _LINUX_BOX_RUNTIMES = {
         dockerfile="docker/zeroad/Dockerfile",
         cache_volume="wargames-zeroad",
     ),
+    "freeciv": LinuxBoxRuntime(
+        game="freeciv",
+        image="wargames-linux-freeciv",
+        dockerfile="docker/freeciv/Dockerfile",
+        cache_volume="wargames-freeciv",
+    ),
 }
 _OPENRA_REPO = "https://github.com/OpenRA/OpenRA.git"
 _OPENRA_REF = "bleed"
@@ -92,6 +98,10 @@ def _game(id: str) -> GameDescriptor:
         from wargames.games.zeroad import GAME
 
         return GAME
+    if id == "freeciv":
+        from wargames.games.freeciv import GAME
+
+        return GAME
     raise SystemExit(f"unknown game: {id}")
 
 
@@ -112,6 +122,10 @@ def _reward_schema(game: str) -> GameRewardSchema:
         from wargames.games.zeroad.reward_schema import ZEROAD_REWARD_SCHEMA
 
         return ZEROAD_REWARD_SCHEMA
+    if game == "freeciv":
+        from wargames.games.freeciv.reward_schema import FREECIV_REWARD_SCHEMA
+
+        return FREECIV_REWARD_SCHEMA
     raise SystemExit(f"unknown game: {game}")
 
 
@@ -283,6 +297,16 @@ def _is_zeroad_root(path: Path) -> bool:
     )
 
 
+def _is_freeciv_root(path: Path) -> bool:
+    return (
+        path.name in {"freeciv-server", "freeciv-gtk3.22", "freeciv-gtk3"}
+        or (path / "bin" / "freeciv-server").exists()
+        or (path / "bin" / "freeciv-gtk3.22").exists()
+        or (path / "usr" / "games" / "freeciv-server").exists()
+        or (path / "usr" / "games" / "freeciv-gtk3.22").exists()
+    )
+
+
 def _find_flightgear_binary(root: Path | None = None) -> Path | None:
     candidates: list[Path | str | None] = [
         root if root and root.name == "fgfs" else None,
@@ -343,6 +367,47 @@ def _find_zeroad_binary(root: Path | None = None) -> Path | None:
     return None
 
 
+def _find_freeciv_server_binary(root: Path | None = None) -> Path | None:
+    candidates: list[Path | str | None] = [
+        root if root and root.is_file() and root.name == "freeciv-server" else None,
+        root / "bin" / "freeciv-server" if root and not root.is_file() else None,
+        root / "usr" / "games" / "freeciv-server" if root and not root.is_file() else None,
+        shutil.which("freeciv-server"),
+        "/usr/games/freeciv-server",
+        "/usr/bin/freeciv-server",
+    ]
+    for candidate in candidates:
+        if candidate:
+            path = Path(candidate).expanduser()
+            if path.exists():
+                return path
+    return None
+
+
+def _find_freeciv_client_binary(root: Path | None = None) -> Path | None:
+    candidates: list[Path | str | None] = [
+        root
+        if root and root.is_file() and root.name in {"freeciv-gtk3.22", "freeciv-gtk3"}
+        else None,
+        root / "bin" / "freeciv-gtk3.22" if root and not root.is_file() else None,
+        root / "bin" / "freeciv-gtk3" if root and not root.is_file() else None,
+        root / "usr" / "games" / "freeciv-gtk3.22" if root and not root.is_file() else None,
+        root / "usr" / "games" / "freeciv-gtk3" if root and not root.is_file() else None,
+        shutil.which("freeciv-gtk3.22"),
+        shutil.which("freeciv-gtk3"),
+        "/usr/games/freeciv-gtk3.22",
+        "/usr/games/freeciv-gtk3",
+        "/usr/bin/freeciv-gtk3.22",
+        "/usr/bin/freeciv-gtk3",
+    ]
+    for candidate in candidates:
+        if candidate:
+            path = Path(candidate).expanduser()
+            if path.exists():
+                return path
+    return None
+
+
 def _flightgear_root(binary: Path, root: Path | None = None) -> Path:
     if root is not None:
         return root
@@ -374,6 +439,16 @@ def _zeroad_root(binary: Path, root: Path | None = None) -> Path:
     share_root = Path("/usr/share/games/0ad")
     if share_root.exists():
         return share_root
+    if binary.parent.name == "bin":
+        return binary.parent.parent
+    return binary.parent
+
+
+def _freeciv_root(binary: Path, root: Path | None = None) -> Path:
+    if root is not None and not root.is_file():
+        return root
+    if binary.parent.name == "games" and binary.parent.parent.name == "usr":
+        return binary.parent.parent
     if binary.parent.name == "bin":
         return binary.parent.parent
     return binary.parent
@@ -460,6 +535,7 @@ def _runtime_resolution(env: Mapping[str, str] = os.environ) -> tuple[int, int]:
         "LAYERBRAIN_WARGAMES_REDALERT_OPENRA_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_SUPERTUXKART_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_ZEROAD_WINDOW_SIZE",
+        "LAYERBRAIN_WARGAMES_FREECIV_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_FLIGHTGEAR_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_XVFB_RESOLUTION",
     ):
@@ -596,6 +672,7 @@ def _linux_box_command(
         "LAYERBRAIN_WARGAMES_SUPERTUXKART_WINDOW_SIZE", _resolution_text(active_resolution)
     )
     env.setdefault("LAYERBRAIN_WARGAMES_ZEROAD_WINDOW_SIZE", _resolution_text(active_resolution))
+    env.setdefault("LAYERBRAIN_WARGAMES_FREECIV_WINDOW_SIZE", _resolution_text(active_resolution))
     if stream_port is not None:
         env["LAYERBRAIN_WARGAMES_HOST_STREAM_URL"] = (
             f"udp://host.docker.internal:{stream_port}?pkt_size=1316"
@@ -994,6 +1071,32 @@ def _install_zeroad(args: argparse.Namespace, env: Mapping[str, str] = os.enviro
     return 0
 
 
+def _install_freeciv(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
+    root = Path(args.root).expanduser() if args.root else None
+    if root is not None and not _is_freeciv_root(root):
+        raise SystemExit(f"Freeciv root does not contain freeciv-server and GTK client: {root}")
+
+    server = _find_freeciv_server_binary(root)
+    client = _find_freeciv_client_binary(root)
+    if server is None or client is None:
+        raise SystemExit(
+            "Freeciv was not found in its Docker runtime image. Rebuild the Freeciv "
+            "runtime image or register a container-visible install with --root."
+        )
+
+    payload = {
+        "game": "freeciv",
+        "server_binary": str(server),
+        "client_binary": str(client),
+        "root": str(_freeciv_root(server, root)),
+        "state_interface": "Freeciv server save snapshots",
+        "status": "present",
+    }
+    _write_game_install_manifest("freeciv", payload, env)
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0
+
+
 async def _install(args: argparse.Namespace) -> int:
     if os.environ.get(_LINUX_BOX_ENV) != "1" and not args.root:
         raise SystemExit(
@@ -1008,6 +1111,8 @@ async def _install(args: argparse.Namespace) -> int:
         return await asyncio.to_thread(_install_supertuxkart, args)
     if args.game == "zeroad":
         return await asyncio.to_thread(_install_zeroad, args)
+    if args.game == "freeciv":
+        return await asyncio.to_thread(_install_freeciv, args)
     raise SystemExit(f"unknown game: {args.game}")
 
 
@@ -1344,6 +1449,8 @@ async def _serve(args: argparse.Namespace) -> int:
         from wargames.games.supertuxkart.transport.ws import app
     elif args.game == "zeroad":
         from wargames.games.zeroad.transport.ws import app
+    elif args.game == "freeciv":
+        from wargames.games.freeciv.transport.ws import app
     else:
         raise SystemExit(f"unknown game: {args.game}")
 
