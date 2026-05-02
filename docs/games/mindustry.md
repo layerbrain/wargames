@@ -1,11 +1,13 @@
 # Mindustry
 
-Mindustry is the factory-survival environment in WarGames.
+Mindustry is the automation and base-defense environment in WarGames.
 
-WarGames runs the rendered Mindustry client in a Linux/Xvfb runtime, captures
-the game window as pixels, applies keyboard and mouse events, and scores
-rewards from a WarGames plugin loaded by the client. Agent observations contain
-pixels only; plugin state is hidden and used only by evaluation.
+Missions cover survival maps with resource routing, construction, power,
+turrets, wave defense, and base expansion.
+
+Rewards use trusted state from a WarGames plugin loaded by the Mindustry
+client: wave, core health, items, buildings, units, enemies, power, and
+win/game-over state.
 
 ![Mindustry control proof](../assets/mindustry-control-proof.mp4)
 

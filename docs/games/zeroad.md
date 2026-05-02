@@ -1,11 +1,12 @@
 # 0 A.D.
 
 0 A.D. is the ancient-warfare real-time strategy environment in WarGames.
+Missions cover scenario and skirmish maps with gathering, construction,
+population growth, exploration, and combat.
 
-WarGames captures the game window as pixels, applies standard keyboard and
-mouse actions, and reads 0 A.D. state through the upstream RL HTTP interface
-for rewards: players, resources, population, entities, map size, victory
-conditions, and win/defeat state.
+Rewards use 0 A.D. state through the upstream RL HTTP interface: players,
+resources, population, entities, map size, victory conditions, and win/defeat
+state.
 
 ![0 A.D. control demo](../assets/zeroad-control-demo.gif)
 

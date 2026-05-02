@@ -1,11 +1,11 @@
 # Freeciv
 
 Freeciv is the low-memory, long-horizon turn-based strategy environment in
-WarGames.
+WarGames. Missions cover packaged historical and tutorial scenarios with
+exploration, settlement, production, diplomacy, and conquest.
 
-WarGames captures the GTK client window as pixels, applies standard keyboard
-and mouse actions, and scores rewards from authoritative Freeciv server save
-snapshots: turn, year, players, cities, units, treasury, tax rates, map
+Rewards use authoritative Freeciv server save snapshots: turn, year, players,
+cities, units, treasury, tax rates, map
 knowledge, and victory/defeat state.
 
 ![Freeciv control demo](../assets/freeciv-control-demo.gif)

@@ -7,7 +7,7 @@ probes, world types, mission discovery, and any game-specific lobby topology.
 
 ## Boundaries
 
-- Agent-facing `Observation` is pixels only: `frame` is the captured game image.
+- `Observation` carries the public rendered frame: `frame: Frame | None`.
 - `StepResult` is the trusted Python result: action, tick, frame, hidden
   snapshot, previous hidden snapshot, finished/truncated flags, and info.
 - Hidden state is never serialized on the WebSocket.
