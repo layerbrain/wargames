@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.noloks-party-pit.normal",
+  "level_file": "levels/bonus1/noloks_party_pit.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 300,
+  "time_limit_ticks": 22500,
+  "title": "Nolok's Party Pit (Normal)"
+}

@@ -1,0 +1,18 @@
+{
+  "difficulty": "normal",
+  "game": "mindustry",
+  "id": "mindustry.survival.labyrinth.normal",
+  "map_name": "Labyrinth",
+  "mode": "survival",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "factory",
+    "tower-defense",
+    "survival",
+    "win-wave:20"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Labyrinth Survival (Normal)",
+  "win_wave": 20
+}

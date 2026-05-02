@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.semi-frozen.easy",
+  "level_file": "levels/bonus1/semi_frozen.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 162,
+  "time_limit_ticks": 17010,
+  "title": "Semi-Frozen (Easy)"
+}

@@ -1,0 +1,21 @@
+{
+  "content": "freedoom1",
+  "difficulty": "easy",
+  "episode": 1,
+  "game": "doom",
+  "id": "doom.episode.e1m1.easy",
+  "iwad": "/usr/share/games/doom/freedoom1.wad",
+  "map": "E1M1",
+  "map_number": 1,
+  "native_difficulty": "2",
+  "skill": 2,
+  "source": "builtin",
+  "tags": [
+    "freedoom1",
+    "e1m1",
+    "fps",
+    "freedoom"
+  ],
+  "time_limit_ticks": 12600,
+  "title": "Freedoom Phase 1 E1M1 (Easy)"
+}

@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "hard",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.mysterious-house-of-ice.hard",
+  "level_file": "levels/bonus1/mysterious_house_of_ice.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "speedrun",
+    "platformer"
+  ],
+  "target_time_seconds": 75,
+  "time_limit_ticks": 4500,
+  "title": "A Mysterious House of Ice (Hard)"
+}

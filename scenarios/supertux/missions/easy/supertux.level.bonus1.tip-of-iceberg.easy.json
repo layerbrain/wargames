@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.tip-of-iceberg.easy",
+  "level_file": "levels/bonus1/tip_of_iceberg.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 190,
+  "time_limit_ticks": 19950,
+  "title": "Tip of the Iceberg (Easy)"
+}

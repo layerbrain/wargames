@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.revenge_in_redmond.who-is-gown.easy",
+  "level_file": "levels/revenge_in_redmond/who_is_gown.stl",
+  "level_set": "revenge_in_redmond",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "revenge_in_redmond",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 43,
+  "time_limit_ticks": 4515,
+  "title": "Who Is This Gown? (Easy)"
+}

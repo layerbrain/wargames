@@ -1,0 +1,1 @@
+"""Mindustry game tests."""

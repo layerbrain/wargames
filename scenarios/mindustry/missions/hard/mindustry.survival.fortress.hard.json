@@ -1,0 +1,18 @@
+{
+  "difficulty": "hard",
+  "game": "mindustry",
+  "id": "mindustry.survival.fortress.hard",
+  "map_name": "Fortress",
+  "mode": "survival",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "factory",
+    "tower-defense",
+    "survival",
+    "win-wave:40"
+  ],
+  "time_limit_ticks": 72000,
+  "title": "Fortress Survival (Hard)",
+  "win_wave": 40
+}

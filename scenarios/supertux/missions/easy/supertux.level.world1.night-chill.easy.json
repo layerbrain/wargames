@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.world1.night-chill.easy",
+  "level_file": "levels/world1/night_chill.stl",
+  "level_set": "world1",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "world1",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 70,
+  "time_limit_ticks": 7350,
+  "title": "Night Chill (Easy)"
+}

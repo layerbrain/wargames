@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.let-us-snow.easy",
+  "level_file": "levels/bonus1/let_us_snow.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 245,
+  "time_limit_ticks": 25725,
+  "title": "Let Us Snow! (Easy)"
+}

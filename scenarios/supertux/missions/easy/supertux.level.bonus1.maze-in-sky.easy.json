@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.maze-in-sky.easy",
+  "level_file": "levels/bonus1/maze_in_sky.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 172,
+  "time_limit_ticks": 18060,
+  "title": "A Maze in the Sky (Easy)"
+}

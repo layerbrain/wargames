@@ -1,0 +1,81 @@
+from __future__ import annotations
+
+from wargames.evaluation.schema import GameRewardSchema, RewardField, RewardPrimitiveSpec
+
+SUPERTUX_REWARD_SCHEMA = GameRewardSchema(
+    game="supertux",
+    world_type="wargames.games.supertux.world.SuperTuxWorld",
+    tick_rate=60,
+    fields={
+        "tick": RewardField("tick", "int", "track", "WarGames step tick."),
+        "mission.finished": RewardField("mission.finished", "bool", "maximize", "Level exit reached."),
+        "mission.failed": RewardField("mission.failed", "bool", "minimize", "Player death or runtime failure."),
+        "level.file": RewardField("level.file", "str", "track", "Level file path."),
+        "level.name": RewardField("level.name", "str", "track", "Level display name."),
+        "level.elapsed_ticks": RewardField("level.elapsed_ticks", "int", "minimize", "Elapsed level ticks."),
+        "level.coins": RewardField("level.coins", "int", "maximize", "Collected coins."),
+        "level.total_coins": RewardField("level.total_coins", "int", "track", "Available coins."),
+        "level.secrets": RewardField("level.secrets", "int", "maximize", "Found secrets."),
+        "level.total_secrets": RewardField("level.total_secrets", "int", "track", "Available secrets."),
+        "player.x": RewardField("player.x", "float | None", "track", "Player x position."),
+        "player.y": RewardField("player.y", "float | None", "track", "Player y position."),
+        "player.vx": RewardField("player.vx", "float | None", "maximize", "Horizontal speed."),
+        "player.vy": RewardField("player.vy", "float | None", "track", "Vertical speed."),
+        "player.coins": RewardField("player.coins", "int", "maximize", "Player wallet coins."),
+        "player.bonus": RewardField("player.bonus", "str", "track", "Current power-up."),
+        "player.alive": RewardField("player.alive", "bool", "maximize", "Player is alive."),
+        "player.dead": RewardField("player.dead", "bool", "minimize", "Player is dead."),
+        "player.winning": RewardField("player.winning", "bool", "maximize", "Player is in win sequence."),
+    },
+    primitives={
+        "terminal": RewardPrimitiveSpec(
+            "terminal",
+            ("mission.finished", "mission.failed"),
+            1.0,
+            "terminal",
+            "Success/failure outcome.",
+        ),
+        "delta_coins": RewardPrimitiveSpec(
+            "delta_coins",
+            ("level.coins",),
+            1.0,
+            "per_step",
+            "Reward newly collected coins.",
+        ),
+        "delta_secrets": RewardPrimitiveSpec(
+            "delta_secrets",
+            ("level.secrets",),
+            1.0,
+            "per_step",
+            "Reward newly found secrets.",
+        ),
+        "progress_x": RewardPrimitiveSpec(
+            "progress_x",
+            ("player.x",),
+            1.0,
+            "per_step",
+            "Reward forward horizontal progress.",
+        ),
+        "velocity_x": RewardPrimitiveSpec(
+            "velocity_x",
+            ("player.vx",),
+            1.0,
+            "per_step",
+            "Reward moving right.",
+        ),
+        "death_penalty": RewardPrimitiveSpec(
+            "death_penalty",
+            ("player.dead",),
+            1.0,
+            "per_step",
+            "Penalty when Tux dies.",
+        ),
+        "time_penalty": RewardPrimitiveSpec(
+            "time_penalty",
+            ("tick",),
+            1.0,
+            "per_step",
+            "Small pressure to finish efficiently.",
+        ),
+    },
+)

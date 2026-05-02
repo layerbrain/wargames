@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.pipe-down-over-there.normal",
+  "level_file": "levels/bonus1/pipe_down_over_there.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 96,
+  "time_limit_ticks": 7200,
+  "title": "Pipe Down Over There! (Normal)"
+}

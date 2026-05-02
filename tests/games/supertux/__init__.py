@@ -1,0 +1,1 @@
+"""SuperTux game tests."""

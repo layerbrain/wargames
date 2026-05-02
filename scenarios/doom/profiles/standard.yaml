@@ -1,0 +1,34 @@
+id: standard
+game: doom
+description: "Doom standard reward profile: fight, collect useful items, preserve health, and reach the map exit."
+step_reward_min: -0.25
+step_reward_max: 1.00
+entries:
+  - id: delta_kills
+    fn: wargames.games.doom.rewards.delta_kills
+    weight: 0.15
+    when: per_step
+  - id: delta_items
+    fn: wargames.games.doom.rewards.delta_items
+    weight: 0.05
+    when: per_step
+  - id: delta_secrets
+    fn: wargames.games.doom.rewards.delta_secrets
+    weight: 0.25
+    when: per_step
+  - id: health_preservation
+    fn: wargames.games.doom.rewards.health_preservation
+    weight: 0.01
+    when: per_step
+  - id: damage_penalty
+    fn: wargames.games.doom.rewards.damage_penalty
+    weight: 0.02
+    when: per_step
+  - id: time_penalty
+    fn: wargames.games.doom.rewards.time_penalty
+    weight: 0.0001
+    when: per_step
+  - id: terminal
+    fn: wargames.core.missions.rewards.terminal
+    weight: 1.0
+    when: terminal

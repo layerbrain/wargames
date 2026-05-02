@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "hard",
+  "game": "supertux",
+  "id": "supertux.level.world2.ghosttree-boss.hard",
+  "level_file": "levels/world2/ghosttree_boss.stl",
+  "level_set": "world2",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "world2",
+    "speedrun",
+    "platformer"
+  ],
+  "target_time_seconds": 95,
+  "time_limit_ticks": 5700,
+  "title": "Roots of All Evil (Hard)"
+}

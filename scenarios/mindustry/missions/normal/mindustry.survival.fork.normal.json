@@ -1,0 +1,18 @@
+{
+  "difficulty": "normal",
+  "game": "mindustry",
+  "id": "mindustry.survival.fork.normal",
+  "map_name": "Fork",
+  "mode": "survival",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "factory",
+    "tower-defense",
+    "survival",
+    "win-wave:20"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Fork Survival (Normal)",
+  "win_wave": 20
+}

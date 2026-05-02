@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.revenge_in_redmond.long-office-nights.easy",
+  "level_file": "levels/revenge_in_redmond/long_office_nights.stl",
+  "level_set": "revenge_in_redmond",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "revenge_in_redmond",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 45,
+  "time_limit_ticks": 4725,
+  "title": "Long Office Nights (Easy)"
+}

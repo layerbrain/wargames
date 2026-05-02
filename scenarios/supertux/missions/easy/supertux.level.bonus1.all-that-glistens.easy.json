@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.all-that-glistens.easy",
+  "level_file": "levels/bonus1/all_that_glistens.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 90,
+  "time_limit_ticks": 9450,
+  "title": "All That Glistens is Not Gold (Easy)"
+}

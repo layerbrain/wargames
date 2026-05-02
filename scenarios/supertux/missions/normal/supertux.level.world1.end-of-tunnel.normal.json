@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.world1.end-of-tunnel.normal",
+  "level_file": "levels/world1/end_of_tunnel.stl",
+  "level_set": "world1",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "world1",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 180,
+  "time_limit_ticks": 13500,
+  "title": "End of the Tunnel (Normal)"
+}

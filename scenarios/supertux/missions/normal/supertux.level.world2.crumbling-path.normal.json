@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.world2.crumbling-path.normal",
+  "level_file": "levels/world2/crumbling_path.stl",
+  "level_set": "world2",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "world2",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 130,
+  "time_limit_ticks": 9750,
+  "title": "Crumbling Path (Normal)"
+}

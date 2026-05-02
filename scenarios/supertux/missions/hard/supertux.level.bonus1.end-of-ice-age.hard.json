@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "hard",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.end-of-ice-age.hard",
+  "level_file": "levels/bonus1/end_of_ice_age.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "speedrun",
+    "platformer"
+  ],
+  "target_time_seconds": 102,
+  "time_limit_ticks": 6120,
+  "title": "End of the Ice Age (Hard)"
+}

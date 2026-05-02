@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.world2.entangled-roots.normal",
+  "level_file": "levels/world2/entangled_roots.stl",
+  "level_set": "world2",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "world2",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 54,
+  "time_limit_ticks": 4050,
+  "title": "Entangled in Roots (Normal)"
+}

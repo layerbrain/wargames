@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.world1.fork-in-the-road.easy",
+  "level_file": "levels/world1/fork_in_the_road.stl",
+  "level_set": "world1",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "world1",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 65,
+  "time_limit_ticks": 6825,
+  "title": "A Fork in the Road? (Easy)"
+}

@@ -1,0 +1,18 @@
+{
+  "difficulty": "easy",
+  "game": "mindustry",
+  "id": "mindustry.survival.shattered.easy",
+  "map_name": "Shattered",
+  "mode": "survival",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "factory",
+    "tower-defense",
+    "survival",
+    "win-wave:10"
+  ],
+  "time_limit_ticks": 18000,
+  "title": "Shattered Survival (Easy)",
+  "win_wave": 10
+}

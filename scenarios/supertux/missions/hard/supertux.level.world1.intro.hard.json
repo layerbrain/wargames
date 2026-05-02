@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "hard",
+  "game": "supertux",
+  "id": "supertux.level.world1.intro.hard",
+  "level_file": "levels/world1/intro.stl",
+  "level_set": "world1",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "world1",
+    "speedrun",
+    "platformer"
+  ],
+  "target_time_seconds": null,
+  "time_limit_ticks": 7200,
+  "title": "Picnic With Penny (Hard)"
+}

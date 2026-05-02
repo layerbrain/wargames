@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "hard",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.castle-in-sky.hard",
+  "level_file": "levels/bonus1/castle_in_sky.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "speedrun",
+    "platformer"
+  ],
+  "target_time_seconds": 120,
+  "time_limit_ticks": 7200,
+  "title": "Castle in the Sky (Hard)"
+}

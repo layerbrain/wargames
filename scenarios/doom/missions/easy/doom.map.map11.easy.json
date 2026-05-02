@@ -1,0 +1,21 @@
+{
+  "content": "freedoom2",
+  "difficulty": "easy",
+  "episode": null,
+  "game": "doom",
+  "id": "doom.map.map11.easy",
+  "iwad": "/usr/share/games/doom/freedoom2.wad",
+  "map": "MAP11",
+  "map_number": 11,
+  "native_difficulty": "2",
+  "skill": 2,
+  "source": "builtin",
+  "tags": [
+    "freedoom2",
+    "map11",
+    "fps",
+    "freedoom"
+  ],
+  "time_limit_ticks": 12600,
+  "title": "Freedoom Phase 2 MAP11 (Easy)"
+}

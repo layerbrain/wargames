@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "hard",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.flanders-ice-field.hard",
+  "level_file": "levels/bonus1/flanders_ice_field.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "speedrun",
+    "platformer"
+  ],
+  "target_time_seconds": 140,
+  "time_limit_ticks": 8400,
+  "title": "In Flanders Ice Field (Hard)"
+}

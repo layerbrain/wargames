@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.fire-in-the-sky.normal",
+  "level_file": "levels/bonus1/fire_in_the_sky.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 48,
+  "time_limit_ticks": 3600,
+  "title": "Fire in the Sky (Normal)"
+}

@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.world2.three-sheets-wind.easy",
+  "level_file": "levels/world2/three_sheets_wind.stl",
+  "level_set": "world2",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "world2",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 170,
+  "time_limit_ticks": 17850,
+  "title": "Three Sheets to the Wind (Easy)"
+}

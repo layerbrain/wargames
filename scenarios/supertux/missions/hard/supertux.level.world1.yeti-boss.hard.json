@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "hard",
+  "game": "supertux",
+  "id": "supertux.level.world1.yeti-boss.hard",
+  "level_file": "levels/world1/yeti_boss.stl",
+  "level_set": "world1",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "world1",
+    "speedrun",
+    "platformer"
+  ],
+  "target_time_seconds": 75,
+  "time_limit_ticks": 4500,
+  "title": "No More Mr. Ice Guy (Hard)"
+}

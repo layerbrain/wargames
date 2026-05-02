@@ -1,0 +1,9 @@
+{
+  "name": "wargames-state",
+  "displayName": "WarGames State Export",
+  "author": "Layerbrain",
+  "main": "com.layerbrain.wargames.mindustry.WargamesStatePlugin",
+  "description": "Exports hidden Mindustry game state to JSONL for WarGames reward scoring.",
+  "version": "1.0.0",
+  "minGameVersion": "146"
+}

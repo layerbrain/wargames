@@ -9,18 +9,28 @@ from unittest.mock import patch
 from wargames import WarGamesConfig
 from wargames.cli import (
     _build_zeroad_source,
+    _default_doom_source_root,
+    _default_mindustry_root,
     _default_openra_root,
+    _default_supertux_source_root,
     _default_zeroad_source_root,
+    _find_doom_binary,
     _find_freeciv_client_binary,
     _find_freeciv_server_binary,
+    _find_mindustry_client,
+    _find_mindustry_server,
     _find_openra_root,
+    _find_supertux_binary,
     _find_supertuxkart_binary,
     _find_zeroad_binary,
-    _host_openra_support_dir,
     _ensure_linux_box_image,
+    _host_openra_support_dir,
     _install_flightgear,
     _install_freeciv,
+    _install_doom,
+    _install_mindustry,
     _install_redalert,
+    _install_supertux,
     _install_supertuxkart,
     _install_zeroad,
     _linux_box_command,
@@ -69,6 +79,41 @@ def _write_freeciv_app(root: Path) -> tuple[Path, Path]:
     return server, client
 
 
+def _write_doom_checkout(root: Path) -> Path:
+    binary = root / "build" / "src" / "chocolate-doom"
+    binary.parent.mkdir(parents=True)
+    binary.write_text("#!/usr/bin/env bash\n", encoding="utf-8")
+    (root / "src" / "doom").mkdir(parents=True)
+    (root / "src" / "doom" / "g_game.c").write_text("void G_Ticker(void) {}\n", encoding="utf-8")
+    (root / "CMakeLists.txt").write_text("project(chocolate-doom)\n", encoding="utf-8")
+    return binary
+
+
+def _write_supertux_checkout(root: Path) -> Path:
+    binary = root / "build" / "supertux2"
+    binary.parent.mkdir(parents=True)
+    binary.write_text("#!/usr/bin/env bash\nWARGAMES_SUPERTUX_STATE_PATH=1\n", encoding="utf-8")
+    (root / "src" / "supertux").mkdir(parents=True)
+    (root / "src" / "supertux" / "game_session.cpp").write_text(
+        "void GameSession::update() {}\n", encoding="utf-8"
+    )
+    (root / "data" / "levels" / "world1").mkdir(parents=True)
+    (root / "data" / "levels" / "world1" / "intro.stl").write_text(
+        '(supertux-level (name "Intro"))\n', encoding="utf-8"
+    )
+    (root / "CMakeLists.txt").write_text("project(supertux)\n", encoding="utf-8")
+    return binary
+
+
+def _write_mindustry_app(root: Path) -> tuple[Path, Path]:
+    client = root / "Mindustry.jar"
+    server = root / "server-release.jar"
+    server.parent.mkdir(parents=True)
+    client.write_text("jar", encoding="utf-8")
+    server.write_text("jar", encoding="utf-8")
+    return client, server
+
+
 class CLITests(TestCase):
     def test_parser_exposes_commands(self) -> None:
         parser = build_parser()
@@ -76,6 +121,9 @@ class CLITests(TestCase):
         self.assertEqual(parser.parse_args(["missions"]).command, "missions")
         self.assertEqual(parser.parse_args(["missions", "--game", "flightgear"]).game, "flightgear")
         self.assertEqual(parser.parse_args(["missions", "--game", "freeciv"]).game, "freeciv")
+        self.assertEqual(parser.parse_args(["missions", "--game", "doom"]).game, "doom")
+        self.assertEqual(parser.parse_args(["missions", "--game", "supertux"]).game, "supertux")
+        self.assertEqual(parser.parse_args(["missions", "--game", "mindustry"]).game, "mindustry")
         self.assertEqual(
             parser.parse_args(
                 ["run", "--game", "flightgear", "--mission", "m", "--agent", "a"]
@@ -101,6 +149,9 @@ class CLITests(TestCase):
         )
         self.assertEqual(parser.parse_args(["install", "--game", "zeroad"]).game, "zeroad")
         self.assertEqual(parser.parse_args(["install", "--game", "freeciv"]).game, "freeciv")
+        self.assertEqual(parser.parse_args(["install", "--game", "doom"]).game, "doom")
+        self.assertEqual(parser.parse_args(["install", "--game", "supertux"]).game, "supertux")
+        self.assertEqual(parser.parse_args(["install", "--game", "mindustry"]).game, "mindustry")
 
     def test_host_runs_primitive_redalert_commands_in_linux_box(self) -> None:
         parser = build_parser()
@@ -139,6 +190,16 @@ class CLITests(TestCase):
         )
         self.assertEqual(
             _default_zeroad_source_root(env), Path("/tmp/wargames-cache/games/zeroad/0ad")
+        )
+        self.assertEqual(
+            _default_doom_source_root(env),
+            Path("/tmp/wargames-cache/games/doom/chocolate-doom"),
+        )
+        self.assertEqual(
+            _default_supertux_source_root(env), Path("/tmp/wargames-cache/games/supertux/supertux")
+        )
+        self.assertEqual(
+            _default_mindustry_root(env), Path("/tmp/wargames-cache/games/mindustry")
         )
         self.assertEqual(_host_openra_support_dir(env), Path("/tmp/wargames-cache/openra-support"))
 
@@ -225,6 +286,74 @@ class CLITests(TestCase):
             self.assertEqual(_find_freeciv_server_binary(root), server)
             self.assertEqual(_find_freeciv_client_binary(root), client)
 
+    def test_install_doom_remembers_registered_app(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            env = {"LAYERBRAIN_WARGAMES_CACHE_DIR": str(Path(temp_dir) / "cache")}
+            root = Path(temp_dir) / "chocolate-doom"
+            binary = _write_doom_checkout(root)
+            args = SimpleNamespace(root=str(root))
+
+            with (
+                patch("wargames.cli._install_doom_probe"),
+                patch("wargames.games.doom.missions.discover_iwads", return_value=(Path("/iwad.wad"),)),
+                redirect_stdout(StringIO()),
+            ):
+                self.assertEqual(_install_doom(args, env), 0)
+
+            manifest = Path(temp_dir) / "cache" / "games" / "doom" / "install.json"
+            self.assertIn("WarGames in-process Doom state exporter", manifest.read_text(encoding="utf-8"))
+            self.assertEqual(_find_doom_binary(root), binary)
+
+    def test_install_supertux_remembers_registered_app(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            env = {"LAYERBRAIN_WARGAMES_CACHE_DIR": str(Path(temp_dir) / "cache")}
+            root = Path(temp_dir) / "supertux"
+            binary = _write_supertux_checkout(root)
+            args = SimpleNamespace(root=str(root))
+
+            with (
+                patch("wargames.cli._install_supertux_probe"),
+                redirect_stdout(StringIO()),
+            ):
+                self.assertEqual(_install_supertux(args, env), 0)
+
+            manifest = Path(temp_dir) / "cache" / "games" / "supertux" / "install.json"
+            self.assertIn(
+                "WarGames in-process SuperTux state exporter",
+                manifest.read_text(encoding="utf-8"),
+            )
+            self.assertEqual(_find_supertux_binary(root), binary)
+
+    def test_install_mindustry_remembers_registered_app(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            env = {"LAYERBRAIN_WARGAMES_CACHE_DIR": str(Path(temp_dir) / "cache")}
+            root = Path(temp_dir) / "mindustry"
+            client, server = _write_mindustry_app(root)
+            args = SimpleNamespace(root=str(root))
+
+            with (
+                patch(
+                    "wargames.cli._build_mindustry_probe",
+                    return_value=root
+                    / "home"
+                    / ".local"
+                    / "share"
+                    / "Mindustry"
+                    / "mods"
+                    / "wargames-mindustry-state.jar",
+                ),
+                redirect_stdout(StringIO()),
+            ):
+                self.assertEqual(_install_mindustry(args, env), 0)
+
+            manifest = Path(temp_dir) / "cache" / "games" / "mindustry" / "install.json"
+            self.assertIn(
+                "Mindustry headless server plugin JSONL state exporter",
+                manifest.read_text(encoding="utf-8"),
+            )
+            self.assertEqual(_find_mindustry_client(root), client)
+            self.assertEqual(_find_mindustry_server(root), server)
+
     def test_linux_box_command_does_not_forward_model_keys(self) -> None:
         with patch.dict(
             "os.environ",
@@ -247,6 +376,8 @@ class CLITests(TestCase):
         self.assertIn("LAYERBRAIN_WARGAMES_SUPERTUXKART_WINDOW_SIZE=1280x720", joined)
         self.assertIn("LAYERBRAIN_WARGAMES_ZEROAD_WINDOW_SIZE=1280x720", joined)
         self.assertIn("LAYERBRAIN_WARGAMES_FREECIV_WINDOW_SIZE=1280x720", joined)
+        self.assertIn("LAYERBRAIN_WARGAMES_DOOM_WINDOW_SIZE=1280x720", joined)
+        self.assertIn("LAYERBRAIN_WARGAMES_SUPERTUX_WINDOW_SIZE=1280x720", joined)
         self.assertIn("--entrypoint /workspace/host-wargames/scripts/linux_box.sh", joined)
 
     def test_linux_box_install_uses_docker_volume_cache(self) -> None:
@@ -264,6 +395,9 @@ class CLITests(TestCase):
             "supertuxkart": ("wargames-linux-supertuxkart", "wargames-supertuxkart"),
             "zeroad": ("wargames-linux-zeroad", "wargames-zeroad"),
             "freeciv": ("wargames-linux-freeciv", "wargames-freeciv"),
+            "doom": ("wargames-linux-doom", "wargames-doom"),
+            "supertux": ("wargames-linux-supertux", "wargames-supertux"),
+            "mindustry": ("wargames-linux-mindustry", "wargames-mindustry"),
         }
         for game, (image, volume) in cases.items():
             with self.subTest(game=game):
@@ -276,6 +410,9 @@ class CLITests(TestCase):
                 self.assertIn(image, joined)
                 self.assertIn(f"{volume}:/opt/wargames-cache", joined)
                 self.assertIn(f"LAYERBRAIN_WARGAMES_GAME={game}", joined)
+                if game == "mindustry":
+                    self.assertEqual(runtime.platform, "linux/amd64")
+                    self.assertIn("--platform linux/amd64", joined)
 
     def test_linux_box_builds_shared_base_before_game_image(self) -> None:
         built: list[tuple[str, str]] = []
@@ -283,7 +420,7 @@ class CLITests(TestCase):
         def image_exists(image: str) -> bool:
             return image == "docker"
 
-        def build(*, image: str, dockerfile: str) -> None:
+        def build(*, image: str, dockerfile: str, platform: str | None = None) -> None:
             built.append((image, dockerfile))
 
         with (
@@ -298,6 +435,30 @@ class CLITests(TestCase):
             [
                 ("wargames-linux-base", "docker/base/Dockerfile"),
                 ("wargames-linux-zeroad", "docker/zeroad/Dockerfile"),
+            ],
+        )
+
+    def test_mindustry_linux_box_builds_amd64_base_and_game_image(self) -> None:
+        built: list[tuple[str, str, str | None]] = []
+
+        def image_exists(image: str) -> bool:
+            return image == "docker"
+
+        def build(*, image: str, dockerfile: str, platform: str | None = None) -> None:
+            built.append((image, dockerfile, platform))
+
+        with (
+            patch("wargames.cli.shutil.which", return_value="/usr/bin/docker"),
+            patch("wargames.cli._image_exists", side_effect=image_exists),
+            patch("wargames.cli._docker_build", side_effect=build),
+        ):
+            _ensure_linux_box_image(_linux_box_runtime("mindustry"))
+
+        self.assertEqual(
+            built,
+            [
+                ("wargames-linux-base-amd64", "docker/base/Dockerfile", "linux/amd64"),
+                ("wargames-linux-mindustry", "docker/mindustry/Dockerfile", "linux/amd64"),
             ],
         )
 

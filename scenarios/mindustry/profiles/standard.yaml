@@ -1,0 +1,34 @@
+id: standard
+game: mindustry
+description: "Expand the factory, keep cores alive, and survive the target wave."
+step_reward_min: -0.50
+step_reward_max: 0.75
+entries:
+  - id: delta_wave
+    fn: wargames.games.mindustry.rewards.delta_wave
+    weight: 0.50
+    when: per_step
+  - id: delta_items
+    fn: wargames.games.mindustry.rewards.delta_items
+    weight: 0.001
+    when: per_step
+  - id: delta_buildings
+    fn: wargames.games.mindustry.rewards.delta_buildings
+    weight: 0.05
+    when: per_step
+  - id: core_health
+    fn: wargames.games.mindustry.rewards.core_health
+    weight: 0.0002
+    when: per_step
+  - id: enemy_pressure
+    fn: wargames.games.mindustry.rewards.enemy_pressure
+    weight: 0.002
+    when: per_step
+  - id: time_penalty
+    fn: wargames.games.mindustry.rewards.time_penalty
+    weight: 0.00001
+    when: per_step
+  - id: terminal
+    fn: wargames.core.missions.rewards.terminal
+    weight: 5.0
+    when: terminal

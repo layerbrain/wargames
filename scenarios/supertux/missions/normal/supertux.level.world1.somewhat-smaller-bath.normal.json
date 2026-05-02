@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.world1.somewhat-smaller-bath.normal",
+  "level_file": "levels/world1/somewhat_smaller_bath.stl",
+  "level_set": "world1",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "world1",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 48,
+  "time_limit_ticks": 3600,
+  "title": "The Somewhat Smaller Bath (Normal)"
+}

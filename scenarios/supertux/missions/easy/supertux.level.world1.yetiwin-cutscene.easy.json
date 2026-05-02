@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.world1.yetiwin-cutscene.easy",
+  "level_file": "levels/world1/yetiwin_cutscene.stl",
+  "level_set": "world1",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "world1",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": null,
+  "time_limit_ticks": 12600,
+  "title": "Off to the Glacier Isles (Easy)"
+}
