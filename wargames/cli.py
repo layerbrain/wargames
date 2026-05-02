@@ -35,6 +35,8 @@ _INSTALLABLE_GAMES = (
     "doom",
     "supertux",
     "mindustry",
+    "craftium",
+    "ikemen",
 )
 _TASK_GAMES = _INSTALLABLE_GAMES
 _LINUX_BOX_CACHE_MOUNT = "/opt/wargames-cache"
@@ -103,6 +105,22 @@ _LINUX_BOX_RUNTIMES = {
         base_image="wargames-linux-base-amd64",
         platform="linux/amd64",
     ),
+    "craftium": LinuxBoxRuntime(
+        game="craftium",
+        image="wargames-linux-craftium",
+        dockerfile="docker/craftium/Dockerfile",
+        cache_volume="wargames-craftium",
+        base_image="wargames-linux-base-amd64",
+        platform="linux/amd64",
+    ),
+    "ikemen": LinuxBoxRuntime(
+        game="ikemen",
+        image="wargames-linux-ikemen",
+        dockerfile="docker/ikemen/Dockerfile",
+        cache_volume="wargames-ikemen",
+        base_image="wargames-linux-base-amd64",
+        platform="linux/amd64",
+    ),
 }
 _OPENRA_REPO = "https://github.com/OpenRA/OpenRA.git"
 _OPENRA_REF = "bleed"
@@ -115,6 +133,10 @@ _DOOM_REF = "chocolate-doom-3.1.1"
 _SUPERTUX_REPO = "https://github.com/SuperTux/supertux.git"
 _SUPERTUX_REF = "v0.7.0"
 _MINDUSTRY_VERSION = "v146"
+_CRAFTIUM_VERSION = "0.0.1"
+_CRAFTIUM_REF = "v0.0.1"
+_CRAFTIUM_REPO = "https://github.com/mikelma/craftium.git"
+_IKEMEN_VERSION = "v0.99.0"
 
 
 def _game(id: str) -> GameDescriptor:
@@ -148,6 +170,14 @@ def _game(id: str) -> GameDescriptor:
         return GAME
     if id == "mindustry":
         from wargames.games.mindustry import GAME
+
+        return GAME
+    if id == "craftium":
+        from wargames.games.craftium import GAME
+
+        return GAME
+    if id == "ikemen":
+        from wargames.games.ikemen import GAME
 
         return GAME
     raise SystemExit(f"unknown game: {id}")
@@ -186,6 +216,14 @@ def _reward_schema(game: str) -> GameRewardSchema:
         from wargames.games.mindustry.reward_schema import MINDUSTRY_REWARD_SCHEMA
 
         return MINDUSTRY_REWARD_SCHEMA
+    if game == "craftium":
+        from wargames.games.craftium.reward_schema import CRAFTIUM_REWARD_SCHEMA
+
+        return CRAFTIUM_REWARD_SCHEMA
+    if game == "ikemen":
+        from wargames.games.ikemen.reward_schema import IKEMEN_REWARD_SCHEMA
+
+        return IKEMEN_REWARD_SCHEMA
     raise SystemExit(f"unknown game: {game}")
 
 
@@ -383,6 +421,17 @@ def _is_mindustry_root(path: Path) -> bool:
     )
 
 
+def _is_ikemen_root(path: Path) -> bool:
+    if path.is_file():
+        return path.name in {"Ikemen_GO_Linux", "Ikemen_GO"}
+    return (
+        ((path / "Ikemen_GO_Linux").exists() or (path / "Ikemen_GO").exists())
+        and (path / "data" / "system.def").exists()
+        and (path / "chars").exists()
+        and (path / "stages").exists()
+    )
+
+
 def _find_flightgear_binary(root: Path | None = None) -> Path | None:
     candidates: list[Path | str | None] = [
         root if root and root.name == "fgfs" else None,
@@ -550,6 +599,23 @@ def _find_mindustry_client(root: Path | None = None) -> Path | None:
     return None
 
 
+def _find_ikemen_binary(root: Path | None = None) -> Path | None:
+    candidates: list[Path | str | None] = [
+        root if root and root.is_file() and root.name in {"Ikemen_GO_Linux", "Ikemen_GO"} else None,
+        root / "Ikemen_GO_Linux" if root and not root.is_file() else None,
+        root / "Ikemen_GO" if root and not root.is_file() else None,
+        _default_ikemen_root() / "Ikemen_GO_Linux",
+        shutil.which("Ikemen_GO_Linux"),
+        shutil.which("Ikemen_GO"),
+    ]
+    for candidate in candidates:
+        if candidate:
+            path = Path(candidate).expanduser()
+            if path.exists():
+                return path
+    return None
+
+
 def _flightgear_root(binary: Path, root: Path | None = None) -> Path:
     if root is not None:
         return root
@@ -634,6 +700,14 @@ def _default_mindustry_root(env: Mapping[str, str] = os.environ) -> Path:
     return _game_install_dir("mindustry", env)
 
 
+def _default_craftium_root(env: Mapping[str, str] = os.environ) -> Path:
+    return _game_install_dir("craftium", env)
+
+
+def _default_ikemen_root(env: Mapping[str, str] = os.environ) -> Path:
+    return _game_install_dir("ikemen", env)
+
+
 def _should_run_in_linux_box(
     args: argparse.Namespace,
     *,
@@ -710,6 +784,7 @@ def _runtime_resolution(env: Mapping[str, str] = os.environ) -> tuple[int, int]:
         "LAYERBRAIN_WARGAMES_FREECIV_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_DOOM_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_SUPERTUX_WINDOW_SIZE",
+        "LAYERBRAIN_WARGAMES_IKEMEN_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_FLIGHTGEAR_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_XVFB_RESOLUTION",
     ):
@@ -855,6 +930,7 @@ def _linux_box_command(
     env.setdefault("LAYERBRAIN_WARGAMES_FREECIV_WINDOW_SIZE", _resolution_text(active_resolution))
     env.setdefault("LAYERBRAIN_WARGAMES_DOOM_WINDOW_SIZE", _resolution_text(active_resolution))
     env.setdefault("LAYERBRAIN_WARGAMES_SUPERTUX_WINDOW_SIZE", _resolution_text(active_resolution))
+    env.setdefault("LAYERBRAIN_WARGAMES_IKEMEN_WINDOW_SIZE", _resolution_text(active_resolution))
     if stream_port is not None:
         env["LAYERBRAIN_WARGAMES_HOST_STREAM_URL"] = (
             f"udp://host.docker.internal:{stream_port}?pkt_size=1316"
@@ -1052,6 +1128,62 @@ def _download_mindustry_client(target: Path) -> None:
         subprocess.run([curl, "-L", "--retry", "3", "-o", str(target), url], check=True)
     except subprocess.CalledProcessError as exc:
         raise SystemExit(f"Mindustry client download failed with exit code {exc.returncode}") from exc
+
+
+def _download_ikemen_release(target: Path) -> None:
+    curl = shutil.which("curl")
+    if curl is None:
+        raise SystemExit("curl is required to install IKEMEN GO")
+    target.mkdir(parents=True, exist_ok=True)
+    archive = target / f"Ikemen_GO-{_IKEMEN_VERSION}-linux.zip"
+    url = (
+        "https://github.com/ikemen-engine/Ikemen-GO/releases/download/"
+        f"{_IKEMEN_VERSION}/Ikemen_GO-{_IKEMEN_VERSION}-linux.zip"
+    )
+    try:
+        subprocess.run([curl, "-L", "--retry", "3", "-o", str(archive), url], check=True)
+        shutil.unpack_archive(str(archive), str(target), "zip")
+    except (subprocess.CalledProcessError, shutil.ReadError) as exc:
+        raise SystemExit("IKEMEN GO release download failed") from exc
+    finally:
+        archive.unlink(missing_ok=True)
+    binary = target / "Ikemen_GO_Linux"
+    if binary.exists():
+        binary.chmod(binary.stat().st_mode | 0o111)
+
+
+def _craftium_available() -> bool:
+    completed = subprocess.run(
+        [sys.executable, "-c", "import craftium, gymnasium"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
+    return completed.returncode == 0
+
+
+def _ensure_craftium_package() -> None:
+    if _craftium_available():
+        return
+    source = Path("/opt/craftium")
+    if source.exists():
+        package = str(source)
+    else:
+        package = f"git+{_CRAFTIUM_REPO}@{_CRAFTIUM_REF}"
+    try:
+        subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "pip",
+                "install",
+                package,
+                "pillow>=10.0.0",
+            ],
+            check=True,
+        )
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(f"Craftium install failed with exit code {exc.returncode}") from exc
 
 
 def _sync_zeroad_lfs(source_root: Path) -> None:
@@ -1498,10 +1630,56 @@ def _install_mindustry(args: argparse.Namespace, env: Mapping[str, str] = os.env
         "root": str(install_root),
         "plugin": str(plugin),
         "version": _MINDUSTRY_VERSION,
-        "state_interface": "Mindustry headless server plugin JSONL state exporter",
+        "state_interface": "Mindustry client plugin JSONL state exporter",
         "status": status,
     }
     _write_game_install_manifest("mindustry", payload, env)
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0
+
+
+def _install_craftium(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
+    root = Path(args.root).expanduser() if args.root else _default_craftium_root(env)
+    root.mkdir(parents=True, exist_ok=True)
+    _ensure_craftium_package()
+    payload = {
+        "game": "craftium",
+        "root": str(root),
+        "package": f"craftium=={_CRAFTIUM_VERSION}",
+        "source": _CRAFTIUM_REPO,
+        "ref": _CRAFTIUM_REF,
+        "state_interface": "Craftium Gymnasium info and voxel observations",
+        "status": "present",
+    }
+    _write_game_install_manifest("craftium", payload, env)
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0
+
+
+def _install_ikemen(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
+    root = Path(args.root).expanduser() if args.root else _default_ikemen_root(env)
+    install_root = root.parent if root.exists() and root.is_file() else root
+    binary = _find_ikemen_binary(root)
+    status = "present"
+    if binary is None:
+        if install_root.exists() and any(install_root.iterdir()):
+            raise SystemExit(f"IKEMEN GO install path is not a runtime directory: {install_root}")
+        _download_ikemen_release(install_root)
+        status = "installed"
+        binary = _find_ikemen_binary(install_root)
+    if binary is None:
+        raise SystemExit(f"IKEMEN GO install did not produce a binary under {install_root}")
+    if not _is_ikemen_root(install_root):
+        raise SystemExit(f"IKEMEN GO runtime content is missing under {install_root}")
+    payload = {
+        "game": "ikemen",
+        "binary": str(binary),
+        "root": str(install_root),
+        "version": _IKEMEN_VERSION,
+        "state_interface": "IKEMEN GO CommonLua JSONL state exporter",
+        "status": status,
+    }
+    _write_game_install_manifest("ikemen", payload, env)
     print(json.dumps(payload, indent=2, sort_keys=True))
     return 0
 
@@ -1528,6 +1706,10 @@ async def _install(args: argparse.Namespace) -> int:
         return await asyncio.to_thread(_install_supertux, args)
     if args.game == "mindustry":
         return await asyncio.to_thread(_install_mindustry, args)
+    if args.game == "craftium":
+        return await asyncio.to_thread(_install_craftium, args)
+    if args.game == "ikemen":
+        return await asyncio.to_thread(_install_ikemen, args)
     raise SystemExit(f"unknown game: {args.game}")
 
 
@@ -1872,6 +2054,10 @@ async def _serve(args: argparse.Namespace) -> int:
         from wargames.games.supertux.transport.ws import app
     elif args.game == "mindustry":
         from wargames.games.mindustry.transport.ws import app
+    elif args.game == "craftium":
+        from wargames.games.craftium.transport.ws import app
+    elif args.game == "ikemen":
+        from wargames.games.ikemen.transport.ws import app
     else:
         raise SystemExit(f"unknown game: {args.game}")
 

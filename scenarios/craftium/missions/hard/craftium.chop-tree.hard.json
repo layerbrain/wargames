@@ -1,0 +1,29 @@
+{
+  "action_names": [
+    "forward",
+    "jump",
+    "dig",
+    "mouse x+",
+    "mouse x-",
+    "mouse y+",
+    "mouse y-"
+  ],
+  "difficulty": "hard",
+  "env_id": "Craftium/ChopTree-v0",
+  "game": "craftium",
+  "id": "craftium.chop-tree.hard",
+  "loader": "gym",
+  "native_difficulty": "Craftium/ChopTree-v0",
+  "sequence_name": null,
+  "source": "builtin",
+  "success_reward": 1.0,
+  "tags": [
+    "voxel",
+    "survival",
+    "resource-gathering",
+    "env:Craftium/ChopTree-v0"
+  ],
+  "task_id": null,
+  "time_limit_ticks": 1500,
+  "title": "Chop Tree (Hard)"
+}

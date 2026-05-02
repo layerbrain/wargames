@@ -1,0 +1,33 @@
+{
+  "action_names": [
+    "forward",
+    "left",
+    "right",
+    "jump",
+    "dig",
+    "mouse x+",
+    "mouse x-",
+    "mouse y+",
+    "mouse y-"
+  ],
+  "difficulty": "normal",
+  "env_id": "Craftium/ProcDungeons-v0",
+  "game": "craftium",
+  "id": "craftium.crl.sequence0-25.task-09.normal",
+  "loader": "crl_sequence",
+  "native_difficulty": "sequence0_25:9",
+  "sequence_name": "sequence0_25",
+  "source": "builtin",
+  "success_reward": 1.0,
+  "tags": [
+    "voxel",
+    "combat",
+    "exploration",
+    "continual-rl",
+    "env:Craftium/ProcDungeons-v0",
+    "sequence:sequence0_25"
+  ],
+  "task_id": 9,
+  "time_limit_ticks": 4000,
+  "title": "Continual Dungeon Sequence 0 Task 09 (Normal)"
+}

@@ -1,0 +1,24 @@
+{
+  "action_names": [
+    "forward",
+    "mouse x+",
+    "mouse x-"
+  ],
+  "difficulty": "normal",
+  "env_id": "Craftium/SmallRoom-v0",
+  "game": "craftium",
+  "id": "craftium.small-room.normal",
+  "loader": "gym",
+  "native_difficulty": "Craftium/SmallRoom-v0",
+  "sequence_name": null,
+  "source": "builtin",
+  "success_reward": 1.0,
+  "tags": [
+    "voxel",
+    "navigation",
+    "env:Craftium/SmallRoom-v0"
+  ],
+  "task_id": null,
+  "time_limit_ticks": 500,
+  "title": "Small Room Navigation (Normal)"
+}

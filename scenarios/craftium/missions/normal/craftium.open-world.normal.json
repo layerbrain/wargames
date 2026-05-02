@@ -1,0 +1,40 @@
+{
+  "action_names": [
+    "forward",
+    "backward",
+    "left",
+    "right",
+    "jump",
+    "sneak",
+    "dig",
+    "place",
+    "slot_1",
+    "slot_2",
+    "slot_3",
+    "slot_4",
+    "slot_5",
+    "mouse x+",
+    "mouse x-",
+    "mouse y+",
+    "mouse y-"
+  ],
+  "difficulty": "normal",
+  "env_id": "Craftium/OpenWorld-v0",
+  "game": "craftium",
+  "id": "craftium.open-world.normal",
+  "loader": "gym",
+  "native_difficulty": "Craftium/OpenWorld-v0",
+  "sequence_name": null,
+  "source": "builtin",
+  "success_reward": 1.0,
+  "tags": [
+    "voxel",
+    "survival",
+    "crafting",
+    "open-world",
+    "env:Craftium/OpenWorld-v0"
+  ],
+  "task_id": null,
+  "time_limit_ticks": 10000,
+  "title": "Open World (Normal)"
+}

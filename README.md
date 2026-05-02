@@ -13,7 +13,8 @@ Bring your own trainer or use the Prime RL adapter in this repo.
                     |        Game process         |
                     | OpenRA, FlightGear, STK,    |
                     | Freeciv, Doom, SuperTux,    |
-                    | Mindustry                   |
+                    | Mindustry, Craftium,        |
+                    | IKEMEN GO                   |
                     +--------------+--------------+
                                    |
                  capture           |          scoring state
@@ -50,6 +51,8 @@ reward your trainer consumes.
 | Doom | First-person arcade combat | 204 | [docs/games/doom.md](docs/games/doom.md) |
 | SuperTux | Side-scrolling platformer | 321 | [docs/games/supertux.md](docs/games/supertux.md) |
 | Mindustry | Automation and base defense | 27 | [docs/games/mindustry.md](docs/games/mindustry.md) |
+| Craftium | Voxel survival and crafting | 96 | [docs/games/craftium.md](docs/games/craftium.md) |
+| IKEMEN GO | 2D fighting | 9 | [docs/games/ikemen.md](docs/games/ikemen.md) |
 
 A run is four pieces: a game, a mission, a reward profile, and an agent.
 
@@ -74,6 +77,8 @@ wargames install --game freeciv
 wargames install --game doom
 wargames install --game supertux
 wargames install --game mindustry
+wargames install --game craftium
+wargames install --game ikemen
 ```
 
 Run a SuperTuxKart episode:
@@ -97,6 +102,8 @@ wargames missions --game freeciv
 wargames missions --game doom
 wargames missions --game supertux
 wargames missions --game mindustry
+wargames missions --game craftium
+wargames missions --game ikemen
 ```
 
 ## Run Your Own Model
@@ -197,13 +204,15 @@ symbol keys, `Control`, `Shift`, `Alt`, `Meta`, `Enter`, `Escape`, `Space`,
 
 A mission is exported game content - a Red Alert map, a FlightGear C172P
 tutorial, a SuperTuxKart race track, a 0 A.D. map, a Freeciv scenario, a Doom
-map, a SuperTux level, or a Mindustry survival map - wrapped with a difficulty,
-a step budget, a wall-clock budget, and a starting reward profile.
+map, a SuperTux level, a Mindustry survival map, a Craftium task, or an
+IKEMEN GO quick match - wrapped with a difficulty, a step budget, a wall-clock
+budget, and a starting reward profile.
 Mission IDs look like `redalert.soviet-01.normal`,
 `flightgear.c172p.tutorial.takeoff`, `supertuxkart.race.lighthouse.normal`,
 `zeroad.scenario.arcadia.normal`, `freeciv.scenario.earth-small`,
 `doom.map.map01.easy`, `supertux.level.world1.welcome-antarctica.normal`, and
-`mindustry.survival.veins.normal`. They are the same string you pass to
+`mindustry.survival.veins.normal`, `craftium.chop-tree.normal`, and
+`ikemen.vs.kfm.normal`. They are the same string you pass to
 `--mission`, the WebSocket `create_session` op, and Prime RL configs.
 
 ```bash
@@ -215,6 +224,8 @@ wargames missions --game freeciv
 wargames missions --game doom
 wargames missions --game supertux
 wargames missions --game mindustry
+wargames missions --game craftium
+wargames missions --game ikemen
 ```
 
 Mission JSON lives in `scenarios/<game>/missions/<difficulty>/`. Catalogs are

@@ -50,8 +50,8 @@ wave 20, and hard targets wave 40.
 
 ## Live Control
 
-Mindustry uses the same pixel/action contract as the other games. Send keyboard
-and mouse primitives to the rendered game window:
+Mindustry uses the same primitive action format as the other games. Send
+keyboard and mouse primitives to the rendered game window:
 
 ```bash
 printf '%s\n' \

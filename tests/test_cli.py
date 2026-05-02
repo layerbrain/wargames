@@ -10,6 +10,8 @@ from wargames import WarGamesConfig
 from wargames.cli import (
     _build_zeroad_source,
     _default_doom_source_root,
+    _default_craftium_root,
+    _default_ikemen_root,
     _default_mindustry_root,
     _default_openra_root,
     _default_supertux_source_root,
@@ -19,6 +21,7 @@ from wargames.cli import (
     _find_freeciv_server_binary,
     _find_mindustry_client,
     _find_mindustry_server,
+    _find_ikemen_binary,
     _find_openra_root,
     _find_supertux_binary,
     _find_supertuxkart_binary,
@@ -29,6 +32,8 @@ from wargames.cli import (
     _install_freeciv,
     _install_doom,
     _install_mindustry,
+    _install_craftium,
+    _install_ikemen,
     _install_redalert,
     _install_supertux,
     _install_supertuxkart,
@@ -114,6 +119,17 @@ def _write_mindustry_app(root: Path) -> tuple[Path, Path]:
     return client, server
 
 
+def _write_ikemen_app(root: Path) -> Path:
+    binary = root / "Ikemen_GO_Linux"
+    binary.parent.mkdir(parents=True)
+    binary.write_text("#!/usr/bin/env bash\n", encoding="utf-8")
+    (root / "data").mkdir()
+    (root / "data" / "system.def").write_text("[Info]\n", encoding="utf-8")
+    (root / "chars" / "kfm").mkdir(parents=True)
+    (root / "stages").mkdir()
+    return binary
+
+
 class CLITests(TestCase):
     def test_parser_exposes_commands(self) -> None:
         parser = build_parser()
@@ -124,6 +140,8 @@ class CLITests(TestCase):
         self.assertEqual(parser.parse_args(["missions", "--game", "doom"]).game, "doom")
         self.assertEqual(parser.parse_args(["missions", "--game", "supertux"]).game, "supertux")
         self.assertEqual(parser.parse_args(["missions", "--game", "mindustry"]).game, "mindustry")
+        self.assertEqual(parser.parse_args(["missions", "--game", "craftium"]).game, "craftium")
+        self.assertEqual(parser.parse_args(["missions", "--game", "ikemen"]).game, "ikemen")
         self.assertEqual(
             parser.parse_args(
                 ["run", "--game", "flightgear", "--mission", "m", "--agent", "a"]
@@ -152,6 +170,8 @@ class CLITests(TestCase):
         self.assertEqual(parser.parse_args(["install", "--game", "doom"]).game, "doom")
         self.assertEqual(parser.parse_args(["install", "--game", "supertux"]).game, "supertux")
         self.assertEqual(parser.parse_args(["install", "--game", "mindustry"]).game, "mindustry")
+        self.assertEqual(parser.parse_args(["install", "--game", "craftium"]).game, "craftium")
+        self.assertEqual(parser.parse_args(["install", "--game", "ikemen"]).game, "ikemen")
 
     def test_host_runs_primitive_redalert_commands_in_linux_box(self) -> None:
         parser = build_parser()
@@ -201,6 +221,10 @@ class CLITests(TestCase):
         self.assertEqual(
             _default_mindustry_root(env), Path("/tmp/wargames-cache/games/mindustry")
         )
+        self.assertEqual(
+            _default_craftium_root(env), Path("/tmp/wargames-cache/games/craftium")
+        )
+        self.assertEqual(_default_ikemen_root(env), Path("/tmp/wargames-cache/games/ikemen"))
         self.assertEqual(_host_openra_support_dir(env), Path("/tmp/wargames-cache/openra-support"))
 
     def test_find_openra_root_discovers_cached_checkout(self) -> None:
@@ -348,11 +372,36 @@ class CLITests(TestCase):
 
             manifest = Path(temp_dir) / "cache" / "games" / "mindustry" / "install.json"
             self.assertIn(
-                "Mindustry headless server plugin JSONL state exporter",
+                "Mindustry client plugin JSONL state exporter",
                 manifest.read_text(encoding="utf-8"),
             )
             self.assertEqual(_find_mindustry_client(root), client)
             self.assertEqual(_find_mindustry_server(root), server)
+
+    def test_install_craftium_remembers_package_runtime(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            env = {"LAYERBRAIN_WARGAMES_CACHE_DIR": str(Path(temp_dir) / "cache")}
+            args = SimpleNamespace(root=None)
+
+            with patch("wargames.cli._ensure_craftium_package"), redirect_stdout(StringIO()):
+                self.assertEqual(_install_craftium(args, env), 0)
+
+            manifest = Path(temp_dir) / "cache" / "games" / "craftium" / "install.json"
+            self.assertIn("Craftium Gymnasium info", manifest.read_text(encoding="utf-8"))
+
+    def test_install_ikemen_remembers_registered_app(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            env = {"LAYERBRAIN_WARGAMES_CACHE_DIR": str(Path(temp_dir) / "cache")}
+            root = Path(temp_dir) / "ikemen"
+            binary = _write_ikemen_app(root)
+            args = SimpleNamespace(root=str(root))
+
+            with redirect_stdout(StringIO()):
+                self.assertEqual(_install_ikemen(args, env), 0)
+
+            manifest = Path(temp_dir) / "cache" / "games" / "ikemen" / "install.json"
+            self.assertIn("IKEMEN GO CommonLua JSONL state exporter", manifest.read_text(encoding="utf-8"))
+            self.assertEqual(_find_ikemen_binary(root), binary)
 
     def test_linux_box_command_does_not_forward_model_keys(self) -> None:
         with patch.dict(
@@ -378,6 +427,7 @@ class CLITests(TestCase):
         self.assertIn("LAYERBRAIN_WARGAMES_FREECIV_WINDOW_SIZE=1280x720", joined)
         self.assertIn("LAYERBRAIN_WARGAMES_DOOM_WINDOW_SIZE=1280x720", joined)
         self.assertIn("LAYERBRAIN_WARGAMES_SUPERTUX_WINDOW_SIZE=1280x720", joined)
+        self.assertIn("LAYERBRAIN_WARGAMES_IKEMEN_WINDOW_SIZE=1280x720", joined)
         self.assertIn("--entrypoint /workspace/host-wargames/scripts/linux_box.sh", joined)
 
     def test_linux_box_install_uses_docker_volume_cache(self) -> None:
@@ -398,6 +448,8 @@ class CLITests(TestCase):
             "doom": ("wargames-linux-doom", "wargames-doom"),
             "supertux": ("wargames-linux-supertux", "wargames-supertux"),
             "mindustry": ("wargames-linux-mindustry", "wargames-mindustry"),
+            "craftium": ("wargames-linux-craftium", "wargames-craftium"),
+            "ikemen": ("wargames-linux-ikemen", "wargames-ikemen"),
         }
         for game, (image, volume) in cases.items():
             with self.subTest(game=game):
@@ -410,7 +462,7 @@ class CLITests(TestCase):
                 self.assertIn(image, joined)
                 self.assertIn(f"{volume}:/opt/wargames-cache", joined)
                 self.assertIn(f"LAYERBRAIN_WARGAMES_GAME={game}", joined)
-                if game == "mindustry":
+                if game in {"mindustry", "craftium", "ikemen"}:
                     self.assertEqual(runtime.platform, "linux/amd64")
                     self.assertIn("--platform linux/amd64", joined)
 
