@@ -51,7 +51,7 @@ reward your trainer consumes.
 | Doom | First-person arcade combat | 204 | [docs/games/doom.md](docs/games/doom.md) |
 | SuperTux | Side-scrolling platformer | 321 | [docs/games/supertux.md](docs/games/supertux.md) |
 | Mindustry | Automation and base defense | 27 | [docs/games/mindustry.md](docs/games/mindustry.md) |
-| Craftium | Voxel survival and crafting | 21 | [docs/games/craftium.md](docs/games/craftium.md) |
+| Craftium | Voxel survival and crafting | 96 | [docs/games/craftium.md](docs/games/craftium.md) |
 | IKEMEN GO | 2D fighting | 9 | [docs/games/ikemen.md](docs/games/ikemen.md) |
 
 A run is four pieces: a game, a mission, a reward profile, and an agent.

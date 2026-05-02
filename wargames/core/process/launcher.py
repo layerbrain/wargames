@@ -59,6 +59,7 @@ class ProcessLauncher:
             *command,
             cwd=cwd,
             env=merged_env,
+            stdin=asyncio.subprocess.DEVNULL,
             stdout=asyncio.subprocess.DEVNULL,
             stderr=asyncio.subprocess.DEVNULL,
             start_new_session=True,

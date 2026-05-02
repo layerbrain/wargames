@@ -3,7 +3,10 @@
 Craftium is the voxel survival and crafting environment in WarGames.
 
 Missions cover navigation, tree chopping, cave traversal, dungeon exploration,
-spider combat, and open-world survival through Craftium's Gymnasium interface.
+spider combat, open-world survival, and Craftium's `sequence0_25` continual
+dungeon tasks through Craftium's Gymnasium interface.
+
+![Craftium control proof](../assets/craftium-control-proof.mp4)
 
 Rewards use Craftium's trusted `info` state: native task reward, player
 position and velocity, view angles, voxel observation summaries, and terminal
@@ -33,22 +36,34 @@ the install manifest in the Craftium cache volume.
 
 ## Missions
 
-WarGames ships Craftium missions across seven environment families and three
-difficulties.
+WarGames ships 32 upstream Craftium tasks: seven single-agent Gymnasium
+environments and the 25-task `sequence0_25` continual dungeon sequence. Each
+task is exposed through three WarGames difficulty variants. The task objective
+stays the same, and the step budget gets stricter from easy to normal to hard,
+so the catalog has 96 mission entries.
 
-| Difficulty | Missions |
+| Catalog slice | Count |
 |---|---:|
-| Easy | 7 |
-| Normal | 7 |
-| Hard | 7 |
-| Total | 21 |
+| Upstream single-agent environments | 7 |
+| Upstream `sequence0_25` CRL tasks | 25 |
+| Upstream task total | 32 |
+| WarGames mission variants | 96 |
 
 ```bash
 wargames missions --game craftium
 ```
 
 Mission IDs use the environment slug and difficulty, for example
-`craftium.chop-tree.normal` and `craftium.open-world.hard`.
+`craftium.chop-tree.normal`, `craftium.open-world.hard`, and
+`craftium.crl.sequence0-25.task-00.normal`.
+
+Difficulty variants keep the same upstream task and tighten the step budget:
+
+| Difficulty | Step budget |
+|---|---:|
+| Easy | 150% of the upstream task budget |
+| Normal | 100% of the upstream task budget |
+| Hard | 75% of the upstream task budget |
 
 ## Live Control
 

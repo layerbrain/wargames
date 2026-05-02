@@ -316,13 +316,20 @@ def _make_env(mission: CraftiumMissionSpec, config: CraftiumConfig) -> CraftiumE
     _import_craftium()
     import gymnasium as gym  # type: ignore[import-not-found]
 
-    return gym.make(
-        mission.env_id,
-        enable_voxel_obs=config.enable_voxel_obs,
-        render_mode="rgb_array",
-        run_dir_prefix=config.run_dir_prefix,
-        sync_mode=True,
-    )
+    kwargs = {
+        "enable_voxel_obs": config.enable_voxel_obs,
+        "render_mode": "rgb_array",
+        "run_dir_prefix": config.run_dir_prefix,
+        "sync_mode": True,
+    }
+    if mission.loader == "crl_sequence":
+        if mission.sequence_name is None or mission.task_id is None:
+            raise ValueError(f"invalid Craftium CRL mission: {mission.id}")
+        import craftium.extra.crl_dungeons as crl  # type: ignore[import-not-found]
+
+        return crl.load_task(mission.sequence_name, task_id=mission.task_id, **kwargs)
+
+    return gym.make(mission.env_id, **kwargs)
 
 
 def _key_action(key: str) -> str | None:

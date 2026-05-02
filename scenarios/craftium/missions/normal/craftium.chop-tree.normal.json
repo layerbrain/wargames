@@ -12,7 +12,9 @@
   "env_id": "Craftium/ChopTree-v0",
   "game": "craftium",
   "id": "craftium.chop-tree.normal",
+  "loader": "gym",
   "native_difficulty": "Craftium/ChopTree-v0",
+  "sequence_name": null,
   "source": "builtin",
   "success_reward": 1.0,
   "tags": [
@@ -21,6 +23,7 @@
     "resource-gathering",
     "env:Craftium/ChopTree-v0"
   ],
+  "task_id": null,
   "time_limit_ticks": 2000,
   "title": "Chop Tree (Normal)"
 }

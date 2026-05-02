@@ -134,6 +134,8 @@ _SUPERTUX_REPO = "https://github.com/SuperTux/supertux.git"
 _SUPERTUX_REF = "v0.7.0"
 _MINDUSTRY_VERSION = "v146"
 _CRAFTIUM_VERSION = "0.0.1"
+_CRAFTIUM_REF = "v0.0.1"
+_CRAFTIUM_REPO = "https://github.com/mikelma/craftium.git"
 _IKEMEN_VERSION = "v0.99.0"
 
 
@@ -1163,6 +1165,11 @@ def _craftium_available() -> bool:
 def _ensure_craftium_package() -> None:
     if _craftium_available():
         return
+    source = Path("/opt/craftium")
+    if source.exists():
+        package = str(source)
+    else:
+        package = f"git+{_CRAFTIUM_REPO}@{_CRAFTIUM_REF}"
     try:
         subprocess.run(
             [
@@ -1170,7 +1177,7 @@ def _ensure_craftium_package() -> None:
                 "-m",
                 "pip",
                 "install",
-                f"craftium=={_CRAFTIUM_VERSION}",
+                package,
                 "pillow>=10.0.0",
             ],
             check=True,
@@ -1639,6 +1646,8 @@ def _install_craftium(args: argparse.Namespace, env: Mapping[str, str] = os.envi
         "game": "craftium",
         "root": str(root),
         "package": f"craftium=={_CRAFTIUM_VERSION}",
+        "source": _CRAFTIUM_REPO,
+        "ref": _CRAFTIUM_REF,
         "state_interface": "Craftium Gymnasium info and voxel observations",
         "status": "present",
     }

@@ -14,7 +14,9 @@
   "env_id": "Craftium/SpidersAttack-v0",
   "game": "craftium",
   "id": "craftium.spiders-attack.normal",
+  "loader": "gym",
   "native_difficulty": "Craftium/SpidersAttack-v0",
+  "sequence_name": null,
   "source": "builtin",
   "success_reward": 1.0,
   "tags": [
@@ -23,6 +25,7 @@
     "survival",
     "env:Craftium/SpidersAttack-v0"
   ],
+  "task_id": null,
   "time_limit_ticks": 4000,
   "title": "Spiders Attack (Normal)"
 }

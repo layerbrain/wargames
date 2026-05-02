@@ -22,7 +22,9 @@
   "env_id": "Craftium/OpenWorld-v0",
   "game": "craftium",
   "id": "craftium.open-world.hard",
+  "loader": "gym",
   "native_difficulty": "Craftium/OpenWorld-v0",
+  "sequence_name": null,
   "source": "builtin",
   "success_reward": 1.0,
   "tags": [
@@ -32,6 +34,7 @@
     "open-world",
     "env:Craftium/OpenWorld-v0"
   ],
-  "time_limit_ticks": 15000,
+  "task_id": null,
+  "time_limit_ticks": 7500,
   "title": "Open World (Hard)"
 }

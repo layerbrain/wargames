@@ -4,6 +4,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         libasound2t64 \
         libgl1 \
+        libgtk-3-0 \
         libopenal1 \
         libxcursor1 \
         libxi6 \
