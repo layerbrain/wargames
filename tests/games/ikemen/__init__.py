@@ -1,0 +1,1 @@
+"""IKEMEN GO game tests."""

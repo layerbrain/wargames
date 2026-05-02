@@ -296,6 +296,62 @@ The shipped Mindustry profile includes `delta_wave`, `delta_items`,
 `terminal`. Add shaping entries only after declaring the primitive in
 `wargames/games/mindustry/reward_schema.py`.
 
+## Craftium Reward Fields
+
+Craftium profiles use the same profile format. The shipped adapter exposes
+native Craftium task reward, player movement, view angles, voxel observation
+summaries, and terminal task outcome.
+
+| Field | Direction | Meaning |
+|---|---|---|
+| `mission.finished` | maximize | Task success. |
+| `mission.failed` | minimize | Task failure. |
+| `mission.truncated` | track | Step limit reached. |
+| `player.position` | track | Player position. |
+| `player.velocity` | track | Player velocity. |
+| `player.pitch` | track | Player pitch. |
+| `player.yaw` | track | Player yaw. |
+| `voxel.available` | track | Voxel observation availability. |
+| `voxel.shape` | track | Voxel observation shape. |
+| `voxel.nonzero_nodes` | maximize | Non-empty nearby voxel nodes. |
+| `reward` | maximize | Native Craftium reward for the latest step. |
+| `total_reward` | maximize | Accumulated native Craftium reward. |
+| `mt_dtime` | track | Luanti simulation delta time. |
+
+The shipped Craftium profile includes `delta_reward`, `movement_delta`,
+`voxel_discovery`, `time_penalty`, and `terminal`. Add shaping entries only
+after declaring the primitive in `wargames/games/craftium/reward_schema.py`.
+
+## IKEMEN GO Reward Fields
+
+IKEMEN GO profiles use the same profile format. The shipped adapter exposes
+match phase, winner, player life and power, movement, state number, control
+state, and terminal match outcome.
+
+| Field | Direction | Meaning |
+|---|---|---|
+| `mission.finished` | maximize | Match won. |
+| `mission.failed` | minimize | Match lost. |
+| `match.round_state` | track | IKEMEN round state. |
+| `match.round_no` | track | Current round number. |
+| `match.fight_time` | track | Elapsed fight time. |
+| `match.match_over` | track | Match-over flag. |
+| `match.winner_team` | maximize | Winning team number. |
+| `p1.life` | maximize | Player 1 life. |
+| `p1.power` | maximize | Player 1 power. |
+| `p1.x` | track | Player 1 x position. |
+| `p1.y` | track | Player 1 y position. |
+| `p1.state_no` | track | Player 1 state number. |
+| `p2.life` | minimize | Player 2 life. |
+| `p2.power` | track | Player 2 power. |
+| `p2.x` | track | Player 2 x position. |
+| `p2.y` | track | Player 2 y position. |
+| `players` | track | Player summaries. |
+
+The shipped IKEMEN GO profile includes `damage_dealt`, `damage_taken`,
+`power_gain`, `time_penalty`, and `terminal`. Add shaping entries only after
+declaring the primitive in `wargames/games/ikemen/reward_schema.py`.
+
 ## Eval And RL
 
 Use dense shaping for training and sparse or mild profiles for reporting.

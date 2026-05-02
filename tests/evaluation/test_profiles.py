@@ -8,8 +8,12 @@ from pathlib import Path
 from wargames.evaluation.profile_loader import load_profile_yaml
 from wargames.games.flightgear.profiles import register_profiles as register_flightgear_profiles
 from wargames.games.flightgear.reward_schema import FLIGHTGEAR_REWARD_SCHEMA
+from wargames.games.craftium.profiles import register_profiles as register_craftium_profiles
+from wargames.games.craftium.reward_schema import CRAFTIUM_REWARD_SCHEMA
 from wargames.games.freeciv.profiles import register_profiles as register_freeciv_profiles
 from wargames.games.freeciv.reward_schema import FREECIV_REWARD_SCHEMA
+from wargames.games.ikemen.profiles import register_profiles as register_ikemen_profiles
+from wargames.games.ikemen.reward_schema import IKEMEN_REWARD_SCHEMA
 from wargames.games.redalert.profiles import profiles
 from wargames.games.redalert.reward_schema import REDALERT_REWARD_SCHEMA
 from wargames.games.supertuxkart.profiles import (
@@ -104,3 +108,15 @@ class RewardProfileTests(unittest.TestCase):
 
         self.assertEqual(["standard"], [profile.id for profile in loaded])
         FREECIV_REWARD_SCHEMA.validate_primitive("delta_known_tiles")
+
+    def test_craftium_profiles_are_loaded_from_shipped_yaml(self) -> None:
+        loaded = register_craftium_profiles()
+
+        self.assertEqual(["standard"], [profile.id for profile in loaded])
+        CRAFTIUM_REWARD_SCHEMA.validate_primitive("delta_reward")
+
+    def test_ikemen_profiles_are_loaded_from_shipped_yaml(self) -> None:
+        loaded = register_ikemen_profiles()
+
+        self.assertEqual(["standard"], [profile.id for profile in loaded])
+        IKEMEN_REWARD_SCHEMA.validate_primitive("damage_dealt")

@@ -1,0 +1,26 @@
+id: standard
+game: craftium
+description: "Use native Craftium task reward, move through the environment, and finish the scenario."
+step_reward_min: -0.25
+step_reward_max: 1.00
+entries:
+  - id: delta_reward
+    fn: wargames.games.craftium.rewards.delta_reward
+    weight: 1.0
+    when: per_step
+  - id: movement_delta
+    fn: wargames.games.craftium.rewards.movement_delta
+    weight: 0.02
+    when: per_step
+  - id: voxel_discovery
+    fn: wargames.games.craftium.rewards.voxel_discovery
+    weight: 0.001
+    when: per_step
+  - id: time_penalty
+    fn: wargames.games.craftium.rewards.time_penalty
+    weight: 0.0001
+    when: per_step
+  - id: terminal
+    fn: wargames.core.missions.rewards.terminal
+    weight: 5.0
+    when: terminal

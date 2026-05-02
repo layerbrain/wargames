@@ -1,0 +1,28 @@
+{
+  "action_names": [
+    "forward",
+    "left",
+    "right",
+    "jump",
+    "dig",
+    "mouse x+",
+    "mouse x-",
+    "mouse y+",
+    "mouse y-"
+  ],
+  "difficulty": "easy",
+  "env_id": "Craftium/ProcDungeons-v0",
+  "game": "craftium",
+  "id": "craftium.proc-dungeons.easy",
+  "native_difficulty": "Craftium/ProcDungeons-v0",
+  "source": "builtin",
+  "success_reward": 1.0,
+  "tags": [
+    "voxel",
+    "combat",
+    "exploration",
+    "env:Craftium/ProcDungeons-v0"
+  ],
+  "time_limit_ticks": 3000,
+  "title": "Procedural Dungeon (Easy)"
+}

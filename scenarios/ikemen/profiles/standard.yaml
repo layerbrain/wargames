@@ -1,0 +1,26 @@
+id: standard
+game: ikemen
+description: "Win the match, deal damage, preserve life, and build meter."
+step_reward_min: -1.00
+step_reward_max: 1.00
+entries:
+  - id: damage_dealt
+    fn: wargames.games.ikemen.rewards.damage_dealt
+    weight: 0.01
+    when: per_step
+  - id: damage_taken
+    fn: wargames.games.ikemen.rewards.damage_taken
+    weight: 0.01
+    when: per_step
+  - id: power_gain
+    fn: wargames.games.ikemen.rewards.power_gain
+    weight: 0.001
+    when: per_step
+  - id: time_penalty
+    fn: wargames.games.ikemen.rewards.time_penalty
+    weight: 0.00005
+    when: per_step
+  - id: terminal
+    fn: wargames.core.missions.rewards.terminal
+    weight: 5.0
+    when: terminal
