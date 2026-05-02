@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.revenge_in_redmond.get-to-choppa.normal",
+  "level_file": "levels/revenge_in_redmond/get_to_choppa.stl",
+  "level_set": "revenge_in_redmond",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "revenge_in_redmond",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 50,
+  "time_limit_ticks": 3750,
+  "title": "Get to da Choppa! (Normal)"
+}

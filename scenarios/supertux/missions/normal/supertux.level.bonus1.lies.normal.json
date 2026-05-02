@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.lies.normal",
+  "level_file": "levels/bonus1/lies.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 110,
+  "time_limit_ticks": 8250,
+  "title": "Lies! (Normal)"
+}

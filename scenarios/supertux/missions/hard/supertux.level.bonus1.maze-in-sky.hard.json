@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "hard",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.maze-in-sky.hard",
+  "level_file": "levels/bonus1/maze_in_sky.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "speedrun",
+    "platformer"
+  ],
+  "target_time_seconds": 172,
+  "time_limit_ticks": 10320,
+  "title": "A Maze in the Sky (Hard)"
+}

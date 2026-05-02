@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.crumbel-cavern.easy",
+  "level_file": "levels/bonus1/crumbel_cavern.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 140,
+  "time_limit_ticks": 14700,
+  "title": "Crumbel Cavern (Easy)"
+}

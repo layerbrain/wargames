@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "hard",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.cave-of-mirrors.hard",
+  "level_file": "levels/bonus1/cave_of_mirrors.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "speedrun",
+    "platformer"
+  ],
+  "target_time_seconds": 155,
+  "time_limit_ticks": 9300,
+  "title": "Cave of Mirrors (Hard)"
+}

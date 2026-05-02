@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.all-that-glistens.normal",
+  "level_file": "levels/bonus1/all_that_glistens.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 90,
+  "time_limit_ticks": 6750,
+  "title": "All That Glistens is Not Gold (Normal)"
+}

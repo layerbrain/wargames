@@ -1,0 +1,18 @@
+{
+  "difficulty": "easy",
+  "game": "mindustry",
+  "id": "mindustry.survival.maze.easy",
+  "map_name": "Maze",
+  "mode": "survival",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "factory",
+    "tower-defense",
+    "survival",
+    "win-wave:10"
+  ],
+  "time_limit_ticks": 18000,
+  "title": "Maze Survival (Easy)",
+  "win_wave": 10
+}

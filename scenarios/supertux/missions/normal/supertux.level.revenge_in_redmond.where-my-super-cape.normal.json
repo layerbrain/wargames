@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.revenge_in_redmond.where-my-super-cape.normal",
+  "level_file": "levels/revenge_in_redmond/where_my_super_cape.stl",
+  "level_set": "revenge_in_redmond",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "revenge_in_redmond",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 55,
+  "time_limit_ticks": 4125,
+  "title": "Where Is My Super Cape? (Normal)"
+}

@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.world1.antarctic-outpost.easy",
+  "level_file": "levels/world1/antarctic_outpost.stl",
+  "level_set": "world1",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "world1",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 110,
+  "time_limit_ticks": 11550,
+  "title": "Antarctic Outpost (Easy)"
+}

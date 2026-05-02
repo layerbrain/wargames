@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.revenge_in_redmond.intro.easy",
+  "level_file": "levels/revenge_in_redmond/intro.stl",
+  "level_set": "revenge_in_redmond",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "revenge_in_redmond",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": null,
+  "time_limit_ticks": 12600,
+  "title": "A Blast From The Past (Easy)"
+}

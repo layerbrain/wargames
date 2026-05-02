@@ -40,6 +40,9 @@ local.env
 *.mp4
 !docs/assets/zeroad-control-demo.mp4
 !docs/assets/freeciv-control-demo.mp4
+!docs/assets/doom-control-proof.mp4
+!docs/assets/supertux-control-proof.mp4
+!docs/assets/mindustry-control-proof.mp4
 *.log
 
 # OS and editor files

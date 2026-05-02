@@ -1,0 +1,21 @@
+{
+  "content": "freedoom1",
+  "difficulty": "easy",
+  "episode": 2,
+  "game": "doom",
+  "id": "doom.episode.e2m8.easy",
+  "iwad": "/usr/share/games/doom/freedoom1.wad",
+  "map": "E2M8",
+  "map_number": 8,
+  "native_difficulty": "2",
+  "skill": 2,
+  "source": "builtin",
+  "tags": [
+    "freedoom1",
+    "e2m8",
+    "fps",
+    "freedoom"
+  ],
+  "time_limit_ticks": 12600,
+  "title": "Freedoom Phase 1 E2M8 (Easy)"
+}

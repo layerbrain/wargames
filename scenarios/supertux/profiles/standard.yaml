@@ -1,0 +1,34 @@
+id: standard
+game: supertux
+description: "Finish the level while collecting coins and secrets."
+step_reward_min: -0.20
+step_reward_max: 0.50
+entries:
+  - id: delta_coins
+    fn: wargames.games.supertux.rewards.delta_coins
+    weight: 0.05
+    when: per_step
+  - id: delta_secrets
+    fn: wargames.games.supertux.rewards.delta_secrets
+    weight: 0.25
+    when: per_step
+  - id: progress_x
+    fn: wargames.games.supertux.rewards.progress_x
+    weight: 0.002
+    when: per_step
+  - id: velocity_x
+    fn: wargames.games.supertux.rewards.velocity_x
+    weight: 0.0005
+    when: per_step
+  - id: death_penalty
+    fn: wargames.games.supertux.rewards.death_penalty
+    weight: 1.0
+    when: per_step
+  - id: time_penalty
+    fn: wargames.games.supertux.rewards.time_penalty
+    weight: 0.00002
+    when: per_step
+  - id: terminal
+    fn: wargames.core.missions.rewards.terminal
+    weight: 5.0
+    when: terminal

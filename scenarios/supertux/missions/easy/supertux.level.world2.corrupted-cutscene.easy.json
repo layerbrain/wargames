@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.world2.corrupted-cutscene.easy",
+  "level_file": "levels/world2/corrupted_cutscene.stl",
+  "level_set": "world2",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "world2",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": null,
+  "time_limit_ticks": 12600,
+  "title": "From Afar It Spreads (Easy)"
+}

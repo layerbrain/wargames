@@ -1,0 +1,18 @@
+{
+  "difficulty": "normal",
+  "game": "mindustry",
+  "id": "mindustry.survival.veins.normal",
+  "map_name": "Veins",
+  "mode": "survival",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "factory",
+    "tower-defense",
+    "survival",
+    "win-wave:20"
+  ],
+  "time_limit_ticks": 36000,
+  "title": "Veins Survival (Normal)",
+  "win_wave": 20
+}

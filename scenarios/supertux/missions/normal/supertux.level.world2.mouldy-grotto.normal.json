@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.world2.mouldy-grotto.normal",
+  "level_file": "levels/world2/mouldy_grotto.stl",
+  "level_set": "world2",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "world2",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 170,
+  "time_limit_ticks": 12750,
+  "title": "A Mouldy Grotto (Normal)"
+}

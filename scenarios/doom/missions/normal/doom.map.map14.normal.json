@@ -1,0 +1,21 @@
+{
+  "content": "freedoom2",
+  "difficulty": "normal",
+  "episode": null,
+  "game": "doom",
+  "id": "doom.map.map14.normal",
+  "iwad": "/usr/share/games/doom/freedoom2.wad",
+  "map": "MAP14",
+  "map_number": 14,
+  "native_difficulty": "3",
+  "skill": 3,
+  "source": "builtin",
+  "tags": [
+    "freedoom2",
+    "map14",
+    "fps",
+    "freedoom"
+  ],
+  "time_limit_ticks": 21000,
+  "title": "Freedoom Phase 2 MAP14 (Normal)"
+}

@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "hard",
+  "game": "supertux",
+  "id": "supertux.level.world2.welcome-forest.hard",
+  "level_file": "levels/world2/welcome_forest.stl",
+  "level_set": "world2",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "world2",
+    "speedrun",
+    "platformer"
+  ],
+  "target_time_seconds": 80,
+  "time_limit_ticks": 4800,
+  "title": "Welcome to the Forest (Hard)"
+}

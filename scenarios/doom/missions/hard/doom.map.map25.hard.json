@@ -1,0 +1,21 @@
+{
+  "content": "freedoom2",
+  "difficulty": "hard",
+  "episode": null,
+  "game": "doom",
+  "id": "doom.map.map25.hard",
+  "iwad": "/usr/share/games/doom/freedoom2.wad",
+  "map": "MAP25",
+  "map_number": 25,
+  "native_difficulty": "4",
+  "skill": 4,
+  "source": "builtin",
+  "tags": [
+    "freedoom2",
+    "map25",
+    "fps",
+    "freedoom"
+  ],
+  "time_limit_ticks": 31500,
+  "title": "Freedoom Phase 2 MAP25 (Hard)"
+}

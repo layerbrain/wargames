@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "hard",
+  "game": "supertux",
+  "id": "supertux.level.world2.floral-blossom.hard",
+  "level_file": "levels/world2/floral_blossom.stl",
+  "level_set": "world2",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "world2",
+    "speedrun",
+    "platformer"
+  ],
+  "target_time_seconds": 190,
+  "time_limit_ticks": 11400,
+  "title": "Floral Blossom (Hard)"
+}

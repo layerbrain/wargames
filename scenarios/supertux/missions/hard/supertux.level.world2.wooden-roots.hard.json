@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "hard",
+  "game": "supertux",
+  "id": "supertux.level.world2.wooden-roots.hard",
+  "level_file": "levels/world2/wooden_roots.stl",
+  "level_set": "world2",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "world2",
+    "speedrun",
+    "platformer"
+  ],
+  "target_time_seconds": 100,
+  "time_limit_ticks": 6000,
+  "title": "Wooden Roots (Hard)"
+}

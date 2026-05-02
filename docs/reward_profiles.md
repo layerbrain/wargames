@@ -207,6 +207,95 @@ The shipped Freeciv profile includes `delta_city_count`, `delta_unit_count`,
 `delta_gold`, `delta_known_tiles`, and `terminal`. Add shaping entries only
 after declaring the primitive in `wargames/games/freeciv/reward_schema.py`.
 
+## Doom Reward Fields
+
+Doom profiles use the same profile format. The shipped adapter exposes map
+progress, player pose, inventory, combat totals, and terminal map outcome.
+
+| Field | Direction | Meaning |
+|---|---|---|
+| `mission.finished` | maximize | Map exit reached. |
+| `mission.failed` | minimize | Player died or process failed. |
+| `level.map` | track | Map identifier. |
+| `level.elapsed_ticks` | minimize | Elapsed map ticks. |
+| `level.kills` | maximize | Monsters killed by the player. |
+| `level.items` | maximize | Items collected by the player. |
+| `level.secrets` | maximize | Secrets found by the player. |
+| `player.x` | track | Player x position. |
+| `player.y` | track | Player y position. |
+| `player.angle` | track | Player view angle. |
+| `player.health` | maximize | Player health. |
+| `player.armor` | maximize | Player armor. |
+| `player.ammo` | track | Ammo by type. |
+| `player.weapons` | track | Owned weapons. |
+| `player.keys` | track | Owned keys. |
+| `player.damage_taken` | minimize | Damage received this level. |
+| `player.dead` | minimize | Player death state. |
+
+The shipped Doom profile includes `delta_kills`, `delta_items`,
+`delta_secrets`, `health_preservation`, `damage_penalty`, `time_penalty`, and
+`terminal`. Add shaping entries only after declaring the primitive in
+`wargames/games/doom/reward_schema.py`.
+
+## SuperTux Reward Fields
+
+SuperTux profiles use the same profile format. The shipped adapter exposes
+level progress, player movement, coin/secrets collection, power-up state, and
+terminal level outcome.
+
+| Field | Direction | Meaning |
+|---|---|---|
+| `mission.finished` | maximize | Level exit reached. |
+| `mission.failed` | minimize | Player death or process failure. |
+| `level.file` | track | Level file path. |
+| `level.name` | track | Level display name. |
+| `level.elapsed_ticks` | minimize | Elapsed level ticks. |
+| `level.coins` | maximize | Collected coins. |
+| `level.total_coins` | track | Available coins. |
+| `level.secrets` | maximize | Found secrets. |
+| `level.total_secrets` | track | Available secrets. |
+| `player.x` | maximize | Horizontal level progress. |
+| `player.y` | track | Vertical position. |
+| `player.vx` | maximize | Horizontal velocity. |
+| `player.vy` | track | Vertical velocity. |
+| `player.coins` | maximize | Player wallet coins. |
+| `player.bonus` | track | Current power-up. |
+| `player.alive` | maximize | Player is alive. |
+| `player.dead` | minimize | Player is dead. |
+| `player.winning` | maximize | Player is in the win sequence. |
+
+The shipped SuperTux profile includes `delta_coins`, `delta_secrets`,
+`progress_x`, `velocity_x`, `death_penalty`, `time_penalty`, and `terminal`.
+Add shaping entries only after declaring the primitive in
+`wargames/games/supertux/reward_schema.py`.
+
+## Mindustry Reward Fields
+
+Mindustry profiles use the same profile format. The shipped adapter exposes
+hidden game state from the rendered client: survival wave, enemy pressure, team
+core state, items, buildings, units, and terminal victory/defeat.
+
+| Field | Direction | Meaning |
+|---|---|---|
+| `mission.finished` | maximize | Win wave reached or game won. |
+| `mission.failed` | minimize | Core destroyed or game lost. |
+| `game.map` | track | Map name. |
+| `game.wave` | maximize | Survival wave. |
+| `game.enemies` | minimize | Live enemy count. |
+| `game.won` | maximize | Mindustry win flag. |
+| `game.game_over` | track | Mindustry game-over flag. |
+| `us.cores` | maximize | Player core count. |
+| `us.units` | maximize | Player unit count. |
+| `us.buildings` | maximize | Player building count. |
+| `us.items` | maximize | Items stored in team cores. |
+| `us.core_health` | maximize | Total core health. |
+| `teams` | track | Active team summaries. |
+
+The shipped Mindustry profile includes `delta_wave`, `delta_items`,
+`delta_buildings`, `core_health`, `enemy_pressure`, `time_penalty`, and
+`terminal`. Add shaping entries only after declaring the primitive in
+`wargames/games/mindustry/reward_schema.py`.
+
 ## Eval And RL
 
 Use dense shaping for training and sparse or mild profiles for reporting.
@@ -246,6 +335,9 @@ wargames profile validate scenarios/flightgear/profiles/standard.yaml --game fli
 wargames profile validate scenarios/supertuxkart/profiles/standard.yaml --game supertuxkart
 wargames profile validate scenarios/zeroad/profiles/standard.yaml --game zeroad
 wargames profile validate scenarios/freeciv/profiles/standard.yaml --game freeciv
+wargames profile validate scenarios/doom/profiles/standard.yaml --game doom
+wargames profile validate scenarios/supertux/profiles/standard.yaml --game supertux
+wargames profile validate scenarios/mindustry/profiles/standard.yaml --game mindustry
 python -m unittest tests.evaluation.test_profiles -v
 ```
 

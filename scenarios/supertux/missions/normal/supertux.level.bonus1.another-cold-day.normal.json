@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.another-cold-day.normal",
+  "level_file": "levels/bonus1/another_cold_day.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 67,
+  "time_limit_ticks": 5025,
+  "title": "Another Cold Day... (Normal)"
+}

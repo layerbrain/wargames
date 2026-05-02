@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.world1.deep-dive-chill.normal",
+  "level_file": "levels/world1/deep_dive_chill.stl",
+  "level_set": "world1",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "world1",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 120,
+  "time_limit_ticks": 9000,
+  "title": "Deep Dive 'n' Chill (Normal)"
+}

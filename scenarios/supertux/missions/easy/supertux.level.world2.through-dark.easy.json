@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.world2.through-dark.easy",
+  "level_file": "levels/world2/through_dark.stl",
+  "level_set": "world2",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "world2",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 255,
+  "time_limit_ticks": 26775,
+  "title": "Through the Dark (Easy)"
+}

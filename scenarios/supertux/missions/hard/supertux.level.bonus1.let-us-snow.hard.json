@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "hard",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.let-us-snow.hard",
+  "level_file": "levels/bonus1/let_us_snow.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "speedrun",
+    "platformer"
+  ],
+  "target_time_seconds": 245,
+  "time_limit_ticks": 14700,
+  "title": "Let Us Snow! (Hard)"
+}

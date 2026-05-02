@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.snowy-sunset.easy",
+  "level_file": "levels/bonus1/snowy_sunset.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 106,
+  "time_limit_ticks": 11130,
+  "title": "Snowy Sunset (Easy)"
+}

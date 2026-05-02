@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "hard",
+  "game": "supertux",
+  "id": "supertux.level.world2.collapse-imminent.hard",
+  "level_file": "levels/world2/collapse_imminent.stl",
+  "level_set": "world2",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "world2",
+    "speedrun",
+    "platformer"
+  ],
+  "target_time_seconds": 180,
+  "time_limit_ticks": 10800,
+  "title": "Collapse Imminent (Hard)"
+}

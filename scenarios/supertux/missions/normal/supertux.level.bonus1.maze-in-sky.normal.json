@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.bonus1.maze-in-sky.normal",
+  "level_file": "levels/bonus1/maze_in_sky.stl",
+  "level_set": "bonus1",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "bonus1",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 172,
+  "time_limit_ticks": 12900,
+  "title": "A Maze in the Sky (Normal)"
+}

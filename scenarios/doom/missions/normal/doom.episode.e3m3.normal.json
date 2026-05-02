@@ -1,0 +1,21 @@
+{
+  "content": "freedoom1",
+  "difficulty": "normal",
+  "episode": 3,
+  "game": "doom",
+  "id": "doom.episode.e3m3.normal",
+  "iwad": "/usr/share/games/doom/freedoom1.wad",
+  "map": "E3M3",
+  "map_number": 3,
+  "native_difficulty": "3",
+  "skill": 3,
+  "source": "builtin",
+  "tags": [
+    "freedoom1",
+    "e3m3",
+    "fps",
+    "freedoom"
+  ],
+  "time_limit_ticks": 21000,
+  "title": "Freedoom Phase 1 E3M3 (Normal)"
+}

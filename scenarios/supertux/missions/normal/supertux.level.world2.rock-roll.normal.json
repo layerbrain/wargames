@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.world2.rock-roll.normal",
+  "level_file": "levels/world2/rock_roll.stl",
+  "level_set": "world2",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "world2",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 70,
+  "time_limit_ticks": 5250,
+  "title": "Rock 'n' Roll (Normal)"
+}

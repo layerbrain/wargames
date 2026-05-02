@@ -1,0 +1,80 @@
+from __future__ import annotations
+
+from wargames.evaluation.schema import GameRewardSchema, RewardField, RewardPrimitiveSpec
+
+DOOM_REWARD_SCHEMA = GameRewardSchema(
+    game="doom",
+    world_type="wargames.games.doom.world.DoomWorld",
+    tick_rate=35,
+    fields={
+        "tick": RewardField("tick", "int", "track", "WarGames step tick."),
+        "mission.finished": RewardField("mission.finished", "bool", "maximize", "Map exit reached."),
+        "mission.failed": RewardField("mission.failed", "bool", "minimize", "Player died."),
+        "level.map": RewardField("level.map", "str", "track", "Doom map id."),
+        "level.elapsed_ticks": RewardField("level.elapsed_ticks", "int", "minimize", "Elapsed map ticks."),
+        "level.kills": RewardField("level.kills", "int", "maximize", "Player kill count."),
+        "level.items": RewardField("level.items", "int", "maximize", "Collected item count."),
+        "level.secrets": RewardField("level.secrets", "int", "maximize", "Found secret count."),
+        "player.x": RewardField("player.x", "float | None", "track", "Player x position."),
+        "player.y": RewardField("player.y", "float | None", "track", "Player y position."),
+        "player.angle": RewardField("player.angle", "float | None", "track", "Player view angle."),
+        "player.health": RewardField("player.health", "int", "maximize", "Player health."),
+        "player.armor": RewardField("player.armor", "int", "maximize", "Player armor."),
+        "player.ammo": RewardField("player.ammo", "tuple[int, ...]", "track", "Ammo by type."),
+        "player.weapons": RewardField("player.weapons", "tuple[bool, ...]", "track", "Owned weapons."),
+        "player.keys": RewardField("player.keys", "tuple[bool, ...]", "track", "Owned keys."),
+        "player.damage_taken": RewardField("player.damage_taken", "int", "minimize", "Damage received this level."),
+        "player.dead": RewardField("player.dead", "bool", "minimize", "Player death state."),
+    },
+    primitives={
+        "terminal": RewardPrimitiveSpec(
+            "terminal",
+            ("mission.finished", "mission.failed"),
+            1.0,
+            "terminal",
+            "Success/failure outcome.",
+        ),
+        "delta_kills": RewardPrimitiveSpec(
+            "delta_kills",
+            ("level.kills",),
+            1.0,
+            "per_step",
+            "Reward newly killed enemies.",
+        ),
+        "delta_items": RewardPrimitiveSpec(
+            "delta_items",
+            ("level.items",),
+            1.0,
+            "per_step",
+            "Reward newly collected items.",
+        ),
+        "delta_secrets": RewardPrimitiveSpec(
+            "delta_secrets",
+            ("level.secrets",),
+            1.0,
+            "per_step",
+            "Reward newly found secrets.",
+        ),
+        "health_preservation": RewardPrimitiveSpec(
+            "health_preservation",
+            ("player.health",),
+            1.0,
+            "per_step",
+            "Reward staying healthy.",
+        ),
+        "damage_penalty": RewardPrimitiveSpec(
+            "damage_penalty",
+            ("player.damage_taken",),
+            1.0,
+            "per_step",
+            "Penalty for taking damage.",
+        ),
+        "time_penalty": RewardPrimitiveSpec(
+            "time_penalty",
+            ("tick",),
+            1.0,
+            "per_step",
+            "Small pressure to finish efficiently.",
+        ),
+    },
+)

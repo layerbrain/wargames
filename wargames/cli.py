@@ -26,8 +26,17 @@ from wargames.harness.turns import events_from_payload, validate_turn
 _LINUX_BOX_ENV = "LAYERBRAIN_WARGAMES_IN_LINUX_BOX"
 _LINUX_BOX_DEFAULT_RESOLUTION = (1280, 720)
 _BOX_COMMANDS = {"boot", "control", "install", "run", "serve"}
-_INSTALLABLE_GAMES = ("redalert", "flightgear", "supertuxkart", "zeroad", "freeciv")
-_TASK_GAMES = ("redalert", "flightgear", "supertuxkart", "zeroad", "freeciv")
+_INSTALLABLE_GAMES = (
+    "redalert",
+    "flightgear",
+    "supertuxkart",
+    "zeroad",
+    "freeciv",
+    "doom",
+    "supertux",
+    "mindustry",
+)
+_TASK_GAMES = _INSTALLABLE_GAMES
 _LINUX_BOX_CACHE_MOUNT = "/opt/wargames-cache"
 _LINUX_BOX_BASE_IMAGE = "wargames-linux-base"
 _LINUX_BOX_BASE_DOCKERFILE = "docker/base/Dockerfile"
@@ -39,6 +48,8 @@ class LinuxBoxRuntime:
     image: str
     dockerfile: str
     cache_volume: str
+    base_image: str = _LINUX_BOX_BASE_IMAGE
+    platform: str | None = None
 
 
 _LINUX_BOX_RUNTIMES = {
@@ -72,6 +83,26 @@ _LINUX_BOX_RUNTIMES = {
         dockerfile="docker/freeciv/Dockerfile",
         cache_volume="wargames-freeciv",
     ),
+    "doom": LinuxBoxRuntime(
+        game="doom",
+        image="wargames-linux-doom",
+        dockerfile="docker/doom/Dockerfile",
+        cache_volume="wargames-doom",
+    ),
+    "supertux": LinuxBoxRuntime(
+        game="supertux",
+        image="wargames-linux-supertux",
+        dockerfile="docker/supertux/Dockerfile",
+        cache_volume="wargames-supertux",
+    ),
+    "mindustry": LinuxBoxRuntime(
+        game="mindustry",
+        image="wargames-linux-mindustry",
+        dockerfile="docker/mindustry/Dockerfile",
+        cache_volume="wargames-mindustry",
+        base_image="wargames-linux-base-amd64",
+        platform="linux/amd64",
+    ),
 }
 _OPENRA_REPO = "https://github.com/OpenRA/OpenRA.git"
 _OPENRA_REF = "bleed"
@@ -79,6 +110,11 @@ _SUPERTUXKART_REPO = "https://github.com/supertuxkart/stk-code.git"
 _SUPERTUXKART_REF = "1.4"
 _ZEROAD_REPO = "https://gitea.wildfiregames.com/0ad/0ad.git"
 _ZEROAD_REF = "v0.28.0"
+_DOOM_REPO = "https://github.com/chocolate-doom/chocolate-doom.git"
+_DOOM_REF = "chocolate-doom-3.1.1"
+_SUPERTUX_REPO = "https://github.com/SuperTux/supertux.git"
+_SUPERTUX_REF = "v0.7.0"
+_MINDUSTRY_VERSION = "v146"
 
 
 def _game(id: str) -> GameDescriptor:
@@ -100,6 +136,18 @@ def _game(id: str) -> GameDescriptor:
         return GAME
     if id == "freeciv":
         from wargames.games.freeciv import GAME
+
+        return GAME
+    if id == "doom":
+        from wargames.games.doom import GAME
+
+        return GAME
+    if id == "supertux":
+        from wargames.games.supertux import GAME
+
+        return GAME
+    if id == "mindustry":
+        from wargames.games.mindustry import GAME
 
         return GAME
     raise SystemExit(f"unknown game: {id}")
@@ -126,6 +174,18 @@ def _reward_schema(game: str) -> GameRewardSchema:
         from wargames.games.freeciv.reward_schema import FREECIV_REWARD_SCHEMA
 
         return FREECIV_REWARD_SCHEMA
+    if game == "doom":
+        from wargames.games.doom.reward_schema import DOOM_REWARD_SCHEMA
+
+        return DOOM_REWARD_SCHEMA
+    if game == "supertux":
+        from wargames.games.supertux.reward_schema import SUPERTUX_REWARD_SCHEMA
+
+        return SUPERTUX_REWARD_SCHEMA
+    if game == "mindustry":
+        from wargames.games.mindustry.reward_schema import MINDUSTRY_REWARD_SCHEMA
+
+        return MINDUSTRY_REWARD_SCHEMA
     raise SystemExit(f"unknown game: {game}")
 
 
@@ -307,6 +367,22 @@ def _is_freeciv_root(path: Path) -> bool:
     )
 
 
+def _is_doom_root(path: Path) -> bool:
+    return path.name == "chocolate-doom" or (path / "src" / "doom" / "g_game.c").exists()
+
+
+def _is_supertux_root(path: Path) -> bool:
+    return path.name == "supertux2" or (path / "src" / "supertux" / "game_session.cpp").exists()
+
+
+def _is_mindustry_root(path: Path) -> bool:
+    return (
+        path.name in {"server-release.jar", "Mindustry.jar"}
+        or (path / "server-release.jar").exists()
+        or (path / "Mindustry.jar").exists()
+    )
+
+
 def _find_flightgear_binary(root: Path | None = None) -> Path | None:
     candidates: list[Path | str | None] = [
         root if root and root.name == "fgfs" else None,
@@ -408,6 +484,72 @@ def _find_freeciv_client_binary(root: Path | None = None) -> Path | None:
     return None
 
 
+def _find_doom_binary(root: Path | None = None) -> Path | None:
+    candidates: list[Path | str | None] = [
+        root if root and root.is_file() and root.name == "chocolate-doom" else None,
+        root / "build" / "src" / "chocolate-doom" if root and not root.is_file() else None,
+        root / "chocolate-doom" if root and not root.is_file() else None,
+        _default_doom_source_root() / "build" / "src" / "chocolate-doom",
+        shutil.which("chocolate-doom"),
+        "/usr/games/chocolate-doom",
+        "/usr/bin/chocolate-doom",
+    ]
+    for candidate in candidates:
+        if candidate:
+            path = Path(candidate).expanduser()
+            if path.exists():
+                return path
+    return None
+
+
+def _find_supertux_binary(root: Path | None = None) -> Path | None:
+    candidates: list[Path | str | None] = [
+        root if root and root.is_file() and root.name == "supertux2" else None,
+        root / "build" / "supertux2" if root and not root.is_file() else None,
+        root / "cmake_build" / "supertux2" if root and not root.is_file() else None,
+        root / "supertux2" if root and not root.is_file() else None,
+        root / "bin" / "supertux2" if root and not root.is_file() else None,
+        _default_supertux_source_root() / "build" / "supertux2",
+        shutil.which("supertux2"),
+        "/usr/games/supertux2",
+        "/usr/bin/supertux2",
+    ]
+    for candidate in candidates:
+        if candidate:
+            path = Path(candidate).expanduser()
+            if path.exists():
+                return path
+    return None
+
+
+def _find_mindustry_server(root: Path | None = None) -> Path | None:
+    candidates: list[Path | str | None] = [
+        root if root and root.is_file() and root.name == "server-release.jar" else None,
+        root / "server-release.jar" if root and not root.is_file() else None,
+        _default_mindustry_root() / "server-release.jar",
+    ]
+    for candidate in candidates:
+        if candidate:
+            path = Path(candidate).expanduser()
+            if path.exists():
+                return path
+    return None
+
+
+def _find_mindustry_client(root: Path | None = None) -> Path | None:
+    candidates: list[Path | str | None] = [
+        root if root and root.is_file() and root.name == "Mindustry.jar" else None,
+        root / "Mindustry.jar" if root and not root.is_file() else None,
+        _default_mindustry_root() / "Mindustry.jar",
+    ]
+    for candidate in candidates:
+        if candidate:
+            path = Path(candidate).expanduser()
+            if path.exists():
+                return path
+    return None
+
+
 def _flightgear_root(binary: Path, root: Path | None = None) -> Path:
     if root is not None:
         return root
@@ -454,12 +596,42 @@ def _freeciv_root(binary: Path, root: Path | None = None) -> Path:
     return binary.parent
 
 
+def _doom_root(binary: Path, root: Path | None = None) -> Path:
+    if root is not None and not root.is_file():
+        return root
+    if binary.parent.name == "src" and binary.parent.parent.name == "build":
+        return binary.parent.parent.parent
+    return binary.parent
+
+
+def _supertux_root(binary: Path, root: Path | None = None) -> Path:
+    if root is not None and not root.is_file():
+        return root
+    if binary.parent.name == "build":
+        return binary.parent.parent
+    if binary.parent.name == "bin":
+        return binary.parent.parent
+    return binary.parent
+
+
 def _default_supertuxkart_source_root(env: Mapping[str, str] = os.environ) -> Path:
     return _game_install_dir("supertuxkart", env) / "stk-code"
 
 
 def _default_zeroad_source_root(env: Mapping[str, str] = os.environ) -> Path:
     return _game_install_dir("zeroad", env) / "0ad"
+
+
+def _default_doom_source_root(env: Mapping[str, str] = os.environ) -> Path:
+    return _game_install_dir("doom", env) / "chocolate-doom"
+
+
+def _default_supertux_source_root(env: Mapping[str, str] = os.environ) -> Path:
+    return _game_install_dir("supertux", env) / "supertux"
+
+
+def _default_mindustry_root(env: Mapping[str, str] = os.environ) -> Path:
+    return _game_install_dir("mindustry", env)
 
 
 def _should_run_in_linux_box(
@@ -536,6 +708,8 @@ def _runtime_resolution(env: Mapping[str, str] = os.environ) -> tuple[int, int]:
         "LAYERBRAIN_WARGAMES_SUPERTUXKART_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_ZEROAD_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_FREECIV_WINDOW_SIZE",
+        "LAYERBRAIN_WARGAMES_DOOM_WINDOW_SIZE",
+        "LAYERBRAIN_WARGAMES_SUPERTUX_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_FLIGHTGEAR_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_XVFB_RESOLUTION",
     ):
@@ -618,12 +792,12 @@ def _linux_box_game(args: argparse.Namespace) -> str:
     return str(getattr(args, "game", None) or "redalert")
 
 
-def _docker_build(*, image: str, dockerfile: str) -> None:
-    subprocess.run(
-        ["docker", "build", "-f", dockerfile, "-t", image, "."],
-        cwd=_repo_root(),
-        check=True,
-    )
+def _docker_build(*, image: str, dockerfile: str, platform: str | None = None) -> None:
+    command = ["docker", "build"]
+    if platform:
+        command.extend(["--platform", platform])
+    command.extend(["-f", dockerfile, "-t", image, "."])
+    subprocess.run(command, cwd=_repo_root(), check=True)
 
 
 def _ensure_linux_box_image(runtime: LinuxBoxRuntime) -> None:
@@ -631,10 +805,14 @@ def _ensure_linux_box_image(runtime: LinuxBoxRuntime) -> None:
         raise SystemExit(
             "WarGames needs Docker to run the per-game Linux/Xvfb runtime images."
         )
-    if not _image_exists(_LINUX_BOX_BASE_IMAGE):
-        _docker_build(image=_LINUX_BOX_BASE_IMAGE, dockerfile=_LINUX_BOX_BASE_DOCKERFILE)
+    if not _image_exists(runtime.base_image):
+        _docker_build(
+            image=runtime.base_image,
+            dockerfile=_LINUX_BOX_BASE_DOCKERFILE,
+            platform=runtime.platform,
+        )
     if not _image_exists(runtime.image):
-        _docker_build(image=runtime.image, dockerfile=runtime.dockerfile)
+        _docker_build(image=runtime.image, dockerfile=runtime.dockerfile, platform=runtime.platform)
 
 
 def _linux_box_command(
@@ -650,6 +828,8 @@ def _linux_box_command(
         command.extend(["-p", f"127.0.0.1:{port}:{port}"])
     host_repo = _repo_root()
     active_runtime = runtime or _linux_box_runtime(_linux_box_game_from_argv(argv))
+    if active_runtime.platform:
+        command.extend(["--platform", active_runtime.platform])
     command.extend(["-v", f"{host_repo}:/workspace/host-wargames"])
     command.extend(["-v", f"{active_runtime.cache_volume}:{_LINUX_BOX_CACHE_MOUNT}"])
     command.extend(["--entrypoint", "/workspace/host-wargames/scripts/linux_box.sh"])
@@ -673,6 +853,8 @@ def _linux_box_command(
     )
     env.setdefault("LAYERBRAIN_WARGAMES_ZEROAD_WINDOW_SIZE", _resolution_text(active_resolution))
     env.setdefault("LAYERBRAIN_WARGAMES_FREECIV_WINDOW_SIZE", _resolution_text(active_resolution))
+    env.setdefault("LAYERBRAIN_WARGAMES_DOOM_WINDOW_SIZE", _resolution_text(active_resolution))
+    env.setdefault("LAYERBRAIN_WARGAMES_SUPERTUX_WINDOW_SIZE", _resolution_text(active_resolution))
     if stream_port is not None:
         env["LAYERBRAIN_WARGAMES_HOST_STREAM_URL"] = (
             f"udp://host.docker.internal:{stream_port}?pkt_size=1316"
@@ -798,6 +980,80 @@ def _clone_zeroad_source(target: Path) -> None:
         raise SystemExit(f"0 A.D. clone failed with exit code {exc.returncode}") from exc
 
 
+def _clone_doom_source(target: Path) -> None:
+    git = shutil.which("git")
+    if git is None:
+        raise SystemExit("git is required to install Doom")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    command = [
+        git,
+        "clone",
+        "--depth",
+        "1",
+        "--branch",
+        _DOOM_REF,
+        _DOOM_REPO,
+        str(target),
+    ]
+    try:
+        subprocess.run(command, check=True)
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(f"Chocolate Doom clone failed with exit code {exc.returncode}") from exc
+
+
+def _clone_supertux_source(target: Path) -> None:
+    git = shutil.which("git")
+    if git is None:
+        raise SystemExit("git is required to install SuperTux")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    command = [
+        git,
+        "clone",
+        "--depth",
+        "1",
+        "--branch",
+        _SUPERTUX_REF,
+        "--recurse-submodules",
+        "--shallow-submodules",
+        _SUPERTUX_REPO,
+        str(target),
+    ]
+    try:
+        subprocess.run(command, check=True)
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(f"SuperTux clone failed with exit code {exc.returncode}") from exc
+
+
+def _download_mindustry_server(target: Path) -> None:
+    curl = shutil.which("curl")
+    if curl is None:
+        raise SystemExit("curl is required to install Mindustry")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    url = (
+        "https://github.com/Anuken/Mindustry/releases/download/"
+        f"{_MINDUSTRY_VERSION}/server-release.jar"
+    )
+    try:
+        subprocess.run([curl, "-L", "--retry", "3", "-o", str(target), url], check=True)
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(f"Mindustry server download failed with exit code {exc.returncode}") from exc
+
+
+def _download_mindustry_client(target: Path) -> None:
+    curl = shutil.which("curl")
+    if curl is None:
+        raise SystemExit("curl is required to install Mindustry")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    url = (
+        "https://github.com/Anuken/Mindustry/releases/download/"
+        f"{_MINDUSTRY_VERSION}/Mindustry.jar"
+    )
+    try:
+        subprocess.run([curl, "-L", "--retry", "3", "-o", str(target), url], check=True)
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(f"Mindustry client download failed with exit code {exc.returncode}") from exc
+
+
 def _sync_zeroad_lfs(source_root: Path) -> None:
     if _zeroad_lfs_assets_ready(source_root):
         return
@@ -838,6 +1094,55 @@ def _install_supertuxkart_probe(source_root: Path) -> None:
         raise SystemExit(
             f"WarGames SuperTuxKart state exporter build failed with exit code {exc.returncode}"
         ) from exc
+
+
+def _install_doom_probe(source_root: Path) -> None:
+    script = _repo_root() / "scripts" / "install_doom_probe.sh"
+    try:
+        subprocess.run([str(script), str(source_root)], check=True)
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(
+            f"WarGames Doom state exporter build failed with exit code {exc.returncode}"
+        ) from exc
+
+
+def _install_supertux_probe(source_root: Path) -> None:
+    script = _repo_root() / "scripts" / "install_supertux_probe.sh"
+    try:
+        subprocess.run([str(script), str(source_root)], check=True)
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(
+            f"WarGames SuperTux state exporter build failed with exit code {exc.returncode}"
+        ) from exc
+
+
+def _build_mindustry_probe(root: Path, server_jar: Path) -> Path:
+    source_root = _repo_root() / "wargames" / "games" / "mindustry" / "plugin"
+    output = root / "home" / ".local" / "share" / "Mindustry" / "mods" / "wargames-mindustry-state.jar"
+    output.parent.mkdir(parents=True, exist_ok=True)
+    java_files = [str(path) for path in sorted((source_root / "src").rglob("*.java"))]
+    if not java_files:
+        raise SystemExit(f"Mindustry WarGames plugin sources are missing: {source_root}")
+    classes = root / "plugin-classes"
+    shutil.rmtree(classes, ignore_errors=True)
+    classes.mkdir(parents=True)
+    try:
+        subprocess.run(
+            ["javac", "-cp", str(server_jar), "-d", str(classes), *java_files],
+            check=True,
+        )
+        manifest = source_root / "plugin.json"
+        subprocess.run(
+            ["jar", "cf", str(output), "-C", str(classes), ".", "-C", str(source_root), manifest.name],
+            check=True,
+        )
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(
+            f"WarGames Mindustry state plugin build failed with exit code {exc.returncode}"
+        ) from exc
+    finally:
+        shutil.rmtree(classes, ignore_errors=True)
+    return output
 
 
 def _normalize_zeroad_premake_version(source_root: Path, *, jobs: str) -> None:
@@ -1097,6 +1402,110 @@ def _install_freeciv(args: argparse.Namespace, env: Mapping[str, str] = os.envir
     return 0
 
 
+def _install_doom(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
+    from wargames.games.doom.missions import discover_iwads
+
+    root = Path(args.root).expanduser() if args.root else None
+    source_root = (
+        root if root and (root / "CMakeLists.txt").exists() else _default_doom_source_root(env)
+    )
+    status = "present"
+
+    if not source_root.exists():
+        _clone_doom_source(source_root)
+        status = "installed"
+    elif not _is_doom_root(source_root):
+        raise SystemExit(f"Chocolate Doom source path is not a source checkout: {source_root}")
+
+    _install_doom_probe(source_root)
+    binary = _find_doom_binary(source_root)
+    if binary is None:
+        raise SystemExit(f"Chocolate Doom build did not produce a binary under {source_root}")
+
+    iwads = discover_iwads(None)
+    if not iwads:
+        raise SystemExit("Freedoom IWADs were not found in the Doom runtime image")
+
+    payload = {
+        "game": "doom",
+        "binary": str(binary),
+        "root": str(_doom_root(binary, source_root)),
+        "source_root": str(source_root),
+        "iwad": str(iwads[0]),
+        "state_interface": "WarGames in-process Doom state exporter",
+        "status": status,
+    }
+    _write_game_install_manifest("doom", payload, env)
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0
+
+
+def _install_supertux(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
+    root = Path(args.root).expanduser() if args.root else None
+    source_root = (
+        root if root and (root / "CMakeLists.txt").exists() else _default_supertux_source_root(env)
+    )
+    status = "present"
+
+    if not source_root.exists():
+        _clone_supertux_source(source_root)
+        status = "installed"
+    elif not _is_supertux_root(source_root):
+        raise SystemExit(f"SuperTux source path is not a source checkout: {source_root}")
+
+    _install_supertux_probe(source_root)
+    binary = _find_supertux_binary(source_root)
+    if binary is None:
+        raise SystemExit(f"SuperTux build did not produce a binary under {source_root}")
+
+    data_dir = source_root / "data"
+    if not (data_dir / "levels").exists():
+        raise SystemExit(f"SuperTux data directory is missing under {source_root}")
+
+    payload = {
+        "game": "supertux",
+        "binary": str(binary),
+        "root": str(_supertux_root(binary, source_root)),
+        "source_root": str(source_root),
+        "data_dir": str(data_dir),
+        "state_interface": "WarGames in-process SuperTux state exporter",
+        "status": status,
+    }
+    _write_game_install_manifest("supertux", payload, env)
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0
+
+
+def _install_mindustry(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
+    root = Path(args.root).expanduser() if args.root else _default_mindustry_root(env)
+    install_root = root.parent if root.exists() and root.is_file() else root
+    client = _find_mindustry_client(root)
+    server = _find_mindustry_server(root)
+    status = "present"
+    if client is None:
+        client = install_root / "Mindustry.jar"
+        _download_mindustry_client(client)
+        status = "installed"
+    if server is None:
+        server = install_root / "server-release.jar"
+        _download_mindustry_server(server)
+        status = "installed"
+    plugin = _build_mindustry_probe(install_root, server)
+    payload = {
+        "game": "mindustry",
+        "client_jar": str(client),
+        "server_jar": str(server),
+        "root": str(install_root),
+        "plugin": str(plugin),
+        "version": _MINDUSTRY_VERSION,
+        "state_interface": "Mindustry headless server plugin JSONL state exporter",
+        "status": status,
+    }
+    _write_game_install_manifest("mindustry", payload, env)
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0
+
+
 async def _install(args: argparse.Namespace) -> int:
     if os.environ.get(_LINUX_BOX_ENV) != "1" and not args.root:
         raise SystemExit(
@@ -1113,6 +1522,12 @@ async def _install(args: argparse.Namespace) -> int:
         return await asyncio.to_thread(_install_zeroad, args)
     if args.game == "freeciv":
         return await asyncio.to_thread(_install_freeciv, args)
+    if args.game == "doom":
+        return await asyncio.to_thread(_install_doom, args)
+    if args.game == "supertux":
+        return await asyncio.to_thread(_install_supertux, args)
+    if args.game == "mindustry":
+        return await asyncio.to_thread(_install_mindustry, args)
     raise SystemExit(f"unknown game: {args.game}")
 
 
@@ -1451,6 +1866,12 @@ async def _serve(args: argparse.Namespace) -> int:
         from wargames.games.zeroad.transport.ws import app
     elif args.game == "freeciv":
         from wargames.games.freeciv.transport.ws import app
+    elif args.game == "doom":
+        from wargames.games.doom.transport.ws import app
+    elif args.game == "supertux":
+        from wargames.games.supertux.transport.ws import app
+    elif args.game == "mindustry":
+        from wargames.games.mindustry.transport.ws import app
     else:
         raise SystemExit(f"unknown game: {args.game}")
 

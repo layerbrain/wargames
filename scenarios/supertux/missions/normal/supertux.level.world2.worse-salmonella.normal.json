@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.world2.worse-salmonella.normal",
+  "level_file": "levels/world2/worse_salmonella.stl",
+  "level_set": "world2",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "world2",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 80,
+  "time_limit_ticks": 6000,
+  "title": "Worse Than Salmonella (Normal)"
+}

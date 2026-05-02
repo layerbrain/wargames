@@ -1,0 +1,21 @@
+{
+  "content": "freedoom1",
+  "difficulty": "hard",
+  "episode": 4,
+  "game": "doom",
+  "id": "doom.episode.e4m7.hard",
+  "iwad": "/usr/share/games/doom/freedoom1.wad",
+  "map": "E4M7",
+  "map_number": 7,
+  "native_difficulty": "4",
+  "skill": 4,
+  "source": "builtin",
+  "tags": [
+    "freedoom1",
+    "e4m7",
+    "fps",
+    "freedoom"
+  ],
+  "time_limit_ticks": 31500,
+  "title": "Freedoom Phase 1 E4M7 (Hard)"
+}

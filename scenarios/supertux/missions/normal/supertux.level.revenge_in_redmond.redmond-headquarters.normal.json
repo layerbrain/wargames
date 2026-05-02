@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.revenge_in_redmond.redmond-headquarters.normal",
+  "level_file": "levels/revenge_in_redmond/redmond_headquarters.stl",
+  "level_set": "revenge_in_redmond",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "revenge_in_redmond",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 52,
+  "time_limit_ticks": 3900,
+  "title": "Redmond Headquarters (Normal)"
+}

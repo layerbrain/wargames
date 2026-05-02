@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.world2.find-bigger-fish.easy",
+  "level_file": "levels/world2/find_bigger_fish.stl",
+  "level_set": "world2",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "world2",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 80,
+  "time_limit_ticks": 8400,
+  "title": "Find the Bigger Fish! (Easy)"
+}

@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.world1.into-stars.easy",
+  "level_file": "levels/world1/into_stars.stl",
+  "level_set": "world1",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "world1",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 65,
+  "time_limit_ticks": 6825,
+  "title": "Into the Stars (Easy)"
+}

@@ -11,14 +11,16 @@ Bring your own trainer or use the Prime RL adapter in this repo.
 ```text
                     +-----------------------------+
                     |        Game process         |
-                    | OpenRA, FlightGear, STK, Freeciv |
+                    | OpenRA, FlightGear, STK,    |
+                    | Freeciv, Doom, SuperTux,    |
+                    | Mindustry                   |
                     +--------------+--------------+
                                    |
                  capture           |          scoring state
             +---------------+      |      +-------------------+
             | window pixels | <----+----> | probe: units,     |
             |   1280x720    |             | flight telemetry, |
-            +-------+-------+             | kart state        |
+            +-------+-------+             | gameplay state    |
                                            +---------+---------+
                     |                               |
                     v                               v
@@ -45,6 +47,9 @@ reward your trainer consumes.
 | SuperTuxKart | Real-time 3D kart racing | 63 | [docs/games/supertuxkart.md](docs/games/supertuxkart.md) |
 | 0 A.D. | Real-time ancient warfare | 390 | [docs/games/zeroad.md](docs/games/zeroad.md) |
 | Freeciv | Low-memory turn-based empire strategy | 12 | [docs/games/freeciv.md](docs/games/freeciv.md) |
+| Doom | First-person arcade combat | 204 | [docs/games/doom.md](docs/games/doom.md) |
+| SuperTux | Side-scrolling platformer | 321 | [docs/games/supertux.md](docs/games/supertux.md) |
+| Mindustry | Pixel-control factory survival | 27 | [docs/games/mindustry.md](docs/games/mindustry.md) |
 
 A run is four pieces: a game, a mission, a reward profile, and an agent.
 
@@ -66,6 +71,9 @@ wargames install --game flightgear
 wargames install --game supertuxkart
 wargames install --game zeroad
 wargames install --game freeciv
+wargames install --game doom
+wargames install --game supertux
+wargames install --game mindustry
 ```
 
 Run a SuperTuxKart episode:
@@ -86,6 +94,9 @@ wargames missions --game flightgear
 wargames missions --game supertuxkart
 wargames missions --game zeroad
 wargames missions --game freeciv
+wargames missions --game doom
+wargames missions --game supertux
+wargames missions --game mindustry
 ```
 
 ## Run Your Own Model
@@ -185,11 +196,14 @@ symbol keys, `Control`, `Shift`, `Alt`, `Meta`, `Enter`, `Escape`, `Space`,
 ## Missions
 
 A mission is exported game content - a Red Alert map, a FlightGear C172P
-tutorial, a SuperTuxKart race track, a 0 A.D. map, or a Freeciv scenario -
-wrapped with a difficulty, a step budget, a wall-clock budget, and a starting reward profile.
+tutorial, a SuperTuxKart race track, a 0 A.D. map, a Freeciv scenario, a Doom
+map, a SuperTux level, or a Mindustry survival map - wrapped with a difficulty,
+a step budget, a wall-clock budget, and a starting reward profile.
 Mission IDs look like `redalert.soviet-01.normal`,
 `flightgear.c172p.tutorial.takeoff`, `supertuxkart.race.lighthouse.normal`,
-`zeroad.scenario.arcadia.normal`, or `freeciv.scenario.earth-small` and are the same string you pass to
+`zeroad.scenario.arcadia.normal`, `freeciv.scenario.earth-small`,
+`doom.map.map01.easy`, `supertux.level.world1.welcome-antarctica.normal`, and
+`mindustry.survival.veins.normal`. They are the same string you pass to
 `--mission`, the WebSocket `create_session` op, and Prime RL configs.
 
 ```bash
@@ -198,6 +212,9 @@ wargames missions --game flightgear
 wargames missions --game supertuxkart
 wargames missions --game zeroad
 wargames missions --game freeciv
+wargames missions --game doom
+wargames missions --game supertux
+wargames missions --game mindustry
 ```
 
 Mission JSON lives in `scenarios/<game>/missions/<difficulty>/`. Catalogs are
@@ -225,6 +242,9 @@ Shipped profiles:
 | SuperTuxKart | `standard` |
 | 0 A.D. | `standard` |
 | Freeciv | `standard` |
+| Doom | `standard` |
+| SuperTux | `standard` |
+| Mindustry | `standard` |
 
 ```bash
 wargames profile list --game redalert
@@ -232,6 +252,9 @@ wargames profile list --game flightgear
 wargames profile list --game supertuxkart
 wargames profile list --game zeroad
 wargames profile list --game freeciv
+wargames profile list --game doom
+wargames profile list --game supertux
+wargames profile list --game mindustry
 wargames profile validate scenarios/redalert/profiles/protective.yaml
 ```
 

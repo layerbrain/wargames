@@ -1,0 +1,18 @@
+{
+  "difficulty": "hard",
+  "game": "mindustry",
+  "id": "mindustry.survival.islands.hard",
+  "map_name": "Islands",
+  "mode": "survival",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "factory",
+    "tower-defense",
+    "survival",
+    "win-wave:40"
+  ],
+  "time_limit_ticks": 72000,
+  "title": "Islands Survival (Hard)",
+  "win_wave": 40
+}

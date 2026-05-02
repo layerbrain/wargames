@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "normal",
+  "game": "supertux",
+  "id": "supertux.level.world2.ancient-ruin.normal",
+  "level_file": "levels/world2/ancient_ruin.stl",
+  "level_set": "world2",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "world2",
+    "platforming",
+    "platformer"
+  ],
+  "target_time_seconds": 420,
+  "time_limit_ticks": 31500,
+  "title": "Ancient Ruin (Normal)"
+}

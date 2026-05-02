@@ -1,0 +1,4 @@
+id: doom-controls
+kind: subprocess
+description: Scripted Doom proof agent that moves, turns, fires, and uses a door key.
+command: ["python", "examples/agents/doom_controls.py"]

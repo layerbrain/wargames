@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.world1.shattered-bridge.easy",
+  "level_file": "levels/world1/shattered_bridge.stl",
+  "level_set": "world1",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "world1",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 80,
+  "time_limit_ticks": 8400,
+  "title": "Shattered Bridge (Easy)"
+}

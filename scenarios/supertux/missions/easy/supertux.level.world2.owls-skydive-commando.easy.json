@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.world2.owls-skydive-commando.easy",
+  "level_file": "levels/world2/owls_skydive_commando.stl",
+  "level_set": "world2",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "world2",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 160,
+  "time_limit_ticks": 16800,
+  "title": "Owls' Skydive Commando (Easy)"
+}

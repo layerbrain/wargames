@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "hard",
+  "game": "supertux",
+  "id": "supertux.level.world2.penguin-on-tree.hard",
+  "level_file": "levels/world2/penguin_on_tree.stl",
+  "level_set": "world2",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "world2",
+    "speedrun",
+    "platformer"
+  ],
+  "target_time_seconds": 90,
+  "time_limit_ticks": 5400,
+  "title": "Penguins Don't Grow On Trees (Hard)"
+}

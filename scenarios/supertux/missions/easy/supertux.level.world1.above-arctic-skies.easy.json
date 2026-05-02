@@ -1,0 +1,18 @@
+{
+  "data_dir": "/tmp/wargames-supertux/data",
+  "difficulty": "easy",
+  "game": "supertux",
+  "id": "supertux.level.world1.above-arctic-skies.easy",
+  "level_file": "levels/world1/above_arctic_skies.stl",
+  "level_set": "world1",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "world1",
+    "training",
+    "platformer"
+  ],
+  "target_time_seconds": 60,
+  "time_limit_ticks": 6300,
+  "title": "Above the Antarctic Skies (Easy)"
+}
