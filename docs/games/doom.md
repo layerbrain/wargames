@@ -2,10 +2,11 @@
 
 Doom is the fast first-person arcade environment in WarGames.
 
-WarGames runs Chocolate Doom with Freedoom IWADs, captures the game window as
-pixels, applies keyboard and mouse events, and reads trusted state from a
-WarGames exporter compiled into Chocolate Doom. Agent observations contain
-pixels only; exporter state is hidden and used only by evaluation.
+WarGames runs Chocolate Doom with Freedoom IWADs. Missions cover map traversal,
+combat, survival, pickups, secrets, and exits.
+
+Rewards use trusted state from a WarGames exporter compiled into Chocolate
+Doom: health, armor, ammo, kills, secrets, items, map progress, and exit state.
 
 ![Doom control proof](../assets/doom-control-proof.mp4)
 

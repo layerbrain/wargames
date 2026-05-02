@@ -1,9 +1,11 @@
 # Red Alert
 
-Red Alert is the first WarGames environment.
+Red Alert is the OpenRA real-time strategy environment in WarGames. Missions
+cover campaign and skirmish maps with scouting, base building, resource
+collection, unit production, and combat.
 
-WarGames captures the OpenRA window as pixels, applies mouse and keyboard
-actions, and reads OpenRA state for rewards.
+Rewards use OpenRA state such as units, resources, objectives, and win/defeat
+state.
 
 ![Red Alert control demo](../assets/redalert-control-demo.gif)
 

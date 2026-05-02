@@ -1,10 +1,11 @@
 # SuperTuxKart
 
-SuperTuxKart is the kart-racing environment in WarGames.
+SuperTuxKart is the kart-racing environment in WarGames. Missions cover track
+races with multiple difficulty settings, lap counts, opponents, and race
+progression.
 
-WarGames captures the race window as pixels, applies keyboard and mouse events,
-and reads kart state for rewards: position, speed, lap, rank, powerups,
-contact state, and race progress.
+Rewards use kart state such as position, speed, lap, rank, powerups, contact
+state, and race progress.
 
 ![SuperTuxKart control demo](../assets/supertuxkart-control-demo.gif)
 

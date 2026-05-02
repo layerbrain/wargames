@@ -1,9 +1,10 @@
 # FlightGear
 
-FlightGear is the first flight simulator in WarGames.
+FlightGear is the C172P flight simulator environment in WarGames. Missions cover
+takeoff, traffic-pattern flying, approach control, and landing.
 
-WarGames captures the cockpit as pixels, applies keyboard and mouse controls,
-and reads FlightGear telemetry for rewards.
+Rewards use FlightGear telemetry such as altitude, airspeed, heading, position,
+vertical speed, runway alignment, and touchdown state.
 
 ![FlightGear control demo](../assets/flightgear-c172p-control-demo.gif)
 

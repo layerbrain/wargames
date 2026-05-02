@@ -2,10 +2,12 @@
 
 SuperTux is the side-scrolling platformer environment in WarGames.
 
-WarGames runs SuperTux in a Linux/Xvfb runtime, captures the game window as
-pixels, applies keyboard and mouse events, and scores rewards from a WarGames
-state exporter compiled into SuperTux. Agent observations contain pixels only;
-exporter state is hidden and used only by evaluation.
+Missions cover official SuperTux levels with movement, jumping, enemies,
+collectibles, checkpoint progress, and level completion.
+
+Rewards use trusted state from a WarGames exporter compiled into SuperTux:
+position, velocity, coins, enemies, checkpoint progress, death state, and level
+completion.
 
 ![SuperTux control proof](../assets/supertux-control-proof.mp4)
 

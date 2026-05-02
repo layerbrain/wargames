@@ -2,7 +2,7 @@
 
 WarGames turns real-time games into computer-use RL environments.
 
-WarGames launches the game, captures pixels, applies mouse and keyboard
+WarGames launches the game, captures rendered frames, applies mouse and keyboard
 events, records the episode, and scores rewards from trusted per-game probes.
 Bring your own trainer or use the Prime RL adapter in this repo.
 
@@ -18,7 +18,7 @@ Bring your own trainer or use the Prime RL adapter in this repo.
                                    |
                  capture           |          scoring state
             +---------------+      |      +-------------------+
-            | window pixels | <----+----> | probe: units,     |
+            | rendered frame| <----+----> | probe: units,     |
             |   1280x720    |             | flight telemetry, |
             +-------+-------+             | gameplay state    |
                                            +---------+---------+
@@ -49,7 +49,7 @@ reward your trainer consumes.
 | Freeciv | Low-memory turn-based empire strategy | 12 | [docs/games/freeciv.md](docs/games/freeciv.md) |
 | Doom | First-person arcade combat | 204 | [docs/games/doom.md](docs/games/doom.md) |
 | SuperTux | Side-scrolling platformer | 321 | [docs/games/supertux.md](docs/games/supertux.md) |
-| Mindustry | Pixel-control factory survival | 27 | [docs/games/mindustry.md](docs/games/mindustry.md) |
+| Mindustry | Automation and base defense | 27 | [docs/games/mindustry.md](docs/games/mindustry.md) |
 
 A run is four pieces: a game, a mission, a reward profile, and an agent.
 
