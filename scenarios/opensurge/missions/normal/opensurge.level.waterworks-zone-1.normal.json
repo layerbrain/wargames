@@ -1,0 +1,19 @@
+{
+  "act": 1,
+  "data_dir": null,
+  "difficulty": "normal",
+  "game": "opensurge",
+  "id": "opensurge.level.waterworks-zone-1.normal",
+  "level_file": "levels/waterworks-zone-1.lev",
+  "level_set": "builtin",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "platformer",
+    "running",
+    "momentum"
+  ],
+  "target_time_seconds": 171,
+  "time_limit_ticks": 12825,
+  "title": "Waterworks Zone Act 1 (Normal)"
+}

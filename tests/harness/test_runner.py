@@ -98,7 +98,12 @@ class RunnerTests(unittest.IsolatedAsyncioTestCase):
             async with WarGames.for_game(game, RedAlertConfig(capture_frames=True)) as wg:
                 summary = await run_task(
                     task=task,
-                    run_config=RunConfig(recorder_mode="full", video_mode="frames", out_dir=tmp),
+                    run_config=RunConfig(
+                        recorder_mode="full",
+                        video_mode="frames",
+                        audio_mode="chunks",
+                        out_dir=tmp,
+                    ),
                     wg=wg,
                     agent=WaitAgent(max_steps=2),
                 )
@@ -106,7 +111,9 @@ class RunnerTests(unittest.IsolatedAsyncioTestCase):
             run_dir = Path(tmp) / summary.run_id
             events = (run_dir / "events.jsonl").read_text(encoding="utf-8")
             rewards = (run_dir / "rewards.jsonl").read_text(encoding="utf-8")
+            audio = sorted((run_dir / "audio").glob("*.raw"))
 
         self.assertNotIn("hidden", events)
         self.assertNotIn("world", events)
         self.assertIn("delta_units_killed", rewards)
+        self.assertTrue(audio)

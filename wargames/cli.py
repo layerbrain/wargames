@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from wargames import GameDescriptor, WarGames, WarGamesConfig
+from wargames.core.capture.audio import AudioChunk
 from wargames.core.capture.frame import Frame
 from wargames.evaluation.profile import profile_registry
 from wargames.evaluation.schema import GameRewardSchema
@@ -111,6 +112,12 @@ _LINUX_BOX_RUNTIMES = {
         base_image="wargames-linux-base-amd64",
         platform="linux/amd64",
     ),
+    "opensurge": LinuxBoxRuntime(
+        game="opensurge",
+        image="wargames-linux-opensurge",
+        dockerfile="docker/opensurge/Dockerfile",
+        cache_volume="wargames-opensurge",
+    ),
 }
 _OPENRA_REPO = "https://github.com/OpenRA/OpenRA.git"
 _OPENRA_REF = "bleed"
@@ -127,6 +134,8 @@ _CRAFTIUM_VERSION = "0.0.1"
 _CRAFTIUM_REF = "v0.0.1"
 _CRAFTIUM_REPO = "https://github.com/mikelma/craftium.git"
 _IKEMEN_VERSION = "v0.99.0"
+_OPENSURGE_REPO = "https://github.com/alemart/opensurge.git"
+_OPENSURGE_REF = "v0.6.1.3"
 
 
 def _game(id: str) -> GameDescriptor:
@@ -177,6 +186,10 @@ def _reward_schema(game: str) -> GameRewardSchema:
         from wargames.games.ikemen.reward_schema import IKEMEN_REWARD_SCHEMA
 
         return IKEMEN_REWARD_SCHEMA
+    if game == "opensurge":
+        from wargames.games.opensurge.reward_schema import OPENSURGE_REWARD_SCHEMA
+
+        return OPENSURGE_REWARD_SCHEMA
     raise SystemExit(f"unknown game: {game}")
 
 
@@ -207,6 +220,26 @@ def _frame_payload(frame: Frame | None) -> dict[str, Any] | None:
         payload["image_b64"] = frame.image_b64
     elif frame.image_path:
         payload["image_b64"] = base64.b64encode(Path(frame.image_path).read_bytes()).decode()
+    return payload
+
+
+def _audio_payload(audio: AudioChunk | None) -> dict[str, Any] | None:
+    if audio is None:
+        return None
+    payload: dict[str, Any] = {
+        "id": audio.id,
+        "captured_tick": audio.captured_tick,
+        "sample_rate": audio.sample_rate,
+        "channels": audio.channels,
+        "sample_width": audio.sample_width,
+        "duration_seconds": audio.duration_seconds,
+        "mime": audio.mime,
+        "audio_path": audio.audio_path,
+    }
+    if audio.audio_b64:
+        payload["audio_b64"] = audio.audio_b64
+    elif audio.audio_path:
+        payload["audio_b64"] = base64.b64encode(Path(audio.audio_path).read_bytes()).decode()
     return payload
 
 
@@ -364,6 +397,10 @@ def _is_doom_root(path: Path) -> bool:
 
 def _is_supertux_root(path: Path) -> bool:
     return path.name == "supertux2" or (path / "src" / "supertux" / "game_session.cpp").exists()
+
+
+def _is_opensurge_root(path: Path) -> bool:
+    return path.name == "opensurge" or (path / "src" / "scenes" / "level.c").exists()
 
 
 def _is_mindustry_root(path: Path) -> bool:
@@ -524,6 +561,26 @@ def _find_supertux_binary(root: Path | None = None) -> Path | None:
     return None
 
 
+def _find_opensurge_binary(root: Path | None = None) -> Path | None:
+    candidates: list[Path | str | None] = [
+        root if root and root.is_file() and root.name == "opensurge" else None,
+        root / "opensurge" if root and not root.is_file() else None,
+        root / "build" / "opensurge" if root and not root.is_file() else None,
+        root / "cmake_build" / "opensurge" if root and not root.is_file() else None,
+        root / "bin" / "opensurge" if root and not root.is_file() else None,
+        _default_opensurge_source_root() / "opensurge",
+        shutil.which("opensurge"),
+        "/usr/games/opensurge",
+        "/usr/bin/opensurge",
+    ]
+    for candidate in candidates:
+        if candidate:
+            path = Path(candidate).expanduser()
+            if path.exists():
+                return path
+    return None
+
+
 def _find_mindustry_server(root: Path | None = None) -> Path | None:
     candidates: list[Path | str | None] = [
         root if root and root.is_file() and root.name == "server-release.jar" else None,
@@ -633,6 +690,14 @@ def _supertux_root(binary: Path, root: Path | None = None) -> Path:
     return binary.parent
 
 
+def _opensurge_root(binary: Path, root: Path | None = None) -> Path:
+    if root is not None and not root.is_file():
+        return root
+    if binary.parent.name in {"build", "cmake_build", "bin"}:
+        return binary.parent.parent
+    return binary.parent
+
+
 def _default_supertuxkart_source_root(env: Mapping[str, str] = os.environ) -> Path:
     return _game_install_dir("supertuxkart", env) / "stk-code"
 
@@ -647,6 +712,10 @@ def _default_doom_source_root(env: Mapping[str, str] = os.environ) -> Path:
 
 def _default_supertux_source_root(env: Mapping[str, str] = os.environ) -> Path:
     return _game_install_dir("supertux", env) / "supertux"
+
+
+def _default_opensurge_source_root(env: Mapping[str, str] = os.environ) -> Path:
+    return _game_install_dir("opensurge", env) / "opensurge"
 
 
 def _default_mindustry_root(env: Mapping[str, str] = os.environ) -> Path:
@@ -738,6 +807,7 @@ def _runtime_resolution(env: Mapping[str, str] = os.environ) -> tuple[int, int]:
         "LAYERBRAIN_WARGAMES_DOOM_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_SUPERTUX_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_IKEMEN_WINDOW_SIZE",
+        "LAYERBRAIN_WARGAMES_OPENSURGE_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_FLIGHTGEAR_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_XVFB_RESOLUTION",
     ):
@@ -867,6 +937,13 @@ def _linux_box_command(
             env[key] = value
     env["LAYERBRAIN_WARGAMES_GAME"] = active_runtime.game
     active_resolution = resolution or _runtime_resolution(env)
+    if (
+        active_runtime.game == "opensurge"
+        and active_resolution == _LINUX_BOX_DEFAULT_RESOLUTION
+        and "LAYERBRAIN_WARGAMES_OPENSURGE_WINDOW_SIZE" not in env
+        and "LAYERBRAIN_WARGAMES_XVFB_RESOLUTION" not in env
+    ):
+        active_resolution = (1280, 960)
     env["LAYERBRAIN_WARGAMES_CACHE_DIR"] = _LINUX_BOX_CACHE_MOUNT
     env.setdefault("LAYERBRAIN_WARGAMES_XVFB_RESOLUTION", _resolution_text(active_resolution))
     env.setdefault("LAYERBRAIN_WARGAMES_XVFB_SCREEN", f"{_resolution_text(active_resolution)}x24")
@@ -884,6 +961,7 @@ def _linux_box_command(
     env.setdefault("LAYERBRAIN_WARGAMES_DOOM_WINDOW_SIZE", _resolution_text(active_resolution))
     env.setdefault("LAYERBRAIN_WARGAMES_SUPERTUX_WINDOW_SIZE", _resolution_text(active_resolution))
     env.setdefault("LAYERBRAIN_WARGAMES_IKEMEN_WINDOW_SIZE", _resolution_text(active_resolution))
+    env.setdefault("LAYERBRAIN_WARGAMES_OPENSURGE_WINDOW_SIZE", _resolution_text(active_resolution))
     if stream_port is not None:
         env["LAYERBRAIN_WARGAMES_HOST_STREAM_URL"] = (
             f"udp://host.docker.internal:{stream_port}?pkt_size=1316"
@@ -1053,6 +1131,27 @@ def _clone_supertux_source(target: Path) -> None:
         raise SystemExit(f"SuperTux clone failed with exit code {exc.returncode}") from exc
 
 
+def _clone_opensurge_source(target: Path) -> None:
+    git = shutil.which("git")
+    if git is None:
+        raise SystemExit("git is required to install Open Surge")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    command = [
+        git,
+        "clone",
+        "--depth",
+        "1",
+        "--branch",
+        _OPENSURGE_REF,
+        _OPENSURGE_REPO,
+        str(target),
+    ]
+    try:
+        subprocess.run(command, check=True)
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(f"Open Surge clone failed with exit code {exc.returncode}") from exc
+
+
 def _download_mindustry_server(target: Path) -> None:
     curl = shutil.which("curl")
     if curl is None:
@@ -1198,6 +1297,16 @@ def _install_supertux_probe(source_root: Path) -> None:
     except subprocess.CalledProcessError as exc:
         raise SystemExit(
             f"WarGames SuperTux state exporter build failed with exit code {exc.returncode}"
+        ) from exc
+
+
+def _install_opensurge_probe(source_root: Path) -> None:
+    script = _repo_root() / "scripts" / "install_opensurge_probe.sh"
+    try:
+        subprocess.run([str(script), str(source_root)], check=True)
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(
+            f"WarGames Open Surge state exporter build failed with exit code {exc.returncode}"
         ) from exc
 
 
@@ -1561,6 +1670,42 @@ def _install_supertux(args: argparse.Namespace, env: Mapping[str, str] = os.envi
     return 0
 
 
+def _install_opensurge(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
+    root = Path(args.root).expanduser() if args.root else None
+    source_root = (
+        root if root and (root / "CMakeLists.txt").exists() else _default_opensurge_source_root(env)
+    )
+    status = "present"
+
+    if not source_root.exists():
+        _clone_opensurge_source(source_root)
+        status = "installed"
+    elif not _is_opensurge_root(source_root):
+        raise SystemExit(f"Open Surge source path is not a source checkout: {source_root}")
+
+    _install_opensurge_probe(source_root)
+    binary = _find_opensurge_binary(source_root)
+    if binary is None:
+        raise SystemExit(f"Open Surge build did not produce a binary under {source_root}")
+
+    data_dir = source_root
+    if not (data_dir / "levels").exists():
+        raise SystemExit(f"Open Surge levels directory is missing under {source_root}")
+
+    payload = {
+        "game": "opensurge",
+        "binary": str(binary),
+        "root": str(_opensurge_root(binary, source_root)),
+        "source_root": str(source_root),
+        "data_dir": str(data_dir),
+        "state_interface": "WarGames in-process Open Surge state exporter",
+        "status": status,
+    }
+    _write_game_install_manifest("opensurge", payload, env)
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0
+
+
 def _install_mindustry(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
     root = Path(args.root).expanduser() if args.root else _default_mindustry_root(env)
     install_root = root.parent if root.exists() and root.is_file() else root
@@ -1657,6 +1802,8 @@ async def _install(args: argparse.Namespace) -> int:
         return await asyncio.to_thread(_install_doom, args)
     if args.game == "supertux":
         return await asyncio.to_thread(_install_supertux, args)
+    if args.game == "opensurge":
+        return await asyncio.to_thread(_install_opensurge, args)
     if args.game == "mindustry":
         return await asyncio.to_thread(_install_mindustry, args)
     if args.game == "craftium":
@@ -1830,6 +1977,7 @@ async def _run(args: argparse.Namespace) -> int:
     run_config = RunConfig(
         recorder_mode=args.record,
         video_mode=args.video,
+        audio_mode=args.audio,
         frame_sample_rate=args.frame_sample_rate,
         write_trace=args.write_trace,
         out_dir=args.out,
@@ -1908,6 +2056,9 @@ async def _export(args: argparse.Namespace) -> int:
             ],
             check=True,
         )
+    audio = run_root / "audio"
+    if audio.exists():
+        shutil.copytree(audio, out / "audio", dirs_exist_ok=True)
     print(json.dumps({"exported": str(out)}, sort_keys=True))
     return 0
 
@@ -1929,6 +2080,7 @@ async def _boot(args: argparse.Namespace) -> int:
                         "event": "booted",
                         "mission": mission.session.mission.id,
                         "frame": _frame_payload(observation.frame),
+                        "audio": _audio_payload(observation.audio),
                     }
                 )
             )
@@ -1971,6 +2123,7 @@ async def _control(args: argparse.Namespace) -> int:
                             "finished": result.finished,
                             "truncated": result.truncated,
                             "frame": _frame_payload(result.frame),
+                            "audio": _audio_payload(result.audio),
                             "events_applied": events_applied,
                         },
                         sort_keys=True,
@@ -2005,6 +2158,8 @@ async def _serve(args: argparse.Namespace) -> int:
         from wargames.games.doom.transport.ws import app
     elif args.game == "supertux":
         from wargames.games.supertux.transport.ws import app
+    elif args.game == "opensurge":
+        from wargames.games.opensurge.transport.ws import app
     elif args.game == "mindustry":
         from wargames.games.mindustry.transport.ws import app
     elif args.game == "craftium":
@@ -2057,6 +2212,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--watch", choices=("none", "window", "hud"), default="none")
     run.add_argument("--record", choices=("none", "summary_only", "full"), default="summary_only")
     run.add_argument("--video", choices=("none", "frames"), default="none")
+    run.add_argument("--audio", choices=("none", "chunks"), default="none")
     run.add_argument("--frame-sample-rate", type=int, default=1)
     run.add_argument("--write-trace", action="store_true")
     run.add_argument("--out", default="runs")
@@ -2122,20 +2278,20 @@ def build_parser() -> argparse.ArgumentParser:
     boot.add_argument("--game", choices=_TASK_GAMES, default="redalert")
     boot.add_argument("--mission")
     boot.add_argument("--seed", type=int, default=0, help=argparse.SUPPRESS)
-    boot.add_argument("--watch", dest="watch", action="store_true", default=True)
+    boot.add_argument("--watch", dest="watch", action="store_true", default=False)
     boot.add_argument("--no-watch", dest="watch", action="store_false")
     boot.add_argument("--capture-frames", action="store_true")
     boot.add_argument("--hold", type=float, default=300.0)
     boot.set_defaults(handler=_boot)
 
     control = subcommands.add_parser(
-        "control", help="dispatch primitive CUA events from JSON lines"
+        "control", help="dispatch keyboard and mouse events from JSON lines"
     )
     control.add_argument("--game", choices=_TASK_GAMES, default="redalert")
     control.add_argument("--mission")
     control.add_argument("--seed", type=int, default=0, help=argparse.SUPPRESS)
     control.add_argument("--actions", required=True)
-    control.add_argument("--watch", dest="watch", action="store_true", default=True)
+    control.add_argument("--watch", dest="watch", action="store_true", default=False)
     control.add_argument("--no-watch", dest="watch", action="store_false")
     control.add_argument("--capture-frames", action="store_true")
     control.set_defaults(handler=_control)

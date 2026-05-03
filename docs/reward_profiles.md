@@ -82,7 +82,7 @@ entries:
 | `fn` | dotted path | yes | Python function that returns a `RubricEntry` or callable scorer. |
 | `args` | mapping | no | Keyword args passed to `fn`. Use this for objective IDs or custom primitive settings. |
 | `weight` | float | no | Entry multiplier. Defaults to `1.0`. |
-| `when` | `per_step`/`terminal` | yes | `per_step` runs after each primitive event. `terminal` runs once in `finish()`. |
+| `when` | `per_step`/`terminal` | yes | `per_step` runs after each input event. `terminal` runs once in `finish()`. |
 
 ## Red Alert Reward Fields
 
@@ -352,6 +352,29 @@ The shipped IKEMEN GO profile includes `damage_dealt`, `damage_taken`,
 `power_gain`, `time_penalty`, and `terminal`. Add shaping entries only after
 declaring the primitive in `wargames/games/ikemen/reward_schema.py`.
 
+## Open Surge Fields
+
+Open Surge rewards are computed from engine state exported each level tick.
+
+| Field | Direction | Meaning |
+|---|---|---|
+| `mission.finished` | maximize | Act cleared. |
+| `mission.failed` | minimize | Player death or runtime failure. |
+| `level.elapsed_ticks` | minimize | Elapsed level ticks. |
+| `level.width` | track | Level width. |
+| `player.x` | track | Player x position. |
+| `player.speed` | maximize | Player speed. |
+| `player.gsp` | track | Ground speed. |
+| `player.rings` | maximize | Current ring count. |
+| `player.score` | maximize | Current score. |
+| `player.lives` | maximize | Remaining lives. |
+| `player.dying` | minimize | Death state. |
+
+The shipped Open Surge profile includes `delta_rings`, `delta_score`,
+`progress_x`, `speed`, `death_penalty`, `time_penalty`, and `terminal`. Add
+shaping entries only after declaring the primitive in
+`wargames/games/opensurge/reward_schema.py`.
+
 ## Eval And RL
 
 Use dense shaping for training and sparse or mild profiles for reporting.
@@ -396,6 +419,7 @@ wargames reward-profile validate scenarios/supertux/profiles/standard.yaml --gam
 wargames reward-profile validate scenarios/mindustry/profiles/standard.yaml --game mindustry
 wargames reward-profile validate scenarios/craftium/profiles/standard.yaml --game craftium
 wargames reward-profile validate scenarios/ikemen/profiles/standard.yaml --game ikemen
+wargames reward-profile validate scenarios/opensurge/profiles/standard.yaml --game opensurge
 python -m unittest tests.evaluation.test_profiles -v
 ```
 

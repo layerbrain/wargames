@@ -1,6 +1,6 @@
 # WarGames Architecture
 
-WarGames is a primitive game environment runtime. Core owns universal CUA
+WarGames is a game environment runtime. Core owns universal CUA
 actions, process/capture/input plumbing, mission specs, typed results, lobby
 state, and WebSocket transport. Game packages own process launch, window lookup,
 probes, world types, mission discovery, and any game-specific lobby topology.
@@ -12,7 +12,7 @@ probes, world types, mission discovery, and any game-specific lobby topology.
   snapshot, previous hidden snapshot, finished/truncated flags, and info.
 - Hidden state is never serialized on the WebSocket.
 - Rewards are evaluator-side utilities, not runtime/session state.
-- The CLI has primitive commands only: `missions`, `boot`, `control`, `serve`.
+- The CLI exposes runtime commands: `missions`, `boot`, `control`, `serve`.
 - Test doubles are injected by tests; production config has no fake mode.
 
 ## Core Layout
@@ -37,8 +37,8 @@ harnesses.
 
 Each game lives under `wargames/games/<game>/`.
 
-- `backend.py` launches the game, wires input/capture/probe, and returns primitive
-  observations/results.
+- `backend.py` launches the game, wires input/capture/probe, and returns public
+  observations plus trusted step results.
 - `missions.py` discovers the shipped game content and exports WarGames missions.
 - `profiles.py` loads reward profiles from `scenarios/<game>/profiles/`.
 - `process.py` builds the game command and runtime environment.
@@ -69,10 +69,11 @@ scenarios/<game>/missions/extra_hard/
 ## WebSocket Modes
 
 `sampled`: the world keeps running. `observe` samples the latest frame, and
-`act` applies one primitive event or one event array, then returns an `action_result`.
+`act` applies one input event or one event array, then returns an `action_result`.
 
-`streaming`: the world keeps running and `subscribe_frames` pushes frame events
-at the requested FPS. `act` can be sent asynchronously while frames stream.
+`streaming`: the world keeps running and `subscribe_frames` pushes public output
+events at the requested FPS. Each event can include the latest frame and any
+captured audio chunk. `act` can be sent asynchronously while output streams.
 
 ## Verification
 

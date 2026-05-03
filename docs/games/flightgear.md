@@ -106,7 +106,7 @@ repeats.
 
 The observation has `task`, `frame.image_b64`, `history`, `step_index`, and
 `elapsed_seconds`. Your agent does not send that object back. It sends back
-one primitive event or one array of primitive events. The action set is the
+one keyboard/mouse event or one array of keyboard/mouse events. The action set is the
 fixed WarGames keyboard + mouse set.
 
 Trimmed observation your agent receives:
@@ -155,7 +155,7 @@ wargames run \
   --agent-dir .
 ```
 
-Send FlightGear controls as primitive events:
+Send FlightGear controls as input events:
 
 ```json
 {"name":"key_down","arguments":{"key":"PageUp"}}

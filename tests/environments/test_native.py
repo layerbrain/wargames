@@ -30,12 +30,14 @@ class NativeEnvironmentSyncTests(unittest.TestCase):
         self.assertEqual("redalert.soviet-01.normal", info["mission"])
         self.assertIn("wait", cast(tuple[str, ...], info["actions"]))
         self.assertIsNotNone(obs["frame"])
+        self.assertIsNotNone(obs["audio"])
 
         obs, reward, terminated, truncated, info = cast(EnvStepResult, env.step("wait"))
         self.assertIsInstance(reward, float)
         self.assertFalse(terminated)
         self.assertFalse(truncated)
         self.assertEqual(1, obs["step"])
+        self.assertIsNotNone(obs["audio"])
         self.assertNotIn("reward_breakdown", info)
         self.assertNotIn("summary", info)
         self.assertNotIn("hidden", repr(obs))
@@ -82,6 +84,7 @@ class NativeEnvironmentAsyncTests(unittest.IsolatedAsyncioTestCase):
         obs, info = await cast(Awaitable[StartResult], env.start())
         self.assertEqual("redalert", info["game"])
         self.assertIsNotNone(obs["frame"])
+        self.assertIsNotNone(obs["audio"])
 
         obs, reward, terminated, truncated, info = await cast(
             Awaitable[EnvStepResult], env.step(0)

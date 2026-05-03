@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Protocol
 
+from wargames.core.capture.audio import AudioChunk
 from wargames.core.capture.frame import Frame
 from wargames.core.control.tools import ToolSpec
 from wargames.evaluation.task import TaskSpec
@@ -33,6 +34,7 @@ class AgentObservation:
     history: tuple[PublicEvent, ...]
     step_index: int
     elapsed_seconds: float
+    audio: AudioChunk | None = None
 
 
 @dataclass(frozen=True)

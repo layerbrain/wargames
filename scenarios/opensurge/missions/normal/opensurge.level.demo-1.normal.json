@@ -1,0 +1,19 @@
+{
+  "act": 1,
+  "data_dir": null,
+  "difficulty": "normal",
+  "game": "opensurge",
+  "id": "opensurge.level.demo-1.normal",
+  "level_file": "levels/demo-1.lev",
+  "level_set": "builtin",
+  "native_difficulty": "normal",
+  "source": "builtin",
+  "tags": [
+    "platformer",
+    "running",
+    "momentum"
+  ],
+  "target_time_seconds": 55,
+  "time_limit_ticks": 4125,
+  "title": "Demo Level Act 1 (Normal)"
+}

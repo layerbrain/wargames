@@ -9,6 +9,7 @@ from wargames.core.runtime.result import StepResult
 from wargames.evaluation.task import RunConfig, TaskSpec
 from wargames.harness.agent import PublicEvent
 from wargames.episode.serialization import (
+    audio_to_dict,
     breakdown_to_dict,
     frame_to_dict,
     public_event_to_dict,
@@ -24,6 +25,7 @@ class Recorder:
         self.run_config = run_config
         self.root = Path(run_config.out_dir) / run_id
         self.frames = self.root / "frames"
+        self.audio = self.root / "audio"
         self._events = None
         self._rewards = None
         self._trace = None
@@ -44,6 +46,8 @@ class Recorder:
             self._trace = (self.root / "trace.jsonl").open("a", encoding="utf-8")
         if self.run_config.video_mode == "frames":
             self.frames.mkdir(exist_ok=True)
+        if self.run_config.audio_mode == "chunks":
+            self.audio.mkdir(exist_ok=True)
 
     def record_agent(self, agent_id: str, config: dict[str, Any] | None = None) -> None:
         payload = {"id": agent_id, "config": config or {}}
@@ -54,6 +58,10 @@ class Recorder:
     def record_initial_frame(self, frame: object | None) -> None:
         if self.run_config.video_mode == "frames":
             self._write_frame(0, frame)
+
+    def record_initial_audio(self, audio: object | None) -> None:
+        if self.run_config.audio_mode == "chunks":
+            self._write_audio(0, audio)
 
     def record_step(
         self, *, result: StepResult, public_event: PublicEvent, breakdown: RewardBreakdown
@@ -79,6 +87,8 @@ class Recorder:
             and public_event.step % self.run_config.frame_sample_rate == 0
         ):
             self._write_frame(public_event.step + 1, result.frame)
+        if self.run_config.audio_mode == "chunks":
+            self._write_audio(public_event.step + 1, result.audio)
 
     def write_summary(self, summary: dict[str, Any]) -> None:
         self.root.mkdir(parents=True, exist_ok=True)
@@ -120,3 +130,20 @@ class Recorder:
             import base64
 
             (self.frames / f"{index:06d}.png").write_bytes(base64.b64decode(str(image_b64)))
+
+    def _write_audio(self, index: int, audio: object | None) -> None:
+        data = audio_to_dict(audio) if audio is not None else None
+        if not data:
+            return
+        audio_b64 = data.get("audio_b64")
+        audio_path = data.get("audio_path")
+        if audio_path:
+            source = Path(str(audio_path))
+            if source.exists():
+                target = self.audio / f"{index:06d}{source.suffix or '.raw'}"
+                target.write_bytes(source.read_bytes())
+                return
+        if audio_b64:
+            import base64
+
+            (self.audio / f"{index:06d}.raw").write_bytes(base64.b64decode(str(audio_b64)))

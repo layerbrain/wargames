@@ -13,6 +13,7 @@ SUPPORTED_GAMES = (
     "mindustry",
     "craftium",
     "ikemen",
+    "opensurge",
 )
 
 
@@ -55,6 +56,10 @@ def load_game(id: str) -> GameDescriptor:
         return GAME
     if id == "ikemen":
         from wargames.games.ikemen import GAME
+
+        return GAME
+    if id == "opensurge":
+        from wargames.games.opensurge import GAME
 
         return GAME
     raise ValueError(f"unknown game: {id}")

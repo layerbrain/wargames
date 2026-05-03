@@ -1,0 +1,19 @@
+{
+  "act": 2,
+  "data_dir": null,
+  "difficulty": "hard",
+  "game": "opensurge",
+  "id": "opensurge.level.waterworks-zone-2.hard",
+  "level_file": "levels/waterworks-zone-2.lev",
+  "level_set": "builtin",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "platformer",
+    "running",
+    "speedrun"
+  ],
+  "target_time_seconds": 137,
+  "time_limit_ticks": 8220,
+  "title": "Waterworks Zone Act 2 (Hard)"
+}

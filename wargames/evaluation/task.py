@@ -7,6 +7,7 @@ LaunchMode = Literal["direct", "menu"]
 PlayMode = Literal["sampled", "streaming"]
 RecorderMode = Literal["none", "summary_only", "full"]
 VideoMode = Literal["none", "frames"]
+AudioMode = Literal["none", "chunks"]
 
 
 @dataclass(frozen=True)
@@ -55,6 +56,7 @@ class TaskSpec:
 class RunConfig:
     recorder_mode: RecorderMode = "summary_only"
     video_mode: VideoMode = "none"
+    audio_mode: AudioMode = "none"
     frame_sample_rate: int = 1
     write_trace: bool = False
     out_dir: str = "runs"
@@ -64,6 +66,7 @@ class RunConfig:
         return cls(
             recorder_mode=_recorder_mode(str(data.get("recorder_mode", "summary_only"))),
             video_mode=_video_mode(str(data.get("video_mode", "none"))),
+            audio_mode=_audio_mode(str(data.get("audio_mode", "none"))),
             frame_sample_rate=max(1, int(data.get("frame_sample_rate", 1))),
             write_trace=bool(data.get("write_trace", False)),
             out_dir=str(data.get("out_dir", "runs")),
@@ -100,4 +103,10 @@ def _recorder_mode(value: str) -> RecorderMode:
 def _video_mode(value: str) -> VideoMode:
     if value not in {"none", "frames"}:
         raise ValueError(f"invalid video mode: {value}")
+    return value  # type: ignore[return-value]
+
+
+def _audio_mode(value: str) -> AudioMode:
+    if value not in {"none", "chunks"}:
+        raise ValueError(f"invalid audio mode: {value}")
     return value  # type: ignore[return-value]
