@@ -105,18 +105,18 @@ Useful signals:
 | `voxel.nonzero_nodes` | Nearby voxel structure. |
 | `mission.finished` / `mission.failed` | Final outcome. |
 
-Profiles:
+Reward profiles:
 
-| Profile | Use |
+| Reward profile | Use |
 |---|---|
 | `standard` | Follow native task reward, explore, and finish the scenario |
 
 ```bash
-wargames profile list --game craftium
+wargames reward-profile list --game craftium
 ```
 
 The Craftium profile files live in `scenarios/craftium/profiles/`. The full
-profile spec is in [`../reward_profiles.md`](../reward_profiles.md).
+reward profile spec is in [`../reward_profiles.md`](../reward_profiles.md).
 
 ## Agent Setup
 

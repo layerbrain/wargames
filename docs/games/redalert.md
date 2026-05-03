@@ -86,9 +86,9 @@ Useful signals:
 | Friendly losses | Penalizes wasteful play. |
 | Scouted tiles | Rewards exploration. |
 
-Profiles:
+Reward profiles:
 
-| Profile | Use |
+| Reward profile | Use |
 |---|---|
 | `terminal` | Sparse final scoring |
 | `standard` | General eval |
@@ -98,11 +98,11 @@ Profiles:
 | `aggressive_stress_test` | Contrast profile for stress testing |
 
 ```bash
-wargames profile list --game redalert
+wargames reward-profile list --game redalert
 ```
 
 The Red Alert profile files live in `scenarios/redalert/profiles/`. The full
-profile spec is in [`../reward_profiles.md`](../reward_profiles.md).
+reward profile spec is in [`../reward_profiles.md`](../reward_profiles.md).
 
 ## Agent Setup
 
@@ -159,7 +159,7 @@ command: ["python", "my_agent.py"]
 wargames run \
   --game redalert \
   --mission redalert.soviet-01.normal \
-  --profile speedrun \
+  --reward-profile speedrun \
   --agent my-redalert-agent \
   --agent-dir .
 ```

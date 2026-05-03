@@ -83,18 +83,18 @@ Useful signals:
 | Vertical speed | Detect hard landings and bad descents. |
 | Crash / stall flags | End failed runs. |
 
-Profiles:
+Reward profiles:
 
-| Profile | Use |
+| Reward profile | Use |
 |---|---|
 | `standard` | Complete the route while keeping the aircraft stable |
 
 ```bash
-wargames profile list --game flightgear
+wargames reward-profile list --game flightgear
 ```
 
 The FlightGear profile files live in `scenarios/flightgear/profiles/`. The full
-profile spec is in [`../reward_profiles.md`](../reward_profiles.md).
+reward profile spec is in [`../reward_profiles.md`](../reward_profiles.md).
 
 ## Agent Setup
 
@@ -150,7 +150,7 @@ command: ["python", "my_agent.py"]
 wargames run \
   --game flightgear \
   --mission flightgear.c172p.tutorial.takeoff \
-  --profile standard \
+  --reward-profile standard \
   --agent my-flightgear-agent \
   --agent-dir .
 ```

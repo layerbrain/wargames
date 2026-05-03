@@ -1,11 +1,11 @@
 # Reward Profiles
 
-Reward profiles are the training and evaluation contract. A profile says which
+Reward profiles are the training and evaluation contract. A reward profile says which
 trusted game-state measurements become reward, when they are emitted, and how
-strongly they count. Profiles run inside the trusted environment after each
+strongly they count. Reward profiles run inside the trusted environment after each
 action.
 
-Profiles live in `scenarios/<game>/profiles/*.yaml`. Missions reference them by
+Reward profiles live in `scenarios/<game>/profiles/*.yaml`. Missions reference them by
 ID through `reward_profile`. Prime RL, Prime eval, and the local runner all use
 the same profile loader and evaluator.
 
@@ -65,9 +65,9 @@ entries:
 
 | Field | Type | Required | Meaning |
 |---|---:|---:|---|
-| `id` | string | yes | Profile ID used by missions, CLI, and Prime configs. Unique per game. |
+| `id` | string | yes | Reward profile ID used by missions, CLI, and Prime configs. Unique per game. |
 | `game` | string | yes | Game namespace. Red Alert uses `redalert`. |
-| `description` | string | no | Human description shown in docs and profile listings. |
+| `description` | string | no | Human description shown in docs and reward profile listings. |
 | `step_reward_min` | float/null | no | Lower clamp for the total reward from `per_step` entries on one step. |
 | `step_reward_max` | float/null | no | Upper clamp for the total reward from `per_step` entries on one step. |
 | `terminal_reward_weight` | float | no | Multiplier applied to all terminal entries after entry weights. Defaults to `1.0`. |
@@ -386,14 +386,16 @@ recorder_mode = "summary_only"
 ## Validate Before Training
 
 ```bash
-wargames profile validate scenarios/redalert/profiles/protective.yaml
-wargames profile validate scenarios/flightgear/profiles/standard.yaml --game flightgear
-wargames profile validate scenarios/supertuxkart/profiles/standard.yaml --game supertuxkart
-wargames profile validate scenarios/zeroad/profiles/standard.yaml --game zeroad
-wargames profile validate scenarios/freeciv/profiles/standard.yaml --game freeciv
-wargames profile validate scenarios/doom/profiles/standard.yaml --game doom
-wargames profile validate scenarios/supertux/profiles/standard.yaml --game supertux
-wargames profile validate scenarios/mindustry/profiles/standard.yaml --game mindustry
+wargames reward-profile validate scenarios/redalert/profiles/protective.yaml
+wargames reward-profile validate scenarios/flightgear/profiles/standard.yaml --game flightgear
+wargames reward-profile validate scenarios/supertuxkart/profiles/standard.yaml --game supertuxkart
+wargames reward-profile validate scenarios/zeroad/profiles/standard.yaml --game zeroad
+wargames reward-profile validate scenarios/freeciv/profiles/standard.yaml --game freeciv
+wargames reward-profile validate scenarios/doom/profiles/standard.yaml --game doom
+wargames reward-profile validate scenarios/supertux/profiles/standard.yaml --game supertux
+wargames reward-profile validate scenarios/mindustry/profiles/standard.yaml --game mindustry
+wargames reward-profile validate scenarios/craftium/profiles/standard.yaml --game craftium
+wargames reward-profile validate scenarios/ikemen/profiles/standard.yaml --game ikemen
 python -m unittest tests.evaluation.test_profiles -v
 ```
 

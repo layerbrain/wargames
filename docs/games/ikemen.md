@@ -89,18 +89,18 @@ Useful signals:
 | `match.winner_team` | Match outcome. |
 | `mission.finished` / `mission.failed` | Final outcome. |
 
-Profiles:
+Reward profiles:
 
-| Profile | Use |
+| Reward profile | Use |
 |---|---|
 | `standard` | Deal damage, preserve life, build meter, and win the match |
 
 ```bash
-wargames profile list --game ikemen
+wargames reward-profile list --game ikemen
 ```
 
 The IKEMEN GO profile files live in `scenarios/ikemen/profiles/`. The full
-profile spec is in [`../reward_profiles.md`](../reward_profiles.md).
+reward profile spec is in [`../reward_profiles.md`](../reward_profiles.md).
 
 ## Agent Setup
 

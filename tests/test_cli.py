@@ -1,4 +1,5 @@
-from contextlib import redirect_stdout
+import asyncio
+from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -144,6 +145,26 @@ class CLITests(TestCase):
         self.assertEqual(parser.parse_args(["missions", "--game", "ikemen"]).game, "ikemen")
         self.assertEqual(
             parser.parse_args(
+                [
+                    "run",
+                    "--game",
+                    "doom",
+                    "--mission",
+                    "m",
+                    "--agent",
+                    "a",
+                    "--reward-profile",
+                    "standard",
+                ]
+            ).reward_profile,
+            "standard",
+        )
+        self.assertEqual(
+            parser.parse_args(["reward-profile", "list", "--game", "doom"]).command,
+            "reward-profile",
+        )
+        self.assertEqual(
+            parser.parse_args(
                 ["run", "--game", "flightgear", "--mission", "m", "--agent", "a"]
             ).game,
             "flightgear",
@@ -155,6 +176,35 @@ class CLITests(TestCase):
             parser.parse_args(["control", "--actions", "-", "--capture-frames"]).capture_frames
         )
         self.assertEqual(parser.parse_args(["serve"]).command, "serve")
+
+    def test_old_profile_cli_surface_is_removed(self) -> None:
+        parser = build_parser()
+        stderr = StringIO()
+        with redirect_stderr(stderr):
+            with self.assertRaises(SystemExit):
+                parser.parse_args(
+                    [
+                        "run",
+                        "--game",
+                        "doom",
+                        "--mission",
+                        "m",
+                        "--agent",
+                        "a",
+                        "--profile",
+                        "standard",
+                    ]
+                )
+            with self.assertRaises(SystemExit):
+                parser.parse_args(["profile", "list", "--game", "doom"])
+
+    def test_reward_profile_list_command_runs(self) -> None:
+        parser = build_parser()
+        args = parser.parse_args(["reward-profile", "list", "--game", "doom"])
+        output = StringIO()
+        with redirect_stdout(output):
+            self.assertEqual(0, asyncio.run(args.handler(args)))
+        self.assertIn("standard", output.getvalue())
 
     def test_install_command_uses_top_level_game_option(self) -> None:
         parser = build_parser()

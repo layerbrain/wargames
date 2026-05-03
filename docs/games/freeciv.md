@@ -86,18 +86,18 @@ Useful signals:
 | `enemies` | Alive opponent player state. |
 | `mission.finished` / `mission.failed` | Final outcome. |
 
-Profiles:
+Reward profiles:
 
-| Profile | Use |
+| Reward profile | Use |
 |---|---|
 | `standard` | Explore, settle cities, grow units and gold, and win |
 
 ```bash
-wargames profile list --game freeciv
+wargames reward-profile list --game freeciv
 ```
 
 The Freeciv profile files live in `scenarios/freeciv/profiles/`. The full
-profile spec is in [`../reward_profiles.md`](../reward_profiles.md).
+reward profile spec is in [`../reward_profiles.md`](../reward_profiles.md).
 
 ## Prime RL
 
