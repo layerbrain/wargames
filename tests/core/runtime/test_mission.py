@@ -10,6 +10,7 @@ class MissionTests(IsolatedAsyncioTestCase):
             async with wg.mission("core-test.scout", seed=1) as mission:
                 observation = await mission.observe()
                 self.assertIsNone(observation.frame)
+                self.assertIsNone(observation.audio)
                 self.assertFalse(hasattr(observation, "prompt"))
                 self.assertFalse(hasattr(observation, "metadata"))
                 self.assertFalse(hasattr(observation, "tools"))

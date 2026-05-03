@@ -14,6 +14,7 @@ from wargames.cli import (
     _default_craftium_root,
     _default_ikemen_root,
     _default_mindustry_root,
+    _default_opensurge_source_root,
     _default_openra_root,
     _default_supertux_source_root,
     _default_zeroad_source_root,
@@ -23,6 +24,7 @@ from wargames.cli import (
     _find_mindustry_client,
     _find_mindustry_server,
     _find_ikemen_binary,
+    _find_opensurge_binary,
     _find_openra_root,
     _find_supertux_binary,
     _find_supertuxkart_binary,
@@ -35,6 +37,7 @@ from wargames.cli import (
     _install_mindustry,
     _install_craftium,
     _install_ikemen,
+    _install_opensurge,
     _install_redalert,
     _install_supertux,
     _install_supertuxkart,
@@ -111,6 +114,22 @@ def _write_supertux_checkout(root: Path) -> Path:
     return binary
 
 
+def _write_opensurge_checkout(root: Path) -> Path:
+    binary = root / "opensurge"
+    binary.parent.mkdir(parents=True)
+    binary.write_text("#!/usr/bin/env bash\nWARGAMES_OPENSURGE_STATE_PATH=1\n", encoding="utf-8")
+    (root / "src" / "scenes").mkdir(parents=True)
+    (root / "src" / "scenes" / "level.c").write_text(
+        "void level_update(void) {}\n", encoding="utf-8"
+    )
+    (root / "levels").mkdir(parents=True)
+    (root / "levels" / "demo-1.lev").write_text(
+        'name "Demo"\\nact 1\\nbrick 1 1000 1000\\n', encoding="utf-8"
+    )
+    (root / "CMakeLists.txt").write_text("project(opensurge)\n", encoding="utf-8")
+    return binary
+
+
 def _write_mindustry_app(root: Path) -> tuple[Path, Path]:
     client = root / "Mindustry.jar"
     server = root / "server-release.jar"
@@ -143,6 +162,7 @@ class CLITests(TestCase):
         self.assertEqual(parser.parse_args(["missions", "--game", "mindustry"]).game, "mindustry")
         self.assertEqual(parser.parse_args(["missions", "--game", "craftium"]).game, "craftium")
         self.assertEqual(parser.parse_args(["missions", "--game", "ikemen"]).game, "ikemen")
+        self.assertEqual(parser.parse_args(["missions", "--game", "opensurge"]).game, "opensurge")
         self.assertEqual(
             parser.parse_args(
                 [
@@ -169,8 +189,32 @@ class CLITests(TestCase):
             ).game,
             "flightgear",
         )
+        self.assertEqual(
+            parser.parse_args(
+                [
+                    "run",
+                    "--game",
+                    "opensurge",
+                    "--mission",
+                    "m",
+                    "--agent",
+                    "a",
+                    "--audio",
+                    "chunks",
+                ]
+            ).audio,
+            "chunks",
+        )
         self.assertEqual(parser.parse_args(["boot"]).command, "boot")
         self.assertEqual(parser.parse_args(["control", "--actions", "-"]).command, "control")
+        self.assertFalse(parser.parse_args(["boot"]).watch)
+        self.assertTrue(parser.parse_args(["boot", "--watch"]).watch)
+        self.assertFalse(parser.parse_args(["boot", "--watch", "--no-watch"]).watch)
+        self.assertFalse(parser.parse_args(["control", "--actions", "-"]).watch)
+        self.assertTrue(parser.parse_args(["control", "--actions", "-", "--watch"]).watch)
+        self.assertFalse(
+            parser.parse_args(["control", "--actions", "-", "--watch", "--no-watch"]).watch
+        )
         self.assertFalse(parser.parse_args(["control", "--actions", "-"]).capture_frames)
         self.assertTrue(
             parser.parse_args(["control", "--actions", "-", "--capture-frames"]).capture_frames
@@ -222,6 +266,7 @@ class CLITests(TestCase):
         self.assertEqual(parser.parse_args(["install", "--game", "mindustry"]).game, "mindustry")
         self.assertEqual(parser.parse_args(["install", "--game", "craftium"]).game, "craftium")
         self.assertEqual(parser.parse_args(["install", "--game", "ikemen"]).game, "ikemen")
+        self.assertEqual(parser.parse_args(["install", "--game", "opensurge"]).game, "opensurge")
 
     def test_host_runs_primitive_redalert_commands_in_linux_box(self) -> None:
         parser = build_parser()
@@ -275,6 +320,10 @@ class CLITests(TestCase):
             _default_craftium_root(env), Path("/tmp/wargames-cache/games/craftium")
         )
         self.assertEqual(_default_ikemen_root(env), Path("/tmp/wargames-cache/games/ikemen"))
+        self.assertEqual(
+            _default_opensurge_source_root(env),
+            Path("/tmp/wargames-cache/games/opensurge/opensurge"),
+        )
         self.assertEqual(_host_openra_support_dir(env), Path("/tmp/wargames-cache/openra-support"))
 
     def test_find_openra_root_discovers_cached_checkout(self) -> None:
@@ -398,6 +447,26 @@ class CLITests(TestCase):
             )
             self.assertEqual(_find_supertux_binary(root), binary)
 
+    def test_install_opensurge_remembers_registered_app(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            env = {"LAYERBRAIN_WARGAMES_CACHE_DIR": str(Path(temp_dir) / "cache")}
+            root = Path(temp_dir) / "opensurge"
+            binary = _write_opensurge_checkout(root)
+            args = SimpleNamespace(root=str(root))
+
+            with (
+                patch("wargames.cli._install_opensurge_probe"),
+                redirect_stdout(StringIO()),
+            ):
+                self.assertEqual(_install_opensurge(args, env), 0)
+
+            manifest = Path(temp_dir) / "cache" / "games" / "opensurge" / "install.json"
+            self.assertIn(
+                "WarGames in-process Open Surge state exporter",
+                manifest.read_text(encoding="utf-8"),
+            )
+            self.assertEqual(_find_opensurge_binary(root), binary)
+
     def test_install_mindustry_remembers_registered_app(self) -> None:
         with TemporaryDirectory() as temp_dir:
             env = {"LAYERBRAIN_WARGAMES_CACHE_DIR": str(Path(temp_dir) / "cache")}
@@ -478,6 +547,7 @@ class CLITests(TestCase):
         self.assertIn("LAYERBRAIN_WARGAMES_DOOM_WINDOW_SIZE=1280x720", joined)
         self.assertIn("LAYERBRAIN_WARGAMES_SUPERTUX_WINDOW_SIZE=1280x720", joined)
         self.assertIn("LAYERBRAIN_WARGAMES_IKEMEN_WINDOW_SIZE=1280x720", joined)
+        self.assertIn("LAYERBRAIN_WARGAMES_OPENSURGE_WINDOW_SIZE=1280x720", joined)
         self.assertIn("--entrypoint /workspace/host-wargames/scripts/linux_box.sh", joined)
 
     def test_linux_box_install_uses_docker_volume_cache(self) -> None:
@@ -500,6 +570,7 @@ class CLITests(TestCase):
             "mindustry": ("wargames-linux-mindustry", "wargames-mindustry"),
             "craftium": ("wargames-linux-craftium", "wargames-craftium"),
             "ikemen": ("wargames-linux-ikemen", "wargames-ikemen"),
+            "opensurge": ("wargames-linux-opensurge", "wargames-opensurge"),
         }
         for game, (image, volume) in cases.items():
             with self.subTest(game=game):

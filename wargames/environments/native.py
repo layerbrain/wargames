@@ -7,6 +7,7 @@ from collections.abc import Awaitable, Callable
 from dataclasses import asdict, replace
 from typing import TypeAlias, TypeVar
 
+from wargames.core.capture.audio import AudioChunk
 from wargames.core.capture.frame import Frame
 from wargames.core.config import WarGamesConfig
 from wargames.core.runtime.arena import GameDescriptor, WarGames
@@ -102,7 +103,11 @@ class WarGamesEnv:
             tick_rate=self.tick_rate,
         )
         frame = await self._controller.start(agent_id="native-env")
-        return self._observation(frame=frame, tick=frame.captured_tick if frame else 0), {
+        return self._observation(
+            frame=frame,
+            audio=self._controller.latest_audio,
+            tick=frame.captured_tick if frame else 0,
+        ), {
             "game": self.task.game,
             "mission": self.task.mission_id,
             "reward_profile": self.task.reward_profile,
@@ -146,7 +151,7 @@ class WarGamesEnv:
             outcome = final
             self._done = True
 
-        observation = self._observation(frame=outcome.frame, tick=outcome.tick)
+        observation = self._observation(frame=outcome.frame, audio=outcome.audio, tick=outcome.tick)
         info = self._info(action=selected, end_reason=end_reason if (terminated or truncated) else None)
         return observation, reward, terminated, truncated, info
 
@@ -191,10 +196,13 @@ class WarGamesEnv:
         if loop is not None and not loop.is_closed() and not loop.is_running():
             loop.close()
 
-    def _observation(self, *, frame: Frame | None, tick: int) -> EnvObservation:
+    def _observation(
+        self, *, frame: Frame | None, audio: AudioChunk | None, tick: int
+    ) -> EnvObservation:
         step = len(self._controller.public_history) if self._controller is not None else 0
         return {
             "frame": frame,
+            "audio": audio,
             "step": step,
             "tick": tick,
             "game_seconds": tick / self.tick_rate,

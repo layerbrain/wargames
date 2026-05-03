@@ -1,0 +1,19 @@
+{
+  "act": 1,
+  "data_dir": null,
+  "difficulty": "hard",
+  "game": "opensurge",
+  "id": "opensurge.level.demo-1.hard",
+  "level_file": "levels/demo-1.lev",
+  "level_set": "builtin",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "platformer",
+    "running",
+    "speedrun"
+  ],
+  "target_time_seconds": 55,
+  "time_limit_ticks": 3300,
+  "title": "Demo Level Act 1 (Hard)"
+}

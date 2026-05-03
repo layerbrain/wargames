@@ -52,6 +52,7 @@ class WSServerTests(TestCase):
             observation = ws.receive_json()
             self.assertEqual(observation["event"], "observation")
             self.assertIsNotNone(observation["frame"]["image_b64"])
+            self.assertIsNotNone(observation["audio"]["audio_b64"])
 
             ws.send_json(
                 {
@@ -64,6 +65,7 @@ class WSServerTests(TestCase):
             self.assertEqual(result["event"], "action_result")
             self.assertEqual(result["tick"], 1)
             self.assertEqual(result["events_applied"], 1)
+            self.assertIsNotNone(result["audio"]["audio_b64"])
 
             ws.send_json({"op": "delete", "session_id": session_id})
             self.assertEqual(ws.receive_json()["event"], "session_deleted")
@@ -132,6 +134,7 @@ class WSServerTests(TestCase):
             self.assertEqual(ws.receive_json()["event"], "frames_subscribed")
             frames = [ws.receive_json(), ws.receive_json()]
             self.assertTrue(all(frame["event"] == "frame" for frame in frames))
+            self.assertTrue(all(frame["audio"]["audio_b64"] for frame in frames))
             ws.send_json({"op": "unsubscribe_frames", "session_id": session_id})
             self.assertEqual(ws.receive_json()["event"], "frames_unsubscribed")
 

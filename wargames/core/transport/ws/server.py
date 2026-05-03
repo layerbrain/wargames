@@ -15,6 +15,7 @@ except Exception:  # pragma: no cover - import error is raised when constructing
     FastAPI = WebSocket = WebSocketDisconnect = None  # type: ignore[assignment]
 
 from wargames.core.backend.base import Backend
+from wargames.core.capture.audio import AudioChunk
 from wargames.core.capture.frame import Frame
 from wargames.core.config import WarGamesConfig
 from wargames.core.missions.spec import MissionSpec
@@ -145,7 +146,11 @@ class WSApplication:
                 "mission": mission_spec.id,
                 "mode": mode,
                 "phase": "running",
-                "capabilities": {"launch_modes": ["direct", "menu"], "transport": "ws-v1"},
+                "capabilities": {
+                    "launch_modes": ["direct", "menu"],
+                    "transport": "ws-v1",
+                    "observation": ["frame", "audio"],
+                },
                 "frame_size": self._frame_size(observation.frame),
             }
         )
@@ -159,6 +164,7 @@ class WSApplication:
                 "session_id": session.id,
                 "tick": self._observation_tick(observation),
                 "frame": self._frame_payload(observation.frame),
+                "audio": self._audio_payload(observation.audio),
             }
         )
 
@@ -186,6 +192,7 @@ class WSApplication:
                 "finished": result.finished,
                 "truncated": result.truncated,
                 "frame": self._frame_payload(result.frame),
+                "audio": self._audio_payload(result.audio),
                 "events_applied": events_applied,
             }
         )
@@ -225,6 +232,7 @@ class WSApplication:
                     "session_id": session.id,
                     "tick": self._observation_tick(observation),
                     "frame": self._frame_payload(observation.frame),
+                    "audio": self._audio_payload(observation.audio),
                 }
             )
             await asyncio.sleep(interval)
@@ -369,7 +377,11 @@ class WSApplication:
         return self._sessions[str(payload["session_id"])]
 
     def _observation_tick(self, observation: Observation) -> int:
-        return observation.frame.captured_tick if observation.frame else 0
+        if observation.frame:
+            return observation.frame.captured_tick
+        if observation.audio:
+            return observation.audio.captured_tick
+        return 0
 
     def _frame_size(self, frame: Frame | None) -> dict[str, int] | None:
         if frame is None:
@@ -389,6 +401,24 @@ class WSApplication:
             payload["image_b64"] = frame.image_b64
         elif frame.image_path:
             payload["image_b64"] = base64.b64encode(Path(frame.image_path).read_bytes()).decode()
+        return payload
+
+    def _audio_payload(self, audio: AudioChunk | None) -> dict[str, Any] | None:
+        if audio is None:
+            return None
+        payload: dict[str, Any] = {
+            "id": audio.id,
+            "captured_tick": audio.captured_tick,
+            "sample_rate": audio.sample_rate,
+            "channels": audio.channels,
+            "sample_width": audio.sample_width,
+            "duration_seconds": audio.duration_seconds,
+            "mime": audio.mime,
+        }
+        if audio.audio_b64:
+            payload["audio_b64"] = audio.audio_b64
+        elif audio.audio_path:
+            payload["audio_b64"] = base64.b64encode(Path(audio.audio_path).read_bytes()).decode()
         return payload
 
     async def __call__(self, scope: dict[str, Any], receive: Any, send: Any) -> Any:

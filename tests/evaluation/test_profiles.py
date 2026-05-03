@@ -14,6 +14,8 @@ from wargames.games.freeciv.profiles import register_profiles as register_freeci
 from wargames.games.freeciv.reward_schema import FREECIV_REWARD_SCHEMA
 from wargames.games.ikemen.profiles import register_profiles as register_ikemen_profiles
 from wargames.games.ikemen.reward_schema import IKEMEN_REWARD_SCHEMA
+from wargames.games.opensurge.profiles import register_profiles as register_opensurge_profiles
+from wargames.games.opensurge.reward_schema import OPENSURGE_REWARD_SCHEMA
 from wargames.games.redalert.profiles import profiles
 from wargames.games.redalert.reward_schema import REDALERT_REWARD_SCHEMA
 from wargames.games.supertuxkart.profiles import (
@@ -120,3 +122,9 @@ class RewardProfileTests(unittest.TestCase):
 
         self.assertEqual(["standard"], [profile.id for profile in loaded])
         IKEMEN_REWARD_SCHEMA.validate_primitive("damage_dealt")
+
+    def test_opensurge_profiles_are_loaded_from_shipped_yaml(self) -> None:
+        loaded = register_opensurge_profiles()
+
+        self.assertEqual(["standard"], [profile.id for profile in loaded])
+        OPENSURGE_REWARD_SCHEMA.validate_primitive("delta_rings")

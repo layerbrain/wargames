@@ -5,10 +5,12 @@ import uuid
 from dataclasses import asdict, dataclass
 from typing import Any
 
+from wargames.core.capture.audio import AudioChunk
 from wargames.core.capture.frame import Frame
 from wargames.core.missions.rubric import RewardBreakdown
 from wargames.core.runtime.arena import WarGames
 from wargames.core.runtime.mission import Mission
+from wargames.core.runtime.observation import Observation
 from wargames.core.runtime.result import StepResult
 from wargames.core.world.probe import HiddenStateSnapshot
 from wargames.evaluation.profile import profile_registry
@@ -26,6 +28,7 @@ class StepOutcome:
     tick: int
     game_seconds: float
     frame: Frame | None
+    audio: AudioChunk | None
     breakdown: RewardBreakdown
     reward: float
     finished: bool
@@ -68,6 +71,7 @@ class EpisodeController:
         self.mission: Mission | None = None
         self.public_history: tuple[PublicEvent, ...] = ()
         self.latest_hidden: HiddenStateSnapshot | None = None
+        self.latest_audio: AudioChunk | None = None
         self.initial_hidden: HiddenStateSnapshot | None = None
         self.last_result: StepResult | None = None
         self.total_breakdown: dict[str, float] = {}
@@ -88,7 +92,9 @@ class EpisodeController:
         hidden = await _latest_hidden(self.mission)
         self.initial_hidden = hidden
         self.latest_hidden = hidden
+        self.latest_audio = observation.audio
         self.recorder.record_initial_frame(observation.frame)
+        self.recorder.record_initial_audio(observation.audio)
         self._publish("run_started", {"task": self.task.to_mapping(), "agent": {"id": agent_id}})
         if observation.frame is not None:
             self._publish(
@@ -101,10 +107,15 @@ class EpisodeController:
             )
         return observation.frame
 
-    async def observe(self) -> Frame | None:
+    async def observe_public(self) -> Observation:
         if self.mission is None:
             raise RuntimeError("episode has not started")
-        return (await self.mission.observe()).frame
+        observation = await self.mission.observe()
+        self.latest_audio = observation.audio
+        return observation
+
+    async def observe(self) -> Frame | None:
+        return (await self.observe_public()).frame
 
     async def apply_tool_call(self, name: str, arguments: dict[str, object]) -> StepOutcome:
         if self.mission is None:
@@ -113,6 +124,7 @@ class EpisodeController:
         result = await self.mission.step(self.wg.action_from_tool_call(name, dict(arguments)))
         self.last_result = result
         self.latest_hidden = result.hidden or self.latest_hidden
+        self.latest_audio = result.audio
         breakdown = await self.evaluator.score_step(result.prev_hidden, result.hidden)
         self._accumulate(breakdown)
         self.finished = result.finished
@@ -151,6 +163,7 @@ class EpisodeController:
             tick=result.tick,
             game_seconds=result.tick / self.tick_rate,
             frame=result.frame,
+            audio=result.audio,
             breakdown=breakdown,
             reward=breakdown.total,
             finished=result.finished,
@@ -205,11 +218,13 @@ class EpisodeController:
     def _outcome(self, breakdown: RewardBreakdown) -> StepOutcome:
         tick = self.latest_hidden.tick if self.latest_hidden is not None else 0
         frame = self.last_result.frame if self.last_result is not None else None
+        audio = self.last_result.audio if self.last_result is not None else self.latest_audio
         return StepOutcome(
             step=len(self.public_history),
             tick=tick,
             game_seconds=tick / self.tick_rate,
             frame=frame,
+            audio=audio,
             breakdown=breakdown,
             reward=breakdown.total,
             finished=self.finished,

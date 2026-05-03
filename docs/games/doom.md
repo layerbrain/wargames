@@ -118,7 +118,7 @@ wargames run \
   --record full
 ```
 
-Send Doom controls as primitive events:
+Send Doom controls as input events:
 
 ```json
 {"name":"key_down","arguments":{"key":"ArrowUp"}}

@@ -52,7 +52,7 @@ Mission IDs use the opponent slug and difficulty, for example
 
 ## Live Control
 
-IKEMEN GO uses the same primitive action format as the other games:
+IKEMEN GO uses the same keyboard and mouse action format as the other games:
 
 ```bash
 printf '%s\n' \

@@ -1,0 +1,19 @@
+{
+  "act": 3,
+  "data_dir": null,
+  "difficulty": "hard",
+  "game": "opensurge",
+  "id": "opensurge.level.sunshine-3.hard",
+  "level_file": "levels/sunshine-3.lev",
+  "level_set": "builtin",
+  "native_difficulty": "hard",
+  "source": "builtin",
+  "tags": [
+    "platformer",
+    "running",
+    "speedrun"
+  ],
+  "target_time_seconds": 45,
+  "time_limit_ticks": 2700,
+  "title": "Sunshine Paradise Act 3 (Hard)"
+}

@@ -1,0 +1,19 @@
+{
+  "act": 1,
+  "data_dir": null,
+  "difficulty": "easy",
+  "game": "opensurge",
+  "id": "opensurge.level.sunshine-1.easy",
+  "level_file": "levels/sunshine-1.lev",
+  "level_set": "builtin",
+  "native_difficulty": "easy",
+  "source": "builtin",
+  "tags": [
+    "platformer",
+    "running",
+    "training"
+  ],
+  "target_time_seconds": 81,
+  "time_limit_ticks": 8505,
+  "title": "Sunshine Paradise Act 1 (Easy)"
+}

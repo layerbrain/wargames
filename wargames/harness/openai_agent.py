@@ -44,9 +44,9 @@ class OpenAICompatibleAgent:
                     "You control a Red Alert game using only the provided computer-use tools. "
                     "Use a non-reasoning, short response. Play aggressively: "
                     "select combat units, issue attack/move commands, and scout toward the enemy. "
-                    "Do not use wait unless there is no useful input. Use primitive input events: "
+                    "Do not use wait unless there is no useful input. Use keyboard and mouse input events: "
                     "move the mouse, press or release mouse buttons, and press or release keys. "
-                    "Return one or more primitive input events."
+                    "Return one or more keyboard and mouse input events."
                 ),
             )
         )

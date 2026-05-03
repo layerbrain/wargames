@@ -19,13 +19,15 @@ async def run_task(
     t0 = time.monotonic()
     try:
         while True:
+            observation = await controller.observe_public()
             obs = AgentObservation(
                 task=task,
-                frame=await controller.observe(),
+                frame=observation.frame,
                 tools=wg.tools,
                 history=tuple(event.action_only() for event in controller.public_history),
                 step_index=len(controller.public_history),
                 elapsed_seconds=time.monotonic() - t0,
+                audio=observation.audio,
             )
             decision = await agent.decide(obs)
             if decision.stop or not decision.events:

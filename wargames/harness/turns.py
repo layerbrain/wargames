@@ -13,7 +13,7 @@ def events_from_payload(payload: object) -> tuple[ToolCall, ...]:
         return tuple(event_from_mapping(item) for item in payload)
     if isinstance(payload, dict):
         return (event_from_mapping(payload),)
-    raise ValueError("turn must be one primitive event object or an array of event objects")
+    raise ValueError("turn must be one input event object or an array of input event objects")
 
 
 def event_from_mapping(value: object) -> ToolCall:

@@ -5,6 +5,7 @@ from dataclasses import asdict, is_dataclass
 from pathlib import Path
 from typing import Any
 
+from wargames.core.capture.audio import AudioChunk
 from wargames.core.capture.frame import Frame
 from wargames.core.missions.rubric import RewardBreakdown
 from wargames.harness.agent import PublicEvent, ToolCall
@@ -33,10 +34,36 @@ def public_frame_to_dict(frame: Frame | None) -> dict[str, Any] | None:
     return payload
 
 
+def audio_to_dict(audio: AudioChunk | None) -> dict[str, Any] | None:
+    if audio is None:
+        return None
+    return asdict(audio)
+
+
+def public_audio_to_dict(audio: AudioChunk | None) -> dict[str, Any] | None:
+    if audio is None:
+        return None
+    payload: dict[str, Any] = {
+        "id": audio.id,
+        "captured_tick": audio.captured_tick,
+        "sample_rate": audio.sample_rate,
+        "channels": audio.channels,
+        "sample_width": audio.sample_width,
+        "duration_seconds": audio.duration_seconds,
+        "mime": audio.mime,
+    }
+    if audio.audio_b64:
+        payload["audio_b64"] = audio.audio_b64
+    elif audio.audio_path:
+        payload["audio_b64"] = base64.b64encode(Path(audio.audio_path).read_bytes()).decode()
+    return payload
+
+
 def agent_observation_to_dict(observation: Any) -> dict[str, Any]:
     return {
         "task": public_value(observation.task),
         "frame": public_frame_to_dict(observation.frame),
+        "audio": public_audio_to_dict(getattr(observation, "audio", None)),
         "history": [public_event_to_dict(event) for event in observation.history],
         "step_index": observation.step_index,
         "elapsed_seconds": observation.elapsed_seconds,

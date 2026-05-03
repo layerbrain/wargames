@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import base64
+
 from wargames.core.backend.base import Backend, BackendSession
+from wargames.core.capture.audio import AudioChunk
 from wargames.core.capture.frame import Frame
 from wargames.core.config import WarGamesConfig
 from wargames.core.control.cua import ArenaAction
@@ -75,10 +78,11 @@ class FakeRedAlertSession(BackendSession):
             hidden=hidden,
             prev_hidden=prev,
             info={"action": action.id},
+            audio=self._audio(),
         )
 
     async def observe(self) -> Observation:
-        return Observation(frame=self._frame())
+        return Observation(frame=self._frame(), audio=self._audio())
 
     async def summary(self) -> MissionSummary:
         return MissionSummary(
@@ -101,6 +105,17 @@ class FakeRedAlertSession(BackendSession):
             height=720,
             captured_tick=self.tick,
             image_b64=PNG_1X1,
+        )
+
+    def _audio(self) -> AudioChunk:
+        return AudioChunk(
+            id=f"fake-audio-{self.tick}",
+            captured_tick=self.tick,
+            sample_rate=48_000,
+            channels=2,
+            sample_width=2,
+            duration_seconds=0.001,
+            audio_b64=base64.b64encode(f"audio-{self.tick}".encode()).decode(),
         )
 
 

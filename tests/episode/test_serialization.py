@@ -5,6 +5,7 @@ import tempfile
 from pathlib import Path
 from unittest import TestCase
 
+from wargames.core.capture.audio import AudioChunk
 from wargames.core.capture.frame import Frame
 from wargames.episode.serialization import agent_observation_to_dict
 from wargames.evaluation.task import TaskSpec
@@ -41,6 +42,38 @@ class AgentObservationSerializationTests(TestCase):
         self.assertEqual(base64.b64encode(b"frame-bytes").decode(), payload["frame"]["image_b64"])
         self.assertNotIn("image_path", payload["frame"])
         self.assertNotIn("tools", payload)
+
+    def test_agent_observation_exposes_audio_b64_not_audio_path(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            audio = Path(tmp) / "audio.raw"
+            audio.write_bytes(b"audio-bytes")
+            observation = AgentObservation(
+                task=TaskSpec(
+                    id="redalert.soviet-01.normal.seed-000000",
+                    game="redalert",
+                    mission_id="redalert.soviet-01.normal",
+                    seed=0,
+                ),
+                frame=None,
+                tools=(),
+                history=(),
+                step_index=0,
+                elapsed_seconds=0.0,
+                audio=AudioChunk(
+                    id="audio-1",
+                    captured_tick=1,
+                    sample_rate=48_000,
+                    channels=2,
+                    sample_width=2,
+                    duration_seconds=0.1,
+                    audio_path=str(audio),
+                ),
+            )
+
+            payload = agent_observation_to_dict(observation)
+
+        self.assertEqual(base64.b64encode(b"audio-bytes").decode(), payload["audio"]["audio_b64"])
+        self.assertNotIn("audio_path", payload["audio"])
 
     def test_agent_history_exposes_actions_not_tool_call_field(self) -> None:
         observation = AgentObservation(

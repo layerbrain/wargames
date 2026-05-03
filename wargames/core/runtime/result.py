@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
+from wargames.core.capture.audio import AudioChunk
 from wargames.core.capture.frame import Frame
 from wargames.core.control.cua import ArenaAction
 from wargames.core.missions.spec import MissionSpec
@@ -22,6 +23,7 @@ class StepResult:
     prev_hidden: HiddenStateSnapshot | None = None
     info: dict[str, object] | None = None
     end_reason: MissionEndReason | None = None
+    audio: AudioChunk | None = None
 
 
 @dataclass(frozen=True)

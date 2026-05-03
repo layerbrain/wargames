@@ -67,7 +67,7 @@ Difficulty variants keep the same upstream task and tighten the step budget:
 
 ## Live Control
 
-Craftium uses the same primitive action format as the other games:
+Craftium uses the same keyboard and mouse action format as the other games:
 
 ```bash
 printf '%s\n' \

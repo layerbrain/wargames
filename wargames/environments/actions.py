@@ -161,6 +161,19 @@ IKEMEN_ACTIONS = ActionSet(
     ),
 )
 
+OPENSURGE_ACTIONS = ActionSet(
+    "opensurge",
+    (
+        _wait(),
+        _tap("left", "ArrowLeft", description="Move left briefly."),
+        _tap("right", "ArrowRight", description="Move right briefly."),
+        _tap("jump", "Space", description="Jump."),
+        _tap("roll", "ArrowDown", description="Roll or crouch briefly."),
+        _tap("look_up", "ArrowUp", description="Look up briefly."),
+        _tap("action", "Control", description="Use the action button."),
+    ),
+)
+
 REDALERT_ACTIONS = ActionSet(
     "redalert",
     (
@@ -255,6 +268,7 @@ ACTION_SETS: dict[str, ActionSet] = {
         MINDUSTRY_ACTIONS,
         CRAFTIUM_ACTIONS,
         IKEMEN_ACTIONS,
+        OPENSURGE_ACTIONS,
     )
 }
 

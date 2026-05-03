@@ -53,6 +53,7 @@ reward your trainer consumes.
 | Mindustry | Automation and base defense | 27 | [docs/games/mindustry.md](docs/games/mindustry.md) |
 | Craftium | Voxel survival and crafting | 96 | [docs/games/craftium.md](docs/games/craftium.md) |
 | IKEMEN GO | 2D fighting | 9 | [docs/games/ikemen.md](docs/games/ikemen.md) |
+| Open Surge | Momentum platforming | 33 | [docs/games/opensurge.md](docs/games/opensurge.md) |
 
 A run is four pieces: a game, a mission, a reward profile, and an agent.
 
@@ -79,6 +80,7 @@ wargames install --game supertux
 wargames install --game mindustry
 wargames install --game craftium
 wargames install --game ikemen
+wargames install --game opensurge
 ```
 
 Run a SuperTuxKart episode:
@@ -104,6 +106,7 @@ wargames missions --game supertux
 wargames missions --game mindustry
 wargames missions --game craftium
 wargames missions --game ikemen
+wargames missions --game opensurge
 ```
 
 ## Run Your Own Model
@@ -124,12 +127,12 @@ wargames run \
 ```
 
 `openai-quickstart` is the included OpenAI-compatible agent. It reads the env
-vars above and returns primitive keyboard and mouse events.
+vars above and returns keyboard and mouse input events.
 
 ## Live Control
 
 You can send actions to a live watched session as JSON lines. Each line can be
-one primitive event or one array of primitive events.
+one keyboard/mouse event or one array of keyboard/mouse events.
 
 ```bash
 printf '%s\n' \
@@ -154,12 +157,15 @@ Each step, the agent gets one JSON object:
 | `task` | Mission id, game id, reward profile, limits, and prompt text for this run. |
 | `frame.image_b64` | Latest game frame, PNG bytes base64-encoded. |
 | `frame.width`, `frame.height` | Frame dimensions in pixels. Default 1280x720. |
+| `audio.audio_b64` | New game audio since the previous observation, base64-encoded when the runtime captures sound. |
+| `audio.sample_rate`, `audio.channels` | Audio format metadata for decoding the chunk. |
 | `history` | Public actions the agent has already sent this run. |
 | `step_index` | Zero-based step counter. |
 | `elapsed_seconds` | Wall-clock seconds since the run started. |
 
-State used for scoring stays inside the evaluator and is not included in the
-observation payload.
+The public observation is the game output a player can see and hear. State used
+for scoring stays inside the evaluator and is not included in the observation
+payload.
 
 ## Native Environment
 
@@ -202,7 +208,7 @@ address the same action.
 
 ## Actions
 
-The action set is shared across games. These are primitive input events. No
+The action set is shared across games. These are keyboard and mouse input events. No
 shortcut action combines pointer movement, button presses, or key presses.
 
 | Action | What it does |
@@ -218,7 +224,7 @@ shortcut action combines pointer movement, button presses, or key presses.
 Coordinates are pixels inside the game window. Mouse buttons are `left`,
 `right`, or `middle`.
 
-Every primitive action your agent can send:
+Every action your agent can send:
 
 ```json
 {"name":"move_mouse","arguments":{"x":640,"y":360}}
@@ -243,16 +249,17 @@ symbol keys, `Control`, `Shift`, `Alt`, `Meta`, `Enter`, `Escape`, `Space`,
 
 A mission is exported game content - a Red Alert map, a FlightGear C172P
 tutorial, a SuperTuxKart race track, a 0 A.D. map, a Freeciv scenario, a Doom
-map, a SuperTux level, a Mindustry survival map, a Craftium task, or an
-IKEMEN GO quick match - wrapped with a difficulty, a step budget, a wall-clock
-budget, and a starting reward profile.
+map, a SuperTux level, a Mindustry survival map, a Craftium task, an IKEMEN GO
+quick match, or an Open Surge act - wrapped with a difficulty, a step budget, a
+wall-clock budget, and a starting reward profile.
 Mission IDs look like `redalert.soviet-01.normal`,
 `flightgear.c172p.tutorial.takeoff`, `supertuxkart.race.lighthouse.normal`,
 `zeroad.scenario.arcadia.normal`, `freeciv.scenario.earth-small`,
 `doom.map.map01.easy`, `supertux.level.world1.welcome-antarctica.normal`, and
-`mindustry.survival.veins.normal`, `craftium.chop-tree.normal`, and
-`ikemen.vs.kfm.normal`. They are the same string you pass to
-`--mission`, the WebSocket `create_session` op, and Prime RL configs.
+`mindustry.survival.veins.normal`, `craftium.chop-tree.normal`,
+`ikemen.vs.kfm.normal`, and `opensurge.level.sunshine-1.normal`. They are the
+same string you pass to `--mission`, the WebSocket `create_session` op, and
+Prime RL configs.
 
 ```bash
 wargames missions --game redalert --difficulty hard
@@ -265,6 +272,7 @@ wargames missions --game supertux
 wargames missions --game mindustry
 wargames missions --game craftium
 wargames missions --game ikemen
+wargames missions --game opensurge
 ```
 
 Mission JSON lives in `scenarios/<game>/missions/<difficulty>/`. Catalogs are
@@ -297,6 +305,7 @@ Shipped profiles:
 | Mindustry | `standard` |
 | Craftium | `standard` |
 | IKEMEN GO | `standard` |
+| Open Surge | `standard` |
 
 ```bash
 wargames reward-profile list --game redalert
@@ -309,6 +318,7 @@ wargames reward-profile list --game supertux
 wargames reward-profile list --game mindustry
 wargames reward-profile list --game craftium
 wargames reward-profile list --game ikemen
+wargames reward-profile list --game opensurge
 wargames reward-profile validate scenarios/redalert/profiles/protective.yaml
 ```
 
@@ -374,7 +384,7 @@ wargames run \
 
 The `print(..., flush=True)` line is the whole send path. There is no API
 client. WarGames is already watching stdout, reads that one line, and applies
-it. A turn can contain up to 64 primitive events and at most five seconds of
+it. A turn can contain up to 64 input events and at most five seconds of
 explicit `wait` time. Action shapes are the ones listed under [Actions](#actions).
 
 To stop the episode early, print one line:
@@ -507,8 +517,9 @@ async def main():
 asyncio.run(main())
 ```
 
-In WebSocket mode, frame events are only frames. Mission-end status comes back
-on the next `action_result` after an `act` call:
+In WebSocket mode, stream events carry the latest frame and any captured audio
+chunk. Mission-end status comes back on the next `action_result` after an `act`
+call:
 
 ```json
 {"event":"action_result","finished":true,"truncated":false}
@@ -561,14 +572,17 @@ wargames run \
   --mission redalert.soviet-01.normal \
   --agent scripted-wait \
   --record full \
-  --video frames
+  --video frames \
+  --audio chunks
 
 wargames export <run-id> --out exports --video mp4
 ```
 
 `--record summary_only` keeps just the run summary. `--record full` keeps
 every observation, action, and reward breakdown. `--video frames` writes one
-PNG per step; `wargames export ... --video mp4` stitches them.
+PNG per step. `--audio chunks` writes captured game audio chunks when the
+runtime provides sound. `wargames export ... --video mp4` stitches frames into a
+video.
 
 ## Tests
 
