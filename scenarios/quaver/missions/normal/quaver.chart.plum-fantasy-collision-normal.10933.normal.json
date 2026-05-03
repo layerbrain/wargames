@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/Plum - Fantasy Collision.qp",
+  "artist": "Plum",
+  "audio_file": "audio.mp3",
+  "difficulty": "normal",
+  "difficulty_name": "Normal",
+  "estimated_duration_ticks": 8799,
+  "game": "quaver",
+  "hit_objects": 677,
+  "id": "quaver.chart.plum-fantasy-collision-normal.10933.normal",
+  "key_count": 4,
+  "long_notes": 1,
+  "map_id": 10933,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/Plum - Fantasy Collision.qp:10933.qua",
+  "mapset_id": 923,
+  "mines": 0,
+  "mode": "Keys4",
+  "native_difficulty": "Normal",
+  "notes_per_second": 4.616,
+  "song_length_ms": 146656,
+  "song_title": "Fantasy Collision",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys4",
+    "4k"
+  ],
+  "time_limit_ticks": 9999,
+  "title": "Plum - Fantasy Collision [Normal]",
+  "total_judgements": 678
+}

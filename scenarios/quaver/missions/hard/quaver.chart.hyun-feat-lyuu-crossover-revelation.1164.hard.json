@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/HyuN - CrossOver.qp",
+  "artist": "HyuN feat. LyuU",
+  "audio_file": "audio.mp3",
+  "difficulty": "hard",
+  "difficulty_name": "Revelation",
+  "estimated_duration_ticks": 8908,
+  "game": "quaver",
+  "hit_objects": 2329,
+  "id": "quaver.chart.hyun-feat-lyuu-crossover-revelation.1164.hard",
+  "key_count": 4,
+  "long_notes": 105,
+  "map_id": 1164,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/HyuN - CrossOver.qp:1164.qua",
+  "mapset_id": 523,
+  "mines": 0,
+  "mode": "Keys4",
+  "native_difficulty": "Revelation",
+  "notes_per_second": 15.686,
+  "song_length_ms": 148481,
+  "song_title": "CrossOver",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys4",
+    "4k"
+  ],
+  "time_limit_ticks": 10108,
+  "title": "HyuN feat. LyuU - CrossOver [Revelation]",
+  "total_judgements": 2434
+}

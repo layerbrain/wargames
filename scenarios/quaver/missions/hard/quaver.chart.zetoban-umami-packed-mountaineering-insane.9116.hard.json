@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/zetoban - Umami Packed Mountaineering.qp",
+  "artist": "zetoban",
+  "audio_file": "audio.mp3",
+  "difficulty": "hard",
+  "difficulty_name": "Insane",
+  "estimated_duration_ticks": 7625,
+  "game": "quaver",
+  "hit_objects": 1866,
+  "id": "quaver.chart.zetoban-umami-packed-mountaineering-insane.9116.hard",
+  "key_count": 7,
+  "long_notes": 0,
+  "map_id": 9116,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/zetoban - Umami Packed Mountaineering.qp:9116.qua",
+  "mapset_id": 822,
+  "mines": 0,
+  "mode": "Keys7",
+  "native_difficulty": "Insane",
+  "notes_per_second": 14.682,
+  "song_length_ms": 127092,
+  "song_title": "Umami Packed Mountaineering",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys7",
+    "7k"
+  ],
+  "time_limit_ticks": 8825,
+  "title": "zetoban - Umami Packed Mountaineering [Insane]",
+  "total_judgements": 1866
+}

@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/zetoban - Umami Packed Mountaineering.qp",
+  "artist": "zetoban",
+  "audio_file": "audio.mp3",
+  "difficulty": "easy",
+  "difficulty_name": "SUPEROMEGAHYPERBEGINNER",
+  "estimated_duration_ticks": 7625,
+  "game": "quaver",
+  "hit_objects": 162,
+  "id": "quaver.chart.zetoban-umami-packed-mountaineering-superomegahyperbeginner.9118.easy",
+  "key_count": 7,
+  "long_notes": 53,
+  "map_id": 9118,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/zetoban - Umami Packed Mountaineering.qp:9118.qua",
+  "mapset_id": 822,
+  "mines": 0,
+  "mode": "Keys7",
+  "native_difficulty": "SUPEROMEGAHYPERBEGINNER",
+  "notes_per_second": 1.275,
+  "song_length_ms": 127092,
+  "song_title": "Umami Packed Mountaineering",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys7",
+    "7k"
+  ],
+  "time_limit_ticks": 8825,
+  "title": "zetoban - Umami Packed Mountaineering [SUPEROMEGAHYPERBEGINNER]",
+  "total_judgements": 215
+}

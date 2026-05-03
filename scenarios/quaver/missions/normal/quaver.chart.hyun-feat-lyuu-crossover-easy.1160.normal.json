@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/HyuN - CrossOver.qp",
+  "artist": "HyuN feat. LyuU",
+  "audio_file": "audio.mp3",
+  "difficulty": "normal",
+  "difficulty_name": "Easy",
+  "estimated_duration_ticks": 8674,
+  "game": "quaver",
+  "hit_objects": 532,
+  "id": "quaver.chart.hyun-feat-lyuu-crossover-easy.1160.normal",
+  "key_count": 4,
+  "long_notes": 42,
+  "map_id": 1160,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/HyuN - CrossOver.qp:1160.qua",
+  "mapset_id": 523,
+  "mines": 0,
+  "mode": "Keys4",
+  "native_difficulty": "Easy",
+  "notes_per_second": 3.68,
+  "song_length_ms": 144581,
+  "song_title": "CrossOver",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys4",
+    "4k"
+  ],
+  "time_limit_ticks": 9874,
+  "title": "HyuN feat. LyuU - CrossOver [Easy]",
+  "total_judgements": 574
+}

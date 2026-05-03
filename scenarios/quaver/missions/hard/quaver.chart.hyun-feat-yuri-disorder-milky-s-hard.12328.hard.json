@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/HyuN feat. Yuri - Disorder.qp",
+  "artist": "HyuN feat. Yuri",
+  "audio_file": "HyuN - Disorder (feat. YURI).mp3",
+  "difficulty": "hard",
+  "difficulty_name": "Milky's Hard",
+  "estimated_duration_ticks": 7768,
+  "game": "quaver",
+  "hit_objects": 1043,
+  "id": "quaver.chart.hyun-feat-yuri-disorder-milky-s-hard.12328.hard",
+  "key_count": 4,
+  "long_notes": 19,
+  "map_id": 12328,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/HyuN feat. Yuri - Disorder.qp:12328.qua",
+  "mapset_id": 994,
+  "mines": 0,
+  "mode": "Keys4",
+  "native_difficulty": "Milky's Hard",
+  "notes_per_second": 8.056,
+  "song_length_ms": 129470,
+  "song_title": "Disorder",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys4",
+    "4k"
+  ],
+  "time_limit_ticks": 8968,
+  "title": "HyuN feat. Yuri - Disorder [Milky's Hard]",
+  "total_judgements": 1062
+}

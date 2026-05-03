@@ -118,6 +118,14 @@ _LINUX_BOX_RUNTIMES = {
         dockerfile="docker/opensurge/Dockerfile",
         cache_volume="wargames-opensurge",
     ),
+    "quaver": LinuxBoxRuntime(
+        game="quaver",
+        image="wargames-linux-quaver",
+        dockerfile="docker/quaver/Dockerfile",
+        cache_volume="wargames-quaver",
+        base_image="wargames-linux-base-amd64",
+        platform="linux/amd64",
+    ),
 }
 _OPENRA_REPO = "https://github.com/OpenRA/OpenRA.git"
 _OPENRA_REF = "bleed"
@@ -136,6 +144,8 @@ _CRAFTIUM_REPO = "https://github.com/mikelma/craftium.git"
 _IKEMEN_VERSION = "v0.99.0"
 _OPENSURGE_REPO = "https://github.com/alemart/opensurge.git"
 _OPENSURGE_REF = "v0.6.1.3"
+_QUAVER_REPO = "https://github.com/Quaver/Quaver.git"
+_QUAVER_REF = "670164b1b7eb451bd4302b060360ba70b3c88b40"
 
 
 def _game(id: str) -> GameDescriptor:
@@ -190,6 +200,10 @@ def _reward_schema(game: str) -> GameRewardSchema:
         from wargames.games.opensurge.reward_schema import OPENSURGE_REWARD_SCHEMA
 
         return OPENSURGE_REWARD_SCHEMA
+    if game == "quaver":
+        from wargames.games.quaver.reward_schema import QUAVER_REWARD_SCHEMA
+
+        return QUAVER_REWARD_SCHEMA
     raise SystemExit(f"unknown game: {game}")
 
 
@@ -403,6 +417,14 @@ def _is_opensurge_root(path: Path) -> bool:
     return path.name == "opensurge" or (path / "src" / "scenes" / "level.c").exists()
 
 
+def _is_quaver_root(path: Path) -> bool:
+    if path.is_file():
+        return path.name == "Quaver"
+    return (path / "Quaver" / "Quaver.csproj").exists() and (
+        path / "Quaver.Shared" / "Quaver.Shared.csproj"
+    ).exists()
+
+
 def _is_mindustry_root(path: Path) -> bool:
     return (
         path.name in {"server-release.jar", "Mindustry.jar"}
@@ -581,6 +603,27 @@ def _find_opensurge_binary(root: Path | None = None) -> Path | None:
     return None
 
 
+def _find_quaver_binary(root: Path | None = None) -> Path | None:
+    candidates: list[Path | str | None] = [
+        root if root and root.is_file() and root.name == "Quaver" else None,
+        root / "Quaver" / "bin" / "Release" / "net6.0" / "Quaver"
+        if root and not root.is_file()
+        else None,
+        root / "Quaver" / "bin" / "Debug" / "net6.0" / "Quaver"
+        if root and not root.is_file()
+        else None,
+        root / "Quaver" if root and not root.is_file() and root.name == "net6.0" else None,
+        _default_quaver_source_root() / "Quaver" / "bin" / "Release" / "net6.0" / "Quaver",
+        shutil.which("Quaver"),
+    ]
+    for candidate in candidates:
+        if candidate:
+            path = Path(candidate).expanduser()
+            if path.exists():
+                return path
+    return None
+
+
 def _find_mindustry_server(root: Path | None = None) -> Path | None:
     candidates: list[Path | str | None] = [
         root if root and root.is_file() and root.name == "server-release.jar" else None,
@@ -698,6 +741,14 @@ def _opensurge_root(binary: Path, root: Path | None = None) -> Path:
     return binary.parent
 
 
+def _quaver_root(binary: Path, root: Path | None = None) -> Path:
+    if root is not None and not root.is_file():
+        return root
+    if binary.parent.name == "net6.0":
+        return binary.parent.parent.parent.parent
+    return binary.parent
+
+
 def _default_supertuxkart_source_root(env: Mapping[str, str] = os.environ) -> Path:
     return _game_install_dir("supertuxkart", env) / "stk-code"
 
@@ -716,6 +767,10 @@ def _default_supertux_source_root(env: Mapping[str, str] = os.environ) -> Path:
 
 def _default_opensurge_source_root(env: Mapping[str, str] = os.environ) -> Path:
     return _game_install_dir("opensurge", env) / "opensurge"
+
+
+def _default_quaver_source_root(env: Mapping[str, str] = os.environ) -> Path:
+    return _game_install_dir("quaver", env) / "quaver"
 
 
 def _default_mindustry_root(env: Mapping[str, str] = os.environ) -> Path:
@@ -808,6 +863,7 @@ def _runtime_resolution(env: Mapping[str, str] = os.environ) -> tuple[int, int]:
         "LAYERBRAIN_WARGAMES_SUPERTUX_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_IKEMEN_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_OPENSURGE_WINDOW_SIZE",
+        "LAYERBRAIN_WARGAMES_QUAVER_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_FLIGHTGEAR_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_XVFB_RESOLUTION",
     ):
@@ -944,6 +1000,13 @@ def _linux_box_command(
         and "LAYERBRAIN_WARGAMES_XVFB_RESOLUTION" not in env
     ):
         active_resolution = (1280, 960)
+    if (
+        active_runtime.game == "quaver"
+        and active_resolution == _LINUX_BOX_DEFAULT_RESOLUTION
+        and "LAYERBRAIN_WARGAMES_QUAVER_WINDOW_SIZE" not in env
+        and "LAYERBRAIN_WARGAMES_XVFB_RESOLUTION" not in env
+    ):
+        active_resolution = (1280, 720)
     env["LAYERBRAIN_WARGAMES_CACHE_DIR"] = _LINUX_BOX_CACHE_MOUNT
     env.setdefault("LAYERBRAIN_WARGAMES_XVFB_RESOLUTION", _resolution_text(active_resolution))
     env.setdefault("LAYERBRAIN_WARGAMES_XVFB_SCREEN", f"{_resolution_text(active_resolution)}x24")
@@ -962,6 +1025,7 @@ def _linux_box_command(
     env.setdefault("LAYERBRAIN_WARGAMES_SUPERTUX_WINDOW_SIZE", _resolution_text(active_resolution))
     env.setdefault("LAYERBRAIN_WARGAMES_IKEMEN_WINDOW_SIZE", _resolution_text(active_resolution))
     env.setdefault("LAYERBRAIN_WARGAMES_OPENSURGE_WINDOW_SIZE", _resolution_text(active_resolution))
+    env.setdefault("LAYERBRAIN_WARGAMES_QUAVER_WINDOW_SIZE", _resolution_text(active_resolution))
     if stream_port is not None:
         env["LAYERBRAIN_WARGAMES_HOST_STREAM_URL"] = (
             f"udp://host.docker.internal:{stream_port}?pkt_size=1316"
@@ -1152,6 +1216,33 @@ def _clone_opensurge_source(target: Path) -> None:
         raise SystemExit(f"Open Surge clone failed with exit code {exc.returncode}") from exc
 
 
+def _clone_quaver_source(target: Path) -> None:
+    git = shutil.which("git")
+    if git is None:
+        raise SystemExit("git is required to install Quaver")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    command = [
+        git,
+        "-c",
+        "submodule.Quaver.Server.Client.update=none",
+        "clone",
+        "--depth",
+        "1",
+        "--recurse-submodules",
+        _QUAVER_REPO,
+        str(target),
+    ]
+    try:
+        subprocess.run(command, check=True)
+        subprocess.run(
+            [git, "-C", str(target), "fetch", "--depth", "1", "origin", _QUAVER_REF],
+            check=True,
+        )
+        subprocess.run([git, "-C", str(target), "checkout", _QUAVER_REF], check=True)
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(f"Quaver clone failed with exit code {exc.returncode}") from exc
+
+
 def _download_mindustry_server(target: Path) -> None:
     curl = shutil.which("curl")
     if curl is None:
@@ -1307,6 +1398,16 @@ def _install_opensurge_probe(source_root: Path) -> None:
     except subprocess.CalledProcessError as exc:
         raise SystemExit(
             f"WarGames Open Surge state exporter build failed with exit code {exc.returncode}"
+        ) from exc
+
+
+def _install_quaver_probe(source_root: Path) -> None:
+    script = _repo_root() / "scripts" / "install_quaver_probe.sh"
+    try:
+        subprocess.run([str(script), str(source_root)], check=True)
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(
+            f"WarGames Quaver state exporter build failed with exit code {exc.returncode}"
         ) from exc
 
 
@@ -1706,6 +1807,42 @@ def _install_opensurge(args: argparse.Namespace, env: Mapping[str, str] = os.env
     return 0
 
 
+def _install_quaver(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
+    root = Path(args.root).expanduser() if args.root else None
+    source_root = root if root and _is_quaver_root(root) else _default_quaver_source_root(env)
+    status = "present"
+
+    if not source_root.exists():
+        _clone_quaver_source(source_root)
+        status = "installed"
+    elif not _is_quaver_root(source_root):
+        raise SystemExit(f"Quaver source path is not a source checkout: {source_root}")
+
+    _install_quaver_probe(source_root)
+    binary = _find_quaver_binary(source_root)
+    if binary is None:
+        raise SystemExit(f"Quaver build did not produce a binary under {source_root}")
+
+    default_maps = source_root / "Quaver.Resources" / "Quaver.Resources" / "DefaultMaps"
+    if not any(default_maps.glob("*.qp")):
+        raise SystemExit(f"Quaver default map archives are missing under {source_root}")
+
+    runtime_root = binary.parent
+    payload = {
+        "game": "quaver",
+        "binary": str(binary),
+        "root": str(_quaver_root(binary, source_root)),
+        "runtime_root": str(runtime_root),
+        "source_root": str(source_root),
+        "default_maps_dir": str(default_maps),
+        "state_interface": "WarGames in-process Quaver state exporter",
+        "status": status,
+    }
+    _write_game_install_manifest("quaver", payload, env)
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0
+
+
 def _install_mindustry(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
     root = Path(args.root).expanduser() if args.root else _default_mindustry_root(env)
     install_root = root.parent if root.exists() and root.is_file() else root
@@ -1804,6 +1941,8 @@ async def _install(args: argparse.Namespace) -> int:
         return await asyncio.to_thread(_install_supertux, args)
     if args.game == "opensurge":
         return await asyncio.to_thread(_install_opensurge, args)
+    if args.game == "quaver":
+        return await asyncio.to_thread(_install_quaver, args)
     if args.game == "mindustry":
         return await asyncio.to_thread(_install_mindustry, args)
     if args.game == "craftium":
@@ -2160,6 +2299,8 @@ async def _serve(args: argparse.Namespace) -> int:
         from wargames.games.supertux.transport.ws import app
     elif args.game == "opensurge":
         from wargames.games.opensurge.transport.ws import app
+    elif args.game == "quaver":
+        from wargames.games.quaver.transport.ws import app
     elif args.game == "mindustry":
         from wargames.games.mindustry.transport.ws import app
     elif args.game == "craftium":

@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/HyuN - Princess Of Winter.qp",
+  "artist": "HyuN",
+  "audio_file": "audio.mp3",
+  "difficulty": "hard",
+  "difficulty_name": "Expert",
+  "estimated_duration_ticks": 8296,
+  "game": "quaver",
+  "hit_objects": 1820,
+  "id": "quaver.chart.hyun-princess-of-winter-expert.2043.hard",
+  "key_count": 4,
+  "long_notes": 132,
+  "map_id": 2043,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/HyuN - Princess Of Winter.qp:2043.qua",
+  "mapset_id": 563,
+  "mines": 0,
+  "mode": "Keys4",
+  "native_difficulty": "Expert",
+  "notes_per_second": 13.162,
+  "song_length_ms": 138273,
+  "song_title": "Princess of Winter",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys4",
+    "4k"
+  ],
+  "time_limit_ticks": 9496,
+  "title": "HyuN - Princess of Winter [Expert]",
+  "total_judgements": 1952
+}

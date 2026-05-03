@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/HyuN feat. Yuri - Disorder.qp",
+  "artist": "HyuN feat. Yuri",
+  "audio_file": "HyuN - Disorder (feat. YURI).mp3",
+  "difficulty": "hard",
+  "difficulty_name": "Expert",
+  "estimated_duration_ticks": 7964,
+  "game": "quaver",
+  "hit_objects": 1743,
+  "id": "quaver.chart.hyun-feat-yuri-disorder-expert.12278.hard",
+  "key_count": 4,
+  "long_notes": 63,
+  "map_id": 12278,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/HyuN feat. Yuri - Disorder.qp:12278.qua",
+  "mapset_id": 994,
+  "mines": 0,
+  "mode": "Keys4",
+  "native_difficulty": "Expert",
+  "notes_per_second": 13.132,
+  "song_length_ms": 132734,
+  "song_title": "Disorder",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys4",
+    "4k"
+  ],
+  "time_limit_ticks": 9164,
+  "title": "HyuN feat. Yuri - Disorder [Expert]",
+  "total_judgements": 1806
+}

@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/zetoban - Flowering Night.qp",
+  "artist": "zetoban",
+  "audio_file": "zetoban - Flowering Night (1).mp3",
+  "difficulty": "hard",
+  "difficulty_name": "Insane",
+  "estimated_duration_ticks": 9524,
+  "game": "quaver",
+  "hit_objects": 1594,
+  "id": "quaver.chart.zetoban-flowering-night-insane.10859.hard",
+  "key_count": 4,
+  "long_notes": 212,
+  "map_id": 10859,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/zetoban - Flowering Night.qp:10859.qua",
+  "mapset_id": 919,
+  "mines": 0,
+  "mode": "Keys4",
+  "native_difficulty": "Insane",
+  "notes_per_second": 10.041,
+  "song_length_ms": 158742,
+  "song_title": "Flowering Night",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys4",
+    "4k"
+  ],
+  "time_limit_ticks": 10724,
+  "title": "zetoban - Flowering Night [Insane]",
+  "total_judgements": 1806
+}

@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/Lollipop - vibing oustide the supermarket at 1am.qp",
+  "artist": "Lollipop",
+  "audio_file": "why_are_there_frozen_pizzas_in_the_detergent_aisle.mp3",
+  "difficulty": "normal",
+  "difficulty_name": "Normal",
+  "estimated_duration_ticks": 3321,
+  "game": "quaver",
+  "hit_objects": 235,
+  "id": "quaver.chart.lollipop-vibing-oustide-the-supermarket-at-1am-normal.11510.normal",
+  "key_count": 7,
+  "long_notes": 107,
+  "map_id": 11510,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/Lollipop - vibing oustide the supermarket at 1am.qp:11510.qua",
+  "mapset_id": 954,
+  "mines": 0,
+  "mode": "Keys7",
+  "native_difficulty": "Normal",
+  "notes_per_second": 4.245,
+  "song_length_ms": 55356,
+  "song_title": "vibing oustide the supermarket at 1am",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys7",
+    "7k"
+  ],
+  "time_limit_ticks": 4521,
+  "title": "Lollipop - vibing oustide the supermarket at 1am [Normal]",
+  "total_judgements": 342
+}

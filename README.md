@@ -14,7 +14,8 @@ Bring your own trainer or use the Prime RL adapter in this repo.
                     | OpenRA, FlightGear, STK,    |
                     | Freeciv, Doom, SuperTux,    |
                     | Mindustry, Craftium,        |
-                    | IKEMEN GO                   |
+                    | IKEMEN GO, Open Surge,      |
+                    | Quaver                      |
                     +--------------+--------------+
                                    |
                  capture           |          scoring state
@@ -54,6 +55,7 @@ reward your trainer consumes.
 | Craftium | Voxel survival and crafting | 96 | [docs/games/craftium.md](docs/games/craftium.md) |
 | IKEMEN GO | 2D fighting | 9 | [docs/games/ikemen.md](docs/games/ikemen.md) |
 | Open Surge | Momentum platforming | 33 | [docs/games/opensurge.md](docs/games/opensurge.md) |
+| Quaver | Keyboard rhythm timing | 70 | [docs/games/quaver.md](docs/games/quaver.md) |
 
 A run is four pieces: a game, a mission, a reward profile, and an agent.
 
@@ -81,6 +83,7 @@ wargames install --game mindustry
 wargames install --game craftium
 wargames install --game ikemen
 wargames install --game opensurge
+wargames install --game quaver
 ```
 
 Run a SuperTuxKart episode:
@@ -107,6 +110,7 @@ wargames missions --game mindustry
 wargames missions --game craftium
 wargames missions --game ikemen
 wargames missions --game opensurge
+wargames missions --game quaver
 ```
 
 ## Run Your Own Model

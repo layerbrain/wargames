@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/zetoban - Csikos Post.qp",
+  "artist": "zetoban",
+  "audio_file": "zetoban - Csikos Post.mp3",
+  "difficulty": "normal",
+  "difficulty_name": "Easy",
+  "estimated_duration_ticks": 6304,
+  "game": "quaver",
+  "hit_objects": 291,
+  "id": "quaver.chart.zetoban-csikos-post-easy.1415.normal",
+  "key_count": 4,
+  "long_notes": 14,
+  "map_id": 1415,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/zetoban - Csikos Post.qp:1415.qua",
+  "mapset_id": 536,
+  "mines": 0,
+  "mode": "Keys4",
+  "native_difficulty": "Easy",
+  "notes_per_second": 2.769,
+  "song_length_ms": 105081,
+  "song_title": "Csikos Post",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys4",
+    "4k"
+  ],
+  "time_limit_ticks": 7504,
+  "title": "zetoban - Csikos Post [Easy]",
+  "total_judgements": 305
+}

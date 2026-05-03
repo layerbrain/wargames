@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/HyuN - Princess Of Winter.qp",
+  "artist": "HyuN",
+  "audio_file": "audio.mp3",
+  "difficulty": "hard",
+  "difficulty_name": "Advanced",
+  "estimated_duration_ticks": 8296,
+  "game": "quaver",
+  "hit_objects": 973,
+  "id": "quaver.chart.hyun-princess-of-winter-advanced.2044.hard",
+  "key_count": 4,
+  "long_notes": 60,
+  "map_id": 2044,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/HyuN - Princess Of Winter.qp:2044.qua",
+  "mapset_id": 563,
+  "mines": 0,
+  "mode": "Keys4",
+  "native_difficulty": "Advanced",
+  "notes_per_second": 7.037,
+  "song_length_ms": 138273,
+  "song_title": "Princess of Winter",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys4",
+    "4k"
+  ],
+  "time_limit_ticks": 9496,
+  "title": "HyuN - Princess of Winter [Advanced]",
+  "total_judgements": 1033
+}
