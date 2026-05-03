@@ -1,0 +1,21 @@
+{
+  "data_dir": null,
+  "difficulty": "normal",
+  "estimated_duration_ticks": 7200,
+  "game": "naev",
+  "id": "naev.mission.missions-trader-trader-rehab.normal",
+  "mission_file": "missions/trader/trader_rehab.lua",
+  "mission_name": "Trader Rehabilitation",
+  "native_difficulty": "scripted",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "mission",
+    "normal",
+    "space",
+    "trading"
+  ],
+  "tier": null,
+  "time_limit_ticks": 14400,
+  "title": "Trader Rehabilitation"
+}

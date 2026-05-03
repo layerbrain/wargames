@@ -1,0 +1,21 @@
+{
+  "data_dir": null,
+  "difficulty": "hard",
+  "estimated_duration_ticks": 10800,
+  "game": "naev",
+  "id": "naev.mission.missions-sirius-achack-achack01.hard",
+  "mission_file": "missions/sirius/achack/achack01.lua",
+  "mission_name": "Sirian Bounty",
+  "native_difficulty": "scripted",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "combat",
+    "hard",
+    "mission",
+    "space"
+  ],
+  "tier": null,
+  "time_limit_ticks": 21600,
+  "title": "Sirian Bounty (Academy Hack)"
+}

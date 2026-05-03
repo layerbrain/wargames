@@ -1,0 +1,34 @@
+id: standard
+game: naev
+description: "Complete space missions while preserving the ship and resources."
+step_reward_min: -0.50
+step_reward_max: 0.75
+entries:
+  - id: delta_credits
+    fn: wargames.games.naev.rewards.delta_credits
+    weight: 0.00001
+    when: per_step
+  - id: delta_wealth
+    fn: wargames.games.naev.rewards.delta_wealth
+    weight: 0.000005
+    when: per_step
+  - id: delta_mission_completed
+    fn: wargames.games.naev.rewards.delta_mission_completed
+    weight: 1.0
+    when: per_step
+  - id: damage_penalty
+    fn: wargames.games.naev.rewards.damage_penalty
+    weight: 0.01
+    when: per_step
+  - id: fuel_penalty
+    fn: wargames.games.naev.rewards.fuel_penalty
+    weight: 0.001
+    when: per_step
+  - id: time_penalty
+    fn: wargames.games.naev.rewards.time_penalty
+    weight: 0.00002
+    when: per_step
+  - id: terminal
+    fn: wargames.core.missions.rewards.terminal
+    weight: 5.0
+    when: terminal

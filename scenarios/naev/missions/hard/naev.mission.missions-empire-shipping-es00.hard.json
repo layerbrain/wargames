@@ -1,0 +1,21 @@
+{
+  "data_dir": null,
+  "difficulty": "hard",
+  "estimated_duration_ticks": 12600,
+  "game": "naev",
+  "id": "naev.mission.missions-empire-shipping-es00.hard",
+  "mission_file": "missions/empire/shipping/es00.lua",
+  "mission_name": "Empire Shipping 1",
+  "native_difficulty": "tier-2",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "hard",
+    "mission",
+    "space",
+    "tier-2"
+  ],
+  "tier": 2,
+  "time_limit_ticks": 25200,
+  "title": "Empire Shipping 1 (Empire Shipping)"
+}

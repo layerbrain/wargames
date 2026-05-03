@@ -1,0 +1,22 @@
+{
+  "data_dir": null,
+  "difficulty": "hard",
+  "estimated_duration_ticks": 10800,
+  "game": "naev",
+  "id": "naev.mission.missions-empire-emp-cargo00.hard",
+  "mission_file": "missions/empire/emp_cargo00.lua",
+  "mission_name": "Empire Recruitment",
+  "native_difficulty": "tier-1",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "delivery",
+    "hard",
+    "mission",
+    "space",
+    "tier-1"
+  ],
+  "tier": 1,
+  "time_limit_ticks": 21600,
+  "title": "Empire Recruitment"
+}

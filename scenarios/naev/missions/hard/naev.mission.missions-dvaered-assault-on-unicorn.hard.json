@@ -1,0 +1,21 @@
+{
+  "data_dir": null,
+  "difficulty": "hard",
+  "estimated_duration_ticks": 14400,
+  "game": "naev",
+  "id": "naev.mission.missions-dvaered-assault-on-unicorn.hard",
+  "mission_file": "missions/dvaered/assault_on_unicorn.lua",
+  "mission_name": "Assault on Unicorn",
+  "native_difficulty": "tier-3",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "hard",
+    "mission",
+    "space",
+    "tier-3"
+  ],
+  "tier": 3,
+  "time_limit_ticks": 28800,
+  "title": "Assault on Unicorn"
+}

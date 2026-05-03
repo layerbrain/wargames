@@ -1,0 +1,20 @@
+{
+  "data_dir": null,
+  "difficulty": "normal",
+  "estimated_duration_ticks": 7200,
+  "game": "naev",
+  "id": "naev.mission.missions-zalek-sciencegonewrong-01-sciwrong.normal",
+  "mission_file": "missions/zalek/sciencegonewrong/01_sciwrong.lua",
+  "mission_name": "The one with the Visit",
+  "native_difficulty": "scripted",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "mission",
+    "normal",
+    "space"
+  ],
+  "tier": null,
+  "time_limit_ticks": 14400,
+  "title": "The one with the Visit"
+}

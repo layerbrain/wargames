@@ -1,0 +1,23 @@
+{
+  "data_dir": null,
+  "difficulty": "hard",
+  "estimated_duration_ticks": 10800,
+  "game": "naev",
+  "id": "naev.mission.missions-pirate-pirate-commodity-run.hard",
+  "mission_file": "missions/pirate/pirate_commodity_run.lua",
+  "mission_name": "Pirate Commodity Run",
+  "native_difficulty": "tier-1",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "combat",
+    "delivery",
+    "hard",
+    "mission",
+    "space",
+    "tier-1"
+  ],
+  "tier": 1,
+  "time_limit_ticks": 21600,
+  "title": "Pirate Commodity Run"
+}

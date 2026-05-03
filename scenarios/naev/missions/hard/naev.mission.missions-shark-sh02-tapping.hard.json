@@ -1,0 +1,20 @@
+{
+  "data_dir": null,
+  "difficulty": "hard",
+  "estimated_duration_ticks": 10800,
+  "game": "naev",
+  "id": "naev.mission.missions-shark-sh02-tapping.hard",
+  "mission_file": "missions/shark/sh02_tapping.lua",
+  "mission_name": "Unfair Competition",
+  "native_difficulty": "scripted",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "hard",
+    "mission",
+    "space"
+  ],
+  "tier": null,
+  "time_limit_ticks": 21600,
+  "title": "Unfair Competition (Nexus show their teeth)"
+}

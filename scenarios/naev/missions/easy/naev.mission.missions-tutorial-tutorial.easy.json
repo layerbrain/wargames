@@ -1,0 +1,21 @@
+{
+  "data_dir": null,
+  "difficulty": "easy",
+  "estimated_duration_ticks": 3600,
+  "game": "naev",
+  "id": "naev.mission.missions-tutorial-tutorial.easy",
+  "mission_file": "missions/tutorial/tutorial.lua",
+  "mission_name": "Tutorial",
+  "native_difficulty": "scripted",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "easy",
+    "mission",
+    "space",
+    "tutorial"
+  ],
+  "tier": null,
+  "time_limit_ticks": 7200,
+  "title": "Tutorial"
+}

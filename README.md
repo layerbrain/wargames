@@ -15,7 +15,7 @@ Bring your own trainer or use the Prime RL adapter in this repo.
                     | Freeciv, Doom, SuperTux,    |
                     | Mindustry, Craftium,        |
                     | IKEMEN GO, Open Surge,      |
-                    | Quaver                      |
+                    | Quaver, Naev                |
                     +--------------+--------------+
                                    |
                  capture           |          scoring state
@@ -56,6 +56,7 @@ reward your trainer consumes.
 | IKEMEN GO | 2D fighting | 9 | [docs/games/ikemen.md](docs/games/ikemen.md) |
 | Open Surge | Momentum platforming | 33 | [docs/games/opensurge.md](docs/games/opensurge.md) |
 | Quaver | Keyboard rhythm timing | 70 | [docs/games/quaver.md](docs/games/quaver.md) |
+| Naev | Space trading and combat RPG | 128 | [docs/games/naev.md](docs/games/naev.md) |
 
 A run is four pieces: a game, a mission, a reward profile, and an agent.
 
@@ -84,6 +85,7 @@ wargames install --game craftium
 wargames install --game ikemen
 wargames install --game opensurge
 wargames install --game quaver
+wargames install --game naev
 ```
 
 Run a SuperTuxKart episode:
@@ -111,6 +113,7 @@ wargames missions --game craftium
 wargames missions --game ikemen
 wargames missions --game opensurge
 wargames missions --game quaver
+wargames missions --game naev
 ```
 
 ## Run Your Own Model
@@ -254,16 +257,18 @@ symbol keys, `Control`, `Shift`, `Alt`, `Meta`, `Enter`, `Escape`, `Space`,
 A mission is exported game content - a Red Alert map, a FlightGear C172P
 tutorial, a SuperTuxKart race track, a 0 A.D. map, a Freeciv scenario, a Doom
 map, a SuperTux level, a Mindustry survival map, a Craftium task, an IKEMEN GO
-quick match, or an Open Surge act - wrapped with a difficulty, a step budget, a
-wall-clock budget, and a starting reward profile.
+quick match, an Open Surge act, a Quaver chart, or a Naev space mission -
+wrapped with a difficulty, a step budget, a wall-clock budget, and a starting
+reward profile.
 Mission IDs look like `redalert.soviet-01.normal`,
 `flightgear.c172p.tutorial.takeoff`, `supertuxkart.race.lighthouse.normal`,
 `zeroad.scenario.arcadia.normal`, `freeciv.scenario.earth-small`,
 `doom.map.map01.easy`, `supertux.level.world1.welcome-antarctica.normal`, and
 `mindustry.survival.veins.normal`, `craftium.chop-tree.normal`,
-`ikemen.vs.kfm.normal`, and `opensurge.level.sunshine-1.normal`. They are the
-same string you pass to `--mission`, the WebSocket `create_session` op, and
-Prime RL configs.
+`ikemen.vs.kfm.normal`, `opensurge.level.sunshine-1.normal`,
+`quaver.chart.hyun-feat-lyuu-crossover-beginner.1159.easy`, and
+`naev.mission.missions-tutorial-tutorial.easy`. They are the same string you
+pass to `--mission`, the WebSocket `create_session` op, and Prime RL configs.
 
 ```bash
 wargames missions --game redalert --difficulty hard
@@ -277,6 +282,8 @@ wargames missions --game mindustry
 wargames missions --game craftium
 wargames missions --game ikemen
 wargames missions --game opensurge
+wargames missions --game quaver
+wargames missions --game naev
 ```
 
 Mission JSON lives in `scenarios/<game>/missions/<difficulty>/`. Catalogs are
@@ -310,6 +317,8 @@ Shipped profiles:
 | Craftium | `standard` |
 | IKEMEN GO | `standard` |
 | Open Surge | `standard` |
+| Quaver | `standard` |
+| Naev | `standard` |
 
 ```bash
 wargames reward-profile list --game redalert
@@ -323,6 +332,8 @@ wargames reward-profile list --game mindustry
 wargames reward-profile list --game craftium
 wargames reward-profile list --game ikemen
 wargames reward-profile list --game opensurge
+wargames reward-profile list --game quaver
+wargames reward-profile list --game naev
 wargames reward-profile validate scenarios/redalert/profiles/protective.yaml
 ```
 

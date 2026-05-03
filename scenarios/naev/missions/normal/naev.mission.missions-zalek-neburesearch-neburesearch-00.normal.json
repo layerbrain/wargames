@@ -1,0 +1,21 @@
+{
+  "data_dir": null,
+  "difficulty": "normal",
+  "estimated_duration_ticks": 9000,
+  "game": "naev",
+  "id": "naev.mission.missions-zalek-neburesearch-neburesearch-00.normal",
+  "mission_file": "missions/zalek/neburesearch/neburesearch_00.lua",
+  "mission_name": "Novice Nebula Research",
+  "native_difficulty": "tier-2",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "mission",
+    "normal",
+    "space",
+    "tier-2"
+  ],
+  "tier": 2,
+  "time_limit_ticks": 18000,
+  "title": "Novice Nebula Research (Nebula Research)"
+}
