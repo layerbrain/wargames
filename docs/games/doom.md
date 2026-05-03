@@ -91,14 +91,14 @@ Useful signals:
 | `player.damage_taken` | Damage penalty signal. |
 | `mission.finished` / `mission.failed` | Final outcome. |
 
-Profiles:
+Reward profiles:
 
-| Profile | Use |
+| Reward profile | Use |
 |---|---|
 | `standard` | Reward kills, items, secrets, health, low damage, and efficient completion |
 
 ```bash
-wargames profile list --game doom
+wargames reward-profile list --game doom
 ```
 
 The Doom profile files live in `scenarios/doom/profiles/`. The full profile
@@ -113,7 +113,7 @@ movement, turning, firing, and use-key input:
 wargames run \
   --game doom \
   --mission doom.map.map01.easy \
-  --profile standard \
+  --reward-profile standard \
   --agent doom-controls \
   --record full
 ```

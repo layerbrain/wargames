@@ -86,18 +86,18 @@ Useful signals:
 | `karts` | Player and opponent state. |
 | `mission.finished` / `mission.failed` | Final outcome. |
 
-Profiles:
+Reward profiles:
 
-| Profile | Use |
+| Reward profile | Use |
 |---|---|
 | `standard` | Make progress, drive fast, pass karts, stay on road, and finish |
 
 ```bash
-wargames profile list --game supertuxkart
+wargames reward-profile list --game supertuxkart
 ```
 
 The SuperTuxKart profile files live in `scenarios/supertuxkart/profiles/`. The
-full profile spec is in [`../reward_profiles.md`](../reward_profiles.md).
+full reward profile spec is in [`../reward_profiles.md`](../reward_profiles.md).
 
 ## Agent Setup
 
@@ -146,7 +146,7 @@ command: ["python", "my_agent.py"]
 wargames run \
   --game supertuxkart \
   --mission supertuxkart.race.lighthouse.normal \
-  --profile standard \
+  --reward-profile standard \
   --agent my-supertuxkart-agent \
   --agent-dir .
 ```

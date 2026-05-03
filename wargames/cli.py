@@ -20,24 +20,14 @@ from wargames.core.capture.frame import Frame
 from wargames.evaluation.profile import profile_registry
 from wargames.evaluation.schema import GameRewardSchema
 from wargames.evaluation.task import RunConfig, TaskSpec, canonical_task_id
+from wargames.games.registry import SUPPORTED_GAMES, load_game
 from wargames.harness.agent_loader import create_agent, list_agent_specs, load_agent_spec
 from wargames.harness.turns import events_from_payload, validate_turn
 
 _LINUX_BOX_ENV = "LAYERBRAIN_WARGAMES_IN_LINUX_BOX"
 _LINUX_BOX_DEFAULT_RESOLUTION = (1280, 720)
 _BOX_COMMANDS = {"boot", "control", "install", "run", "serve"}
-_INSTALLABLE_GAMES = (
-    "redalert",
-    "flightgear",
-    "supertuxkart",
-    "zeroad",
-    "freeciv",
-    "doom",
-    "supertux",
-    "mindustry",
-    "craftium",
-    "ikemen",
-)
+_INSTALLABLE_GAMES = SUPPORTED_GAMES
 _TASK_GAMES = _INSTALLABLE_GAMES
 _LINUX_BOX_CACHE_MOUNT = "/opt/wargames-cache"
 _LINUX_BOX_BASE_IMAGE = "wargames-linux-base"
@@ -140,47 +130,10 @@ _IKEMEN_VERSION = "v0.99.0"
 
 
 def _game(id: str) -> GameDescriptor:
-    if id == "redalert":
-        from wargames.games.redalert import GAME
-
-        return GAME
-    if id == "flightgear":
-        from wargames.games.flightgear import GAME
-
-        return GAME
-    if id == "supertuxkart":
-        from wargames.games.supertuxkart import GAME
-
-        return GAME
-    if id == "zeroad":
-        from wargames.games.zeroad import GAME
-
-        return GAME
-    if id == "freeciv":
-        from wargames.games.freeciv import GAME
-
-        return GAME
-    if id == "doom":
-        from wargames.games.doom import GAME
-
-        return GAME
-    if id == "supertux":
-        from wargames.games.supertux import GAME
-
-        return GAME
-    if id == "mindustry":
-        from wargames.games.mindustry import GAME
-
-        return GAME
-    if id == "craftium":
-        from wargames.games.craftium import GAME
-
-        return GAME
-    if id == "ikemen":
-        from wargames.games.ikemen import GAME
-
-        return GAME
-    raise SystemExit(f"unknown game: {id}")
+    try:
+        return load_game(id)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
 
 
 def _reward_schema(game: str) -> GameRewardSchema:
@@ -1771,13 +1724,13 @@ async def _agents(args: argparse.Namespace) -> int:
     raise SystemExit(f"unknown agents command: {args.agent_command}")
 
 
-async def _profiles(args: argparse.Namespace) -> int:
+async def _reward_profiles(args: argparse.Namespace) -> int:
     _game(args.game)
-    if args.profile_command == "list":
+    if args.reward_profile_command == "list":
         for profile in profile_registry.list(args.game):
             print(f"{profile.id}\t{profile.description}")
         return 0
-    if args.profile_command == "show":
+    if args.reward_profile_command == "show":
         profile = profile_registry.get(args.game, args.profile_id)
         print(
             json.dumps(
@@ -1795,13 +1748,13 @@ async def _profiles(args: argparse.Namespace) -> int:
             )
         )
         return 0
-    if args.profile_command == "validate":
+    if args.reward_profile_command == "validate":
         from wargames.evaluation.profile_loader import load_profile_yaml
 
         profile = load_profile_yaml(Path(args.path), schema=_reward_schema(args.game))
         print(json.dumps({"ok": True, "id": profile.id, "game": profile.game}, sort_keys=True))
         return 0
-    if args.profile_command == "new":
+    if args.reward_profile_command == "new":
         path = Path(args.output or f"{args.profile_id}.yaml")
         path.write_text(
             "\n".join(
@@ -1823,7 +1776,7 @@ async def _profiles(args: argparse.Namespace) -> int:
         )
         print(json.dumps({"created": str(path)}, sort_keys=True))
         return 0
-    if args.profile_command == "dry-run":
+    if args.reward_profile_command == "dry-run":
         from wargames.evaluation.profile_loader import load_profile_yaml
         from wargames.core.world.probe import HiddenStateSnapshot
 
@@ -1855,7 +1808,7 @@ async def _profiles(args: argparse.Namespace) -> int:
             json.dumps({"total": sum(total.values()), "breakdown": total}, indent=2, sort_keys=True)
         )
         return 0
-    raise SystemExit(f"unknown profile command: {args.profile_command}")
+    raise SystemExit(f"unknown reward profile command: {args.reward_profile_command}")
 
 
 def _object_tree(value: object) -> object:
@@ -1871,8 +1824,8 @@ def _object_tree(value: object) -> object:
 async def _run(args: argparse.Namespace) -> int:
     game = _game(args.game)
     mission = _resolve_run_mission(args)
-    if args.profile:
-        mission = mission.with_reward_profile(args.profile)
+    if args.reward_profile:
+        mission = mission.with_reward_profile(args.reward_profile)
     profile_registry.get(mission.game, mission.reward_profile)
     run_config = RunConfig(
         recorder_mode=args.record,
@@ -1901,7 +1854,7 @@ def _resolve_run_mission(args: argparse.Namespace) -> TaskSpec:
         seed=seed,
         max_steps=args.max_steps,
         max_wall_seconds=args.max_wall_seconds,
-        reward_profile=args.profile or "standard",
+        reward_profile=args.reward_profile or "standard",
     )
 
 
@@ -2100,7 +2053,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--max-wall-seconds", type=int, default=900)
     run.add_argument("--agent", required=True)
     run.add_argument("--agent-dir", action="append", default=[])
-    run.add_argument("--profile")
+    run.add_argument("--reward-profile")
     run.add_argument("--watch", choices=("none", "window", "hud"), default="none")
     run.add_argument("--record", choices=("none", "summary_only", "full"), default="summary_only")
     run.add_argument("--video", choices=("none", "frames"), default="none")
@@ -2123,29 +2076,33 @@ def build_parser() -> argparse.ArgumentParser:
     agents_validate.add_argument("--agent-dir", action="append", default=[])
     agents_validate.set_defaults(handler=_agents)
 
-    profile = subcommands.add_parser("profile", help="list, show, or validate reward profiles")
-    profile_subcommands = profile.add_subparsers(dest="profile_command", required=True)
-    profile_list = profile_subcommands.add_parser("list")
-    profile_list.add_argument("--game", choices=_TASK_GAMES, default="redalert")
-    profile_list.set_defaults(handler=_profiles)
-    profile_show = profile_subcommands.add_parser("show")
-    profile_show.add_argument("profile_id")
-    profile_show.add_argument("--game", choices=_TASK_GAMES, default="redalert")
-    profile_show.set_defaults(handler=_profiles)
-    profile_validate = profile_subcommands.add_parser("validate")
-    profile_validate.add_argument("path")
-    profile_validate.add_argument("--game", choices=_TASK_GAMES, default="redalert")
-    profile_validate.set_defaults(handler=_profiles)
-    profile_new = profile_subcommands.add_parser("new")
-    profile_new.add_argument("profile_id")
-    profile_new.add_argument("--game", choices=_TASK_GAMES, default="redalert")
-    profile_new.add_argument("-o", "--output")
-    profile_new.set_defaults(handler=_profiles)
-    profile_dry_run = profile_subcommands.add_parser("dry-run")
-    profile_dry_run.add_argument("path")
-    profile_dry_run.add_argument("--trace", required=True)
-    profile_dry_run.add_argument("--game", choices=_TASK_GAMES, default="redalert")
-    profile_dry_run.set_defaults(handler=_profiles)
+    reward_profile = subcommands.add_parser(
+        "reward-profile", help="list, show, or validate reward profiles"
+    )
+    reward_profile_subcommands = reward_profile.add_subparsers(
+        dest="reward_profile_command", required=True
+    )
+    reward_profile_list = reward_profile_subcommands.add_parser("list")
+    reward_profile_list.add_argument("--game", choices=_TASK_GAMES, default="redalert")
+    reward_profile_list.set_defaults(handler=_reward_profiles)
+    reward_profile_show = reward_profile_subcommands.add_parser("show")
+    reward_profile_show.add_argument("profile_id")
+    reward_profile_show.add_argument("--game", choices=_TASK_GAMES, default="redalert")
+    reward_profile_show.set_defaults(handler=_reward_profiles)
+    reward_profile_validate = reward_profile_subcommands.add_parser("validate")
+    reward_profile_validate.add_argument("path")
+    reward_profile_validate.add_argument("--game", choices=_TASK_GAMES, default="redalert")
+    reward_profile_validate.set_defaults(handler=_reward_profiles)
+    reward_profile_new = reward_profile_subcommands.add_parser("new")
+    reward_profile_new.add_argument("profile_id")
+    reward_profile_new.add_argument("--game", choices=_TASK_GAMES, default="redalert")
+    reward_profile_new.add_argument("-o", "--output")
+    reward_profile_new.set_defaults(handler=_reward_profiles)
+    reward_profile_dry_run = reward_profile_subcommands.add_parser("dry-run")
+    reward_profile_dry_run.add_argument("path")
+    reward_profile_dry_run.add_argument("--trace", required=True)
+    reward_profile_dry_run.add_argument("--game", choices=_TASK_GAMES, default="redalert")
+    reward_profile_dry_run.set_defaults(handler=_reward_profiles)
 
     watch = subcommands.add_parser("watch", help="replay recorded public run events")
     watch.add_argument("run_id")

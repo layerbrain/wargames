@@ -90,18 +90,18 @@ Useful signals:
 | `us.core_health` | Core health preservation. |
 | `mission.finished` / `mission.failed` | Final outcome. |
 
-Profiles:
+Reward profiles:
 
-| Profile | Use |
+| Reward profile | Use |
 |---|---|
 | `standard` | Survive waves, accumulate items, build infrastructure, and keep cores alive |
 
 ```bash
-wargames profile list --game mindustry
+wargames reward-profile list --game mindustry
 ```
 
 The Mindustry profile files live in `scenarios/mindustry/profiles/`. The full
-profile spec is in [`../reward_profiles.md`](../reward_profiles.md).
+reward profile spec is in [`../reward_profiles.md`](../reward_profiles.md).
 
 ## Agent Setup
 

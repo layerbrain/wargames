@@ -25,10 +25,10 @@ Bring your own trainer or use the Prime RL adapter in this repo.
                                            +---------+---------+
                     |                               |
                     v                               v
-              +-----------+                  +-------------+
-              |   Agent   |                  |  Evaluator  |
-              | (model)   |                  | (profile)   |
-              +-----+-----+                  +------+------+
+              +-----------+                  +------------------+
+              |   Agent   |                  |    Evaluator     |
+              | (model)   |                  | (reward profile) |
+              +-----+-----+                  +--------+---------+
                     |                               |
                     | action                        | reward
                     v                               v
@@ -118,7 +118,7 @@ export OPENAI_MODEL=gpt-4o-mini
 wargames run \
   --game redalert \
   --mission redalert.soviet-01.normal \
-  --profile standard \
+  --reward-profile standard \
   --agent openai-quickstart \
   --record full
 ```
@@ -151,7 +151,7 @@ Each step, the agent gets one JSON object:
 
 | Field | What it is |
 |---|---|
-| `task` | Mission id, game id, profile, limits, and prompt text for this run. |
+| `task` | Mission id, game id, reward profile, limits, and prompt text for this run. |
 | `frame.image_b64` | Latest game frame, PNG bytes base64-encoded. |
 | `frame.width`, `frame.height` | Frame dimensions in pixels. Default 1280x720. |
 | `history` | Public actions the agent has already sent this run. |
@@ -160,6 +160,45 @@ Each step, the agent gets one JSON object:
 
 State used for scoring stays inside the evaluator and is not included in the
 observation payload.
+
+## Native Environment
+
+A WarGames environment is a running mission. You start the mission, receive the
+first public observation, send actions, and receive the next observation with a
+reward and episode status. The reward comes from the selected reward profile.
+The reward profile can compare trusted game state between steps, but that
+trusted state is not shown to the agent.
+
+```python
+from wargames import WarGamesEnv
+
+env = WarGamesEnv(
+    game="redalert",
+    mission="redalert.soviet-01.normal",
+    reward_profile="standard",
+)
+
+obs, info = env.start()
+
+while True:
+    obs, reward, terminated, truncated, info = env.step("wait")
+    if terminated or truncated:
+        break
+
+env.close()
+```
+
+The same methods work in async code:
+
+```python
+obs, info = await env.start()
+obs, reward, terminated, truncated, info = await env.step("wait")
+await env.close()
+```
+
+Native environment actions are game-specific names. `env.actions` lists the
+available names for the selected game; `env.step(0)` and `env.step("wait")`
+address the same action.
 
 ## Actions
 
@@ -232,7 +271,7 @@ Mission JSON lives in `scenarios/<game>/missions/<difficulty>/`. Catalogs are
 generated from installed game assets; when no game assets are available, the
 game reports no missions.
 
-## Profiles
+## Reward Profiles
 
 A reward profile is the reward function for a run. It turns scoring state
 into the scalar reward your trainer sees, with per-step shaping and a final
@@ -241,12 +280,12 @@ terminal score.
 The YAML format is universal, but **each game ships its own schema**: the
 state fields and reward primitives Red Alert exposes (`us.cash`,
 `mission.objectives`, `delta_units_killed`, ...) are different from
-FlightGear's (`aircraft.altitude_ft`, `aircraft.crashed`, ...). Profiles for
-one game cannot be applied to another.
+FlightGear's (`aircraft.altitude_ft`, `aircraft.crashed`, ...). Reward profiles
+for one game cannot be applied to another.
 
 Shipped profiles:
 
-| Game | Profiles |
+| Game | Reward profiles |
 |---|---|
 | Red Alert | `terminal`, `standard`, `dense`, `protective`, `speedrun`, `aggressive_stress_test` |
 | FlightGear | `standard` |
@@ -256,17 +295,21 @@ Shipped profiles:
 | Doom | `standard` |
 | SuperTux | `standard` |
 | Mindustry | `standard` |
+| Craftium | `standard` |
+| IKEMEN GO | `standard` |
 
 ```bash
-wargames profile list --game redalert
-wargames profile list --game flightgear
-wargames profile list --game supertuxkart
-wargames profile list --game zeroad
-wargames profile list --game freeciv
-wargames profile list --game doom
-wargames profile list --game supertux
-wargames profile list --game mindustry
-wargames profile validate scenarios/redalert/profiles/protective.yaml
+wargames reward-profile list --game redalert
+wargames reward-profile list --game flightgear
+wargames reward-profile list --game supertuxkart
+wargames reward-profile list --game zeroad
+wargames reward-profile list --game freeciv
+wargames reward-profile list --game doom
+wargames reward-profile list --game supertux
+wargames reward-profile list --game mindustry
+wargames reward-profile list --game craftium
+wargames reward-profile list --game ikemen
+wargames reward-profile validate scenarios/redalert/profiles/protective.yaml
 ```
 
 Full schema and the per-game field/primitive tables: [`docs/reward_profiles.md`](docs/reward_profiles.md).

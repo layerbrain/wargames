@@ -1,5 +1,6 @@
 from wargames.core.config import WarGamesConfig
 from wargames.core.runtime.arena import GameDescriptor, WarGames
+from wargames.environments.native import WarGamesEnv
 
 
 def load_environment(*args: object, **kwargs: object) -> object:
@@ -8,4 +9,4 @@ def load_environment(*args: object, **kwargs: object) -> object:
     return load_prime_environment(*args, **kwargs)
 
 
-__all__ = ["GameDescriptor", "WarGames", "WarGamesConfig", "load_environment"]
+__all__ = ["GameDescriptor", "WarGames", "WarGamesConfig", "WarGamesEnv", "load_environment"]

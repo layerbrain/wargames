@@ -81,14 +81,14 @@ Useful signals:
 | `victory_conditions` | The configured win conditions. |
 | `mission.finished` / `mission.failed` | Final outcome. |
 
-Profiles:
+Reward profiles:
 
-| Profile | Use |
+| Reward profile | Use |
 |---|---|
 | `standard` | Grow resources, build population, damage enemies, and win |
 
 ```bash
-wargames profile list --game zeroad
+wargames reward-profile list --game zeroad
 ```
 
 The 0 A.D. profile files live in `scenarios/zeroad/profiles/`. The full profile

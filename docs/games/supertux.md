@@ -87,18 +87,18 @@ Useful signals:
 | `player.dead` | Failure and death penalty. |
 | `mission.finished` / `mission.failed` | Final outcome. |
 
-Profiles:
+Reward profiles:
 
-| Profile | Use |
+| Reward profile | Use |
 |---|---|
 | `standard` | Move right, collect coins and secrets, stay alive, and finish |
 
 ```bash
-wargames profile list --game supertux
+wargames reward-profile list --game supertux
 ```
 
 The SuperTux profile files live in `scenarios/supertux/profiles/`. The full
-profile spec is in [`../reward_profiles.md`](../reward_profiles.md).
+reward profile spec is in [`../reward_profiles.md`](../reward_profiles.md).
 
 ## Agent Setup
 
