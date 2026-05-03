@@ -6,7 +6,7 @@ Missions cover navigation, tree chopping, cave traversal, dungeon exploration,
 spider combat, open-world survival, and Craftium's `sequence0_25` continual
 dungeon tasks through Craftium's Gymnasium interface.
 
-![Craftium control proof](../assets/craftium-control-proof.mp4)
+![Craftium control proof](../assets/craftium-control-proof.gif)
 
 Rewards use Craftium's trusted `info` state: native task reward, player
 position and velocity, view angles, voxel observation summaries, and terminal

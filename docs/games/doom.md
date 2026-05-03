@@ -8,7 +8,7 @@ combat, survival, pickups, secrets, and exits.
 Rewards use trusted state from a WarGames exporter compiled into Chocolate
 Doom: health, armor, ammo, kills, secrets, items, map progress, and exit state.
 
-![Doom control proof](../assets/doom-control-proof.mp4)
+![Doom control proof](../assets/doom-control-proof.gif)
 
 ## Run It
 

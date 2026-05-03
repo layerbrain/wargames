@@ -9,7 +9,7 @@ Rewards use trusted state from a WarGames exporter compiled into SuperTux:
 position, velocity, coins, enemies, checkpoint progress, death state, and level
 completion.
 
-![SuperTux control proof](../assets/supertux-control-proof.mp4)
+![SuperTux control proof](../assets/supertux-control-proof.gif)
 
 ## Run It
 
