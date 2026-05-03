@@ -9,7 +9,7 @@ Rewards use trusted IKEMEN GO state exported from CommonLua: round state,
 winner, player life, power, position, velocity, state number, control state,
 and AI level.
 
-![IKEMEN GO control proof](../assets/ikemen-control-proof.mp4)
+![IKEMEN GO control proof](../assets/ikemen-control-proof.gif)
 
 WarGames uses the upstream [IKEMEN GO project](https://github.com/ikemen-engine/Ikemen-GO).
 IKEMEN GO code is MIT licensed; the upstream package also includes non-code

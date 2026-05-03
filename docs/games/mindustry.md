@@ -9,7 +9,7 @@ Rewards use trusted state from a WarGames plugin loaded by the Mindustry
 client: wave, core health, items, buildings, units, enemies, power, and
 win/game-over state.
 
-![Mindustry control proof](../assets/mindustry-control-proof.mp4)
+![Mindustry control proof](../assets/mindustry-control-proof.gif)
 
 ## Run It
 
