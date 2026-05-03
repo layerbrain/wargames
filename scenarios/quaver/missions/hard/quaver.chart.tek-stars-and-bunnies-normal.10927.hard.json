@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/+TEK - Stars and Bunnies.qp",
+  "artist": "+TEK",
+  "audio_file": "audio.mp3",
+  "difficulty": "hard",
+  "difficulty_name": "Normal",
+  "estimated_duration_ticks": 5314,
+  "game": "quaver",
+  "hit_objects": 516,
+  "id": "quaver.chart.tek-stars-and-bunnies-normal.10927.hard",
+  "key_count": 7,
+  "long_notes": 36,
+  "map_id": 10927,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/+TEK - Stars and Bunnies.qp:10927.qua",
+  "mapset_id": 922,
+  "mines": 0,
+  "mode": "Keys7",
+  "native_difficulty": "Normal",
+  "notes_per_second": 5.826,
+  "song_length_ms": 88574,
+  "song_title": "Stars and Bunnies",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys7",
+    "7k"
+  ],
+  "time_limit_ticks": 6514,
+  "title": "+TEK - Stars and Bunnies [Normal]",
+  "total_judgements": 552
+}

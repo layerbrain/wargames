@@ -1,0 +1,38 @@
+id: standard
+game: quaver
+description: "Complete the chart by hitting notes accurately and preserving health."
+step_reward_min: -0.50
+step_reward_max: 0.50
+entries:
+  - id: delta_score
+    fn: wargames.games.quaver.rewards.delta_score
+    weight: 0.00001
+    when: per_step
+  - id: delta_hits
+    fn: wargames.games.quaver.rewards.delta_hits
+    weight: 0.02
+    when: per_step
+  - id: delta_combo
+    fn: wargames.games.quaver.rewards.delta_combo
+    weight: 0.01
+    when: per_step
+  - id: delta_accuracy
+    fn: wargames.games.quaver.rewards.delta_accuracy
+    weight: 0.02
+    when: per_step
+  - id: miss_penalty
+    fn: wargames.games.quaver.rewards.miss_penalty
+    weight: 0.08
+    when: per_step
+  - id: health_loss_penalty
+    fn: wargames.games.quaver.rewards.health_loss_penalty
+    weight: 0.01
+    when: per_step
+  - id: time_penalty
+    fn: wargames.games.quaver.rewards.time_penalty
+    weight: 0.00001
+    when: per_step
+  - id: terminal
+    fn: wargames.core.missions.rewards.terminal
+    weight: 5.0
+    when: terminal

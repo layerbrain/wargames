@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/Rabbit House - Have A Party Time!.qp",
+  "artist": "Rabbit House",
+  "audio_file": "audio.mp3",
+  "difficulty": "hard",
+  "difficulty_name": "neyoru's 4K Insane",
+  "estimated_duration_ticks": 7867,
+  "game": "quaver",
+  "hit_objects": 1574,
+  "id": "quaver.chart.rabbit-house-have-a-party-time-neyoru-s-4k-insane.16.hard",
+  "key_count": 4,
+  "long_notes": 119,
+  "map_id": 16,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/Rabbit House - Have A Party Time!.qp:16.qua",
+  "mapset_id": 9,
+  "mines": 0,
+  "mode": "Keys4",
+  "native_difficulty": "neyoru's 4K Insane",
+  "notes_per_second": 12.003,
+  "song_length_ms": 131133,
+  "song_title": "Have A Party Time!",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys4",
+    "4k"
+  ],
+  "time_limit_ticks": 9067,
+  "title": "Rabbit House - Have A Party Time! [neyoru's 4K Insane]",
+  "total_judgements": 1693
+}

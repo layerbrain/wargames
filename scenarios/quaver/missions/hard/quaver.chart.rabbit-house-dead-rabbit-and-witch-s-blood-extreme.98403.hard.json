@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/Rabbit House - Dead Rabbit And Witch's Blood.qp",
+  "artist": "Rabbit House",
+  "audio_file": "audio.mp3",
+  "difficulty": "hard",
+  "difficulty_name": "Extreme",
+  "estimated_duration_ticks": 7681,
+  "game": "quaver",
+  "hit_objects": 2370,
+  "id": "quaver.chart.rabbit-house-dead-rabbit-and-witch-s-blood-extreme.98403.hard",
+  "key_count": 4,
+  "long_notes": 12,
+  "map_id": 98403,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/Rabbit House - Dead Rabbit And Witch's Blood.qp:98403.qua",
+  "mapset_id": 21846,
+  "mines": 0,
+  "mode": "Keys4",
+  "native_difficulty": "Extreme",
+  "notes_per_second": 18.513,
+  "song_length_ms": 128019,
+  "song_title": "Dead Rabbit And Witch's Blood",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys4",
+    "4k"
+  ],
+  "time_limit_ticks": 8881,
+  "title": "Rabbit House - Dead Rabbit And Witch's Blood [Extreme]",
+  "total_judgements": 2382
+}

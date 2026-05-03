@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/zetoban - Umami Packed Mountaineering.qp",
+  "artist": "zetoban",
+  "audio_file": "audio.mp3",
+  "difficulty": "hard",
+  "difficulty_name": "Hydria's Advanced",
+  "estimated_duration_ticks": 7788,
+  "game": "quaver",
+  "hit_objects": 1402,
+  "id": "quaver.chart.zetoban-umami-packed-mountaineering-hydria-s-advanced.9115.hard",
+  "key_count": 7,
+  "long_notes": 178,
+  "map_id": 9115,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/zetoban - Umami Packed Mountaineering.qp:9115.qua",
+  "mapset_id": 822,
+  "mines": 0,
+  "mode": "Keys7",
+  "native_difficulty": "Hydria's Advanced",
+  "notes_per_second": 10.801,
+  "song_length_ms": 129802,
+  "song_title": "Umami Packed Mountaineering",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys7",
+    "7k"
+  ],
+  "time_limit_ticks": 8988,
+  "title": "zetoban - Umami Packed Mountaineering [Hydria's Advanced]",
+  "total_judgements": 1580
+}

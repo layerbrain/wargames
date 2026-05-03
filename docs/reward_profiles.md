@@ -375,6 +375,36 @@ The shipped Open Surge profile includes `delta_rings`, `delta_score`,
 shaping entries only after declaring the primitive in
 `wargames/games/opensurge/reward_schema.py`.
 
+## Quaver Reward Fields
+
+Quaver rewards are computed from chart and scoring state exported each gameplay
+tick.
+
+| Field | Direction | Meaning |
+|---|---|---|
+| `mission.finished` | maximize | Chart completed. |
+| `mission.failed` | minimize | Failed chart or runtime failure. |
+| `chart.map_id` | track | Quaver map id. |
+| `chart.difficulty_name` | track | Chart difficulty name. |
+| `chart.key_count` | track | Number of keyboard lanes. |
+| `chart.total_judgements` | track | Scored note events in the chart. |
+| `gameplay.song_time_ms` | maximize | Current chart time. |
+| `gameplay.health` | maximize | Current health. |
+| `gameplay.score` | maximize | Current score. |
+| `gameplay.accuracy` | maximize | Current accuracy. |
+| `gameplay.combo` | maximize | Current combo. |
+| `gameplay.max_combo` | maximize | Best combo this run. |
+| `judgements.marv` | maximize | Marvelous hits. |
+| `judgements.perf` | maximize | Perfect hits. |
+| `judgements.great` | maximize | Great hits. |
+| `judgements.good` | maximize | Good hits. |
+| `judgements.miss` | minimize | Missed notes. |
+
+The shipped Quaver profile includes `delta_score`, `delta_hits`,
+`delta_combo`, `delta_accuracy`, `miss_penalty`, `health_loss_penalty`,
+`time_penalty`, and `terminal`. Add shaping entries only after declaring the
+primitive in `wargames/games/quaver/reward_schema.py`.
+
 ## Eval And RL
 
 Use dense shaping for training and sparse or mild profiles for reporting.
@@ -420,6 +450,7 @@ wargames reward-profile validate scenarios/mindustry/profiles/standard.yaml --ga
 wargames reward-profile validate scenarios/craftium/profiles/standard.yaml --game craftium
 wargames reward-profile validate scenarios/ikemen/profiles/standard.yaml --game ikemen
 wargames reward-profile validate scenarios/opensurge/profiles/standard.yaml --game opensurge
+wargames reward-profile validate scenarios/quaver/profiles/standard.yaml --game quaver
 python -m unittest tests.evaluation.test_profiles -v
 ```
 

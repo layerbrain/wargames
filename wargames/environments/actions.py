@@ -174,6 +174,35 @@ OPENSURGE_ACTIONS = ActionSet(
     ),
 )
 
+QUAVER_ACTIONS = ActionSet(
+    "quaver",
+    (
+        _wait(50),
+        GameAction("lane_1_press", (_tool("key_down", key="a"),), "Press lane 1."),
+        GameAction("lane_1_release", (_tool("key_up", key="a"),), "Release lane 1."),
+        GameAction("lane_2_press", (_tool("key_down", key="s"),), "Press lane 2."),
+        GameAction("lane_2_release", (_tool("key_up", key="s"),), "Release lane 2."),
+        GameAction("lane_3_press", (_tool("key_down", key="d"),), "Press lane 3."),
+        GameAction("lane_3_release", (_tool("key_up", key="d"),), "Release lane 3."),
+        GameAction("lane_4_press", (_tool("key_down", key="Space"),), "Press lane 4."),
+        GameAction("lane_4_release", (_tool("key_up", key="Space"),), "Release lane 4."),
+        GameAction("lane_5_press", (_tool("key_down", key="j"),), "Press lane 5."),
+        GameAction("lane_5_release", (_tool("key_up", key="j"),), "Release lane 5."),
+        GameAction("lane_6_press", (_tool("key_down", key="k"),), "Press lane 6."),
+        GameAction("lane_6_release", (_tool("key_up", key="k"),), "Release lane 6."),
+        GameAction("lane_7_press", (_tool("key_down", key="l"),), "Press lane 7."),
+        GameAction("lane_7_release", (_tool("key_up", key="l"),), "Release lane 7."),
+        _tap("lane_1_tap", "a", ms=35, description="Tap lane 1."),
+        _tap("lane_2_tap", "s", ms=35, description="Tap lane 2."),
+        _tap("lane_3_tap", "d", ms=35, description="Tap lane 3."),
+        _tap("lane_4_tap", "Space", ms=35, description="Tap lane 4."),
+        _tap("lane_5_tap", "j", ms=35, description="Tap lane 5."),
+        _tap("lane_6_tap", "k", ms=35, description="Tap lane 6."),
+        _tap("lane_7_tap", "l", ms=35, description="Tap lane 7."),
+        _tap("pause", "Escape", ms=50, description="Pause or resume."),
+    ),
+)
+
 REDALERT_ACTIONS = ActionSet(
     "redalert",
     (
@@ -269,6 +298,7 @@ ACTION_SETS: dict[str, ActionSet] = {
         CRAFTIUM_ACTIONS,
         IKEMEN_ACTIONS,
         OPENSURGE_ACTIONS,
+        QUAVER_ACTIONS,
     )
 }
 

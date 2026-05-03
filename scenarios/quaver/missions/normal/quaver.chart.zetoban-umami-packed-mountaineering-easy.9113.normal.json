@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/zetoban - Umami Packed Mountaineering.qp",
+  "artist": "zetoban",
+  "audio_file": "audio.mp3",
+  "difficulty": "normal",
+  "difficulty_name": "Easy",
+  "estimated_duration_ticks": 7625,
+  "game": "quaver",
+  "hit_objects": 480,
+  "id": "quaver.chart.zetoban-umami-packed-mountaineering-easy.9113.normal",
+  "key_count": 7,
+  "long_notes": 65,
+  "map_id": 9113,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/zetoban - Umami Packed Mountaineering.qp:9113.qua",
+  "mapset_id": 822,
+  "mines": 0,
+  "mode": "Keys7",
+  "native_difficulty": "Easy",
+  "notes_per_second": 3.777,
+  "song_length_ms": 127092,
+  "song_title": "Umami Packed Mountaineering",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys7",
+    "7k"
+  ],
+  "time_limit_ticks": 8825,
+  "title": "zetoban - Umami Packed Mountaineering [Easy]",
+  "total_judgements": 545
+}

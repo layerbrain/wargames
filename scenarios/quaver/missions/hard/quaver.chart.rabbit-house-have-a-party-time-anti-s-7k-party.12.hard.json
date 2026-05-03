@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/Rabbit House - Have A Party Time!.qp",
+  "artist": "Rabbit House",
+  "audio_file": "audio.mp3",
+  "difficulty": "hard",
+  "difficulty_name": "anti-'s 7K Party",
+  "estimated_duration_ticks": 7867,
+  "game": "quaver",
+  "hit_objects": 3050,
+  "id": "quaver.chart.rabbit-house-have-a-party-time-anti-s-7k-party.12.hard",
+  "key_count": 7,
+  "long_notes": 1218,
+  "map_id": 12,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/Rabbit House - Have A Party Time!.qp:12.qua",
+  "mapset_id": 9,
+  "mines": 0,
+  "mode": "Keys7",
+  "native_difficulty": "anti-'s 7K Party",
+  "notes_per_second": 23.261,
+  "song_length_ms": 131121,
+  "song_title": "Have A Party Time!",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys7",
+    "7k"
+  ],
+  "time_limit_ticks": 9067,
+  "title": "Rabbit House - Have A Party Time! [anti-'s 7K Party]",
+  "total_judgements": 4268
+}

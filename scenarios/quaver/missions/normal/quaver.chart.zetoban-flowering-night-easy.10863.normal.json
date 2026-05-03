@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/zetoban - Flowering Night.qp",
+  "artist": "zetoban",
+  "audio_file": "zetoban - Flowering Night (1).mp3",
+  "difficulty": "normal",
+  "difficulty_name": "Easy",
+  "estimated_duration_ticks": 9462,
+  "game": "quaver",
+  "hit_objects": 453,
+  "id": "quaver.chart.zetoban-flowering-night-easy.10863.normal",
+  "key_count": 4,
+  "long_notes": 6,
+  "map_id": 10863,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/zetoban - Flowering Night.qp:10863.qua",
+  "mapset_id": 919,
+  "mines": 0,
+  "mode": "Keys4",
+  "native_difficulty": "Easy",
+  "notes_per_second": 2.872,
+  "song_length_ms": 157714,
+  "song_title": "Flowering Night",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys4",
+    "4k"
+  ],
+  "time_limit_ticks": 10662,
+  "title": "zetoban - Flowering Night [Easy]",
+  "total_judgements": 459
+}

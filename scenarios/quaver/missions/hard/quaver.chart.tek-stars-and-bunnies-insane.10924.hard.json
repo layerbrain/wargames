@@ -1,0 +1,32 @@
+{
+  "archive_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/+TEK - Stars and Bunnies.qp",
+  "artist": "+TEK",
+  "audio_file": "audio.mp3",
+  "difficulty": "hard",
+  "difficulty_name": "Insane",
+  "estimated_duration_ticks": 5314,
+  "game": "quaver",
+  "hit_objects": 1428,
+  "id": "quaver.chart.tek-stars-and-bunnies-insane.10924.hard",
+  "key_count": 7,
+  "long_notes": 0,
+  "map_id": 10924,
+  "map_path": "Quaver.Resources/Quaver.Resources/DefaultMaps/+TEK - Stars and Bunnies.qp:10924.qua",
+  "mapset_id": 922,
+  "mines": 0,
+  "mode": "Keys7",
+  "native_difficulty": "Insane",
+  "notes_per_second": 16.122,
+  "song_length_ms": 88574,
+  "song_title": "Stars and Bunnies",
+  "source": "builtin",
+  "tags": [
+    "rhythm",
+    "timing",
+    "keys7",
+    "7k"
+  ],
+  "time_limit_ticks": 6514,
+  "title": "+TEK - Stars and Bunnies [Insane]",
+  "total_judgements": 1428
+}
