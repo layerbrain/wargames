@@ -6,6 +6,7 @@ from dataclasses import dataclass
 import json
 from pathlib import Path
 
+from wargames.core.missions.catalog import resolve_mission_catalog_path
 from wargames.core.missions.spec import MissionDifficulty
 from wargames.core.missions.spec import MissionSpec
 
@@ -203,7 +204,7 @@ def discover(openra_root: str | Path) -> tuple[RedAlertMissionSpec, ...]:
 
 
 def load_mission_catalog(path: str | Path) -> tuple[RedAlertMissionSpec, ...]:
-    root = Path(path)
+    root = resolve_mission_catalog_path(path)
     if not root.exists():
         return ()
     missions: list[RedAlertMissionSpec] = []

@@ -3,16 +3,23 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "layerbrain-wargames"
-version = "0.1.8"
+name = "wargames"
+version = "0.1.10"
 description = "Long-horizon real-time game environments for Prime Intellect Verifiers."
 requires-python = ">=3.11"
 authors = [{ name = "Layerbrain", email = "brain@layerbrain.com" }]
 tags = ["defense-sim", "real-time", "games", "cua", "vision", "flight-simulator", "rts", "platformer", "rhythm", "fighting", "space-sim", "reinforcement-learning"]
 dependencies = [
   "datasets>=4.6.1",
+  "fastapi>=0.115.0",
+  "httpx>=0.28.0",
+  "msgpack>=1.0.0",
+  "openai>=2.32.0",
+  "python-xlib>=0.33",
+  "pyyaml>=6.0.0",
+  "uvicorn>=0.30.0",
   "verifiers>=0.1.12",
-  "wargames @ https://github.com/layerbrain/wargames/archive/refs/heads/main.zip",
+  "websockets>=14.0",
 ]
 
 [project.entry-points."verifiers.environments"]
@@ -20,12 +27,10 @@ dependencies = [
 
 [tool.hatch.build.targets.wheel]
 only-include = ["wargames_prime.py", "configs"]
+force-include = { "../../wargames" = "wargames", "../../scenarios" = "wargames/scenarios" }
 
 [tool.hatch.build.targets.editable]
 only-include = ["wargames_prime.py", "configs"]
-
-[tool.hatch.metadata]
-allow-direct-references = true
 
 [tool.prime.environment]
 display_name = "WarGames"

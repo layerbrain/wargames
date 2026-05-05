@@ -12,6 +12,7 @@ from typing import Any
 
 import yaml
 
+from wargames.core.missions.catalog import resolve_mission_catalog_path
 from wargames.core.missions.spec import MissionDifficulty, MissionSpec
 
 QUAVER_DIFFICULTIES: tuple[MissionDifficulty, ...] = ("easy", "normal", "hard")
@@ -109,7 +110,7 @@ def extract_mission_catalog(
 
 
 def load_mission_catalog(path: str | Path) -> tuple[QuaverMissionSpec, ...]:
-    root = Path(path)
+    root = resolve_mission_catalog_path(path)
     if not root.exists():
         return ()
     return tuple(

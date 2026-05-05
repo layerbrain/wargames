@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from xml.etree import ElementTree
 
+from wargames.core.missions.catalog import resolve_mission_catalog_path
 from wargames.core.missions.spec import MissionSpec
 
 
@@ -85,7 +86,7 @@ def extract_mission_catalog(
 
 
 def load_mission_catalog(path: str | Path) -> tuple[FlightGearMissionSpec, ...]:
-    root = Path(path)
+    root = resolve_mission_catalog_path(path)
     if not root.exists():
         return ()
     missions: list[FlightGearMissionSpec] = []

@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from wargames.core.missions.catalog import resolve_mission_catalog_path
 from wargames.core.missions.spec import MissionDifficulty, MissionSpec
 
 IKEMEN_DIFFICULTIES: tuple[MissionDifficulty, ...] = ("easy", "normal", "hard")
@@ -79,7 +80,7 @@ def extract_mission_catalog(root: str | Path | None, output_dir: str | Path) -> 
 
 
 def load_mission_catalog(path: str | Path) -> tuple[IkemenMissionSpec, ...]:
-    root = Path(path)
+    root = resolve_mission_catalog_path(path)
     if not root.exists():
         return ()
     return tuple(
