@@ -104,4 +104,5 @@ make -C environments/prime publish
 ```
 
 The publish target runs the WarGames harness/evaluation tests, Prime conformance
-tests, and then pushes the public `layerbrain/wargames` environment.
+tests, a Prime source archive install check, and then pushes the public
+`layerbrain/wargames` environment.
