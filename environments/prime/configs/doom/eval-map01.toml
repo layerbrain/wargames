@@ -1,0 +1,5 @@
+game = "doom"
+mission = "doom.map.map01.easy"
+reward_profile = "standard"
+recorder_mode = "summary_only"
+max_steps = 512

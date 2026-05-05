@@ -1,0 +1,6 @@
+game = "craftium"
+mission = "craftium.chop-tree.normal"
+reward_profile = "standard"
+recorder_mode = "none"
+max_steps = 512
+rollouts_per_example = 8

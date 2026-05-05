@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import replace
-from typing import Any, Callable
+from typing import Any, Callable, cast
 
 import verifiers as vf
 from datasets import Dataset
@@ -23,6 +23,7 @@ from wargames.episode.media import frame_data_url
 from wargames.evaluation.task import RunConfig, TaskSpec, canonical_task_id
 from wargames.games.redalert import GAME
 from wargames.games.redalert.config import RedAlertConfig
+from wargames.games.registry import load_game
 
 
 ConfigFactory = Callable[[], WarGamesConfig]
@@ -248,29 +249,11 @@ def _dataset(tasks: tuple[TaskSpec, ...]) -> Dataset:
 
 
 def _game_runtime(game: str) -> tuple[GameDescriptor, ConfigFactory]:
-    if game == "redalert":
-        return GAME, RedAlertConfig.from_env
-    if game == "flightgear":
-        from wargames.games.flightgear import GAME as FLIGHTGEAR_GAME
-        from wargames.games.flightgear.config import FlightGearConfig
-
-        return FLIGHTGEAR_GAME, FlightGearConfig.from_env
-    if game == "supertuxkart":
-        from wargames.games.supertuxkart import GAME as SUPERTUXKART_GAME
-        from wargames.games.supertuxkart.config import SuperTuxKartConfig
-
-        return SUPERTUXKART_GAME, SuperTuxKartConfig.from_env
-    if game == "zeroad":
-        from wargames.games.zeroad import GAME as ZEROAD_GAME
-        from wargames.games.zeroad.config import ZeroADConfig
-
-        return ZEROAD_GAME, ZeroADConfig.from_env
-    if game == "freeciv":
-        from wargames.games.freeciv import GAME as FREECIV_GAME
-        from wargames.games.freeciv.config import FreeCivConfig
-
-        return FREECIV_GAME, FreeCivConfig.from_env
-    raise ValueError(f"unknown game: {game}")
+    runtime = load_game(game)
+    from_env = getattr(runtime.config_cls, "from_env", None)
+    if not callable(from_env):
+        raise ValueError(f"game config has no from_env: {game}")
+    return runtime, cast(ConfigFactory, from_env)
 
 
 def _tool_defs() -> list[Tool]:

@@ -1,0 +1,5 @@
+game = "ikemen"
+mission = "ikemen.vs.kfm.normal"
+reward_profile = "standard"
+recorder_mode = "summary_only"
+max_steps = 512
