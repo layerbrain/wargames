@@ -203,6 +203,45 @@ QUAVER_ACTIONS = ActionSet(
     ),
 )
 
+NAEV_ACTIONS = ActionSet(
+    "naev",
+    (
+        _wait(),
+        _tap("forward", "w", description="Accelerate forward."),
+        _tap("reverse", "s", description="Reverse thrust."),
+        _tap("turn_left", "a", description="Turn left."),
+        _tap("turn_right", "d", description="Turn right."),
+        _tap("fire_primary", "Space", ms=100, description="Fire the primary weapon set."),
+        GameAction(
+            "fire_secondary",
+            (
+                _tool("key_down", key="Shift"),
+                _tool("wait", ms=100),
+                _tool("key_up", key="Shift"),
+            ),
+            "Fire the secondary weapon set.",
+        ),
+        _tap("target_nearest", "t", description="Target the nearest pilot."),
+        _tap("target_hostile", "r", description="Target the nearest hostile pilot."),
+        _tap("face_target", "q", description="Turn toward the current target."),
+        _tap("land_or_approach", "l", description="Approach or land on the selected planet."),
+        _tap("jump", "j", description="Jump through the selected hyperspace lane."),
+        GameAction(
+            "autonav",
+            (
+                _tool("key_down", key="Control"),
+                _tool("key_down", key="j"),
+                _tool("wait", ms=75),
+                _tool("key_up", key="j"),
+                _tool("key_up", key="Control"),
+            ),
+            "Toggle autonav.",
+        ),
+        _tap("map", "m", description="Open or close the star map."),
+        _tap("cancel", "Escape", description="Cancel the current dialog or menu."),
+    ),
+)
+
 REDALERT_ACTIONS = ActionSet(
     "redalert",
     (
@@ -299,6 +338,7 @@ ACTION_SETS: dict[str, ActionSet] = {
         IKEMEN_ACTIONS,
         OPENSURGE_ACTIONS,
         QUAVER_ACTIONS,
+        NAEV_ACTIONS,
     )
 }
 

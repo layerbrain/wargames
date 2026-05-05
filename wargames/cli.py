@@ -126,6 +126,14 @@ _LINUX_BOX_RUNTIMES = {
         base_image="wargames-linux-base-amd64",
         platform="linux/amd64",
     ),
+    "naev": LinuxBoxRuntime(
+        game="naev",
+        image="wargames-linux-naev",
+        dockerfile="docker/naev/Dockerfile",
+        cache_volume="wargames-naev",
+        base_image="wargames-linux-base-amd64",
+        platform="linux/amd64",
+    ),
 }
 _OPENRA_REPO = "https://github.com/OpenRA/OpenRA.git"
 _OPENRA_REF = "bleed"
@@ -146,6 +154,8 @@ _OPENSURGE_REPO = "https://github.com/alemart/opensurge.git"
 _OPENSURGE_REF = "v0.6.1.3"
 _QUAVER_REPO = "https://github.com/Quaver/Quaver.git"
 _QUAVER_REF = "670164b1b7eb451bd4302b060360ba70b3c88b40"
+_NAEV_REPO = "https://github.com/naev/naev"
+_NAEV_PACKAGE_VERSION = "0.8.2"
 
 
 def _game(id: str) -> GameDescriptor:
@@ -204,6 +214,10 @@ def _reward_schema(game: str) -> GameRewardSchema:
         from wargames.games.quaver.reward_schema import QUAVER_REWARD_SCHEMA
 
         return QUAVER_REWARD_SCHEMA
+    if game == "naev":
+        from wargames.games.naev.reward_schema import NAEV_REWARD_SCHEMA
+
+        return NAEV_REWARD_SCHEMA
     raise SystemExit(f"unknown game: {game}")
 
 
@@ -425,6 +439,20 @@ def _is_quaver_root(path: Path) -> bool:
     ).exists()
 
 
+def _is_naev_root(path: Path) -> bool:
+    if path.is_file():
+        return path.name == "naev"
+    return (
+        (path / "start.xml").exists()
+        and (path / "events").is_dir()
+        and (path / "missions").is_dir()
+    ) or (
+        (path / "dat" / "start.xml").exists()
+        and (path / "dat" / "events").is_dir()
+        and (path / "dat" / "missions").is_dir()
+    )
+
+
 def _is_mindustry_root(path: Path) -> bool:
     return (
         path.name in {"server-release.jar", "Mindustry.jar"}
@@ -624,6 +652,22 @@ def _find_quaver_binary(root: Path | None = None) -> Path | None:
     return None
 
 
+def _find_naev_binary(root: Path | None = None) -> Path | None:
+    candidates: list[Path | str | None] = [
+        root if root and root.is_file() and root.name == "naev" else None,
+        root / "naev" if root and not root.is_file() else None,
+        shutil.which("naev"),
+        "/usr/games/naev",
+        "/usr/bin/naev",
+    ]
+    for candidate in candidates:
+        if candidate:
+            path = Path(candidate).expanduser()
+            if path.exists():
+                return path
+    return None
+
+
 def _find_mindustry_server(root: Path | None = None) -> Path | None:
     candidates: list[Path | str | None] = [
         root if root and root.is_file() and root.name == "server-release.jar" else None,
@@ -749,6 +793,18 @@ def _quaver_root(binary: Path, root: Path | None = None) -> Path:
     return binary.parent
 
 
+def _naev_data_source(root: Path | None = None) -> Path | None:
+    candidates = [
+        root if root and (root / "start.xml").exists() else None,
+        root / "dat" if root and (root / "dat" / "start.xml").exists() else None,
+        Path("/usr/share/naev/dat"),
+    ]
+    for candidate in candidates:
+        if candidate and _is_naev_root(candidate):
+            return candidate
+    return None
+
+
 def _default_supertuxkart_source_root(env: Mapping[str, str] = os.environ) -> Path:
     return _game_install_dir("supertuxkart", env) / "stk-code"
 
@@ -783,6 +839,10 @@ def _default_craftium_root(env: Mapping[str, str] = os.environ) -> Path:
 
 def _default_ikemen_root(env: Mapping[str, str] = os.environ) -> Path:
     return _game_install_dir("ikemen", env)
+
+
+def _default_naev_root(env: Mapping[str, str] = os.environ) -> Path:
+    return _game_install_dir("naev", env)
 
 
 def _should_run_in_linux_box(
@@ -864,6 +924,7 @@ def _runtime_resolution(env: Mapping[str, str] = os.environ) -> tuple[int, int]:
         "LAYERBRAIN_WARGAMES_IKEMEN_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_OPENSURGE_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_QUAVER_WINDOW_SIZE",
+        "LAYERBRAIN_WARGAMES_NAEV_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_FLIGHTGEAR_WINDOW_SIZE",
         "LAYERBRAIN_WARGAMES_XVFB_RESOLUTION",
     ):
@@ -1026,6 +1087,7 @@ def _linux_box_command(
     env.setdefault("LAYERBRAIN_WARGAMES_IKEMEN_WINDOW_SIZE", _resolution_text(active_resolution))
     env.setdefault("LAYERBRAIN_WARGAMES_OPENSURGE_WINDOW_SIZE", _resolution_text(active_resolution))
     env.setdefault("LAYERBRAIN_WARGAMES_QUAVER_WINDOW_SIZE", _resolution_text(active_resolution))
+    env.setdefault("LAYERBRAIN_WARGAMES_NAEV_WINDOW_SIZE", _resolution_text(active_resolution))
     if stream_port is not None:
         env["LAYERBRAIN_WARGAMES_HOST_STREAM_URL"] = (
             f"udp://host.docker.internal:{stream_port}?pkt_size=1316"
@@ -1843,6 +1905,47 @@ def _install_quaver(args: argparse.Namespace, env: Mapping[str, str] = os.enviro
     return 0
 
 
+def _install_naev(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
+    root = Path(args.root).expanduser() if args.root else _default_naev_root(env)
+    data_source = _naev_data_source(root if args.root else None) or _naev_data_source(None)
+    if data_source is None:
+        raise SystemExit(
+            "Naev package data was not found in the Docker runtime image. Rebuild the Naev "
+            "runtime image or register a container-visible data directory with --root."
+        )
+    binary = _find_naev_binary(root if args.root else None)
+    if binary is None:
+        raise SystemExit(
+            "Naev binary was not found in the Docker runtime image. Rebuild the Naev "
+            "runtime image or register a container-visible install with --root."
+        )
+
+    if root.is_file():
+        install_root = root.parent
+    elif data_source.resolve() == root.resolve():
+        install_root = root.parent
+    else:
+        install_root = root
+    data_dir = install_root / "dat"
+    if data_source.resolve() != data_dir.resolve():
+        data_dir.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(data_source, data_dir, dirs_exist_ok=True)
+
+    payload = {
+        "game": "naev",
+        "binary": str(binary),
+        "root": str(install_root),
+        "data_dir": str(data_dir),
+        "source": _NAEV_REPO,
+        "version": _NAEV_PACKAGE_VERSION,
+        "state_interface": "Naev Lua stdout state exporter",
+        "status": "present",
+    }
+    _write_game_install_manifest("naev", payload, env)
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0
+
+
 def _install_mindustry(args: argparse.Namespace, env: Mapping[str, str] = os.environ) -> int:
     root = Path(args.root).expanduser() if args.root else _default_mindustry_root(env)
     install_root = root.parent if root.exists() and root.is_file() else root
@@ -1943,6 +2046,8 @@ async def _install(args: argparse.Namespace) -> int:
         return await asyncio.to_thread(_install_opensurge, args)
     if args.game == "quaver":
         return await asyncio.to_thread(_install_quaver, args)
+    if args.game == "naev":
+        return await asyncio.to_thread(_install_naev, args)
     if args.game == "mindustry":
         return await asyncio.to_thread(_install_mindustry, args)
     if args.game == "craftium":
@@ -2301,6 +2406,8 @@ async def _serve(args: argparse.Namespace) -> int:
         from wargames.games.opensurge.transport.ws import app
     elif args.game == "quaver":
         from wargames.games.quaver.transport.ws import app
+    elif args.game == "naev":
+        from wargames.games.naev.transport.ws import app
     elif args.game == "mindustry":
         from wargames.games.mindustry.transport.ws import app
     elif args.game == "craftium":

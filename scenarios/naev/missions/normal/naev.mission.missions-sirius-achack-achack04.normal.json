@@ -1,0 +1,20 @@
+{
+  "data_dir": null,
+  "difficulty": "normal",
+  "estimated_duration_ticks": 7200,
+  "game": "naev",
+  "id": "naev.mission.missions-sirius-achack-achack04.normal",
+  "mission_file": "missions/sirius/achack/achack04.lua",
+  "mission_name": "Sirian Truce",
+  "native_difficulty": "scripted",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "mission",
+    "normal",
+    "space"
+  ],
+  "tier": null,
+  "time_limit_ticks": 14400,
+  "title": "Sirian Truce (Academy Hack)"
+}

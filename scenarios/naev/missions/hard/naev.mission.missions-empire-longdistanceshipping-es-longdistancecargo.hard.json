@@ -1,0 +1,21 @@
+{
+  "data_dir": null,
+  "difficulty": "hard",
+  "estimated_duration_ticks": 10800,
+  "game": "naev",
+  "id": "naev.mission.missions-empire-longdistanceshipping-es-longdistancecargo.hard",
+  "mission_file": "missions/empire/longdistanceshipping/es_longdistancecargo.lua",
+  "mission_name": "Long Distance Empire Shipping",
+  "native_difficulty": "scripted",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "delivery",
+    "hard",
+    "mission",
+    "space"
+  ],
+  "tier": null,
+  "time_limit_ticks": 21600,
+  "title": "Long Distance Empire Shipping (Long Distance Shipping)"
+}

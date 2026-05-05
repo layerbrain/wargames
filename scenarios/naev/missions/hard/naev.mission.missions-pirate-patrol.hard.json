@@ -1,0 +1,22 @@
+{
+  "data_dir": null,
+  "difficulty": "hard",
+  "estimated_duration_ticks": 14400,
+  "game": "naev",
+  "id": "naev.mission.missions-pirate-patrol.hard",
+  "mission_file": "missions/pirate/patrol.lua",
+  "mission_name": "Pirate Patrol",
+  "native_difficulty": "tier-3",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "combat",
+    "hard",
+    "mission",
+    "space",
+    "tier-3"
+  ],
+  "tier": 3,
+  "time_limit_ticks": 28800,
+  "title": "Pirate Patrol"
+}

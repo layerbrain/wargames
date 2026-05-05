@@ -1,0 +1,21 @@
+{
+  "data_dir": null,
+  "difficulty": "hard",
+  "estimated_duration_ticks": 14400,
+  "game": "naev",
+  "id": "naev.mission.missions-neutral-patrol.hard",
+  "mission_file": "missions/neutral/patrol.lua",
+  "mission_name": "Patrol",
+  "native_difficulty": "tier-3",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "hard",
+    "mission",
+    "space",
+    "tier-3"
+  ],
+  "tier": 3,
+  "time_limit_ticks": 28800,
+  "title": "Patrol"
+}

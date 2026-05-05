@@ -1,0 +1,21 @@
+{
+  "data_dir": null,
+  "difficulty": "hard",
+  "estimated_duration_ticks": 10800,
+  "game": "naev",
+  "id": "naev.mission.missions-flf-flf-pirates.hard",
+  "mission_file": "missions/flf/flf_pirates.lua",
+  "mission_name": "FLF Pirate Disturbance",
+  "native_difficulty": "scripted",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "combat",
+    "hard",
+    "mission",
+    "space"
+  ],
+  "tier": null,
+  "time_limit_ticks": 21600,
+  "title": "FLF Pirate Disturbance"
+}

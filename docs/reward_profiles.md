@@ -405,6 +405,33 @@ The shipped Quaver profile includes `delta_score`, `delta_hits`,
 `time_penalty`, and `terminal`. Add shaping entries only after declaring the
 primitive in `wargames/games/quaver/reward_schema.py`.
 
+## Naev Reward Fields
+
+Naev rewards are computed from ship, navigation, economy, combat, and mission
+state exported by Lua during play.
+
+| Field | Direction | Meaning |
+|---|---|---|
+| `mission.finished` | maximize | Mission completed. |
+| `mission.failed` | minimize | Mission failed. |
+| `mission.completed_count` | maximize | Completed mission events. |
+| `mission.failed_count` | minimize | Failed mission events. |
+| `player.system` | track | Current star system. |
+| `player.landed` | track | Whether the ship is landed. |
+| `player.speed` | track | Ship speed. |
+| `player.credits` | maximize | Player credits. |
+| `player.wealth` | maximize | Total wealth. |
+| `player.fuel` | maximize | Ship fuel. |
+| `player.armour` | maximize | Ship armour. |
+| `player.shield` | maximize | Ship shield. |
+| `player.target` | track | Current target. |
+| `player.target_distance` | track | Distance to current target. |
+
+The shipped Naev profile includes `delta_credits`, `delta_wealth`,
+`delta_mission_completed`, `damage_penalty`, `fuel_penalty`, `time_penalty`,
+and `terminal`. Add shaping entries only after declaring the primitive in
+`wargames/games/naev/reward_schema.py`.
+
 ## Eval And RL
 
 Use dense shaping for training and sparse or mild profiles for reporting.

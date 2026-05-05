@@ -1,0 +1,21 @@
+{
+  "data_dir": null,
+  "difficulty": "normal",
+  "estimated_duration_ticks": 9000,
+  "game": "naev",
+  "id": "naev.mission.missions-zalek-zlk-test.normal",
+  "mission_file": "missions/zalek/zlk_test.lua",
+  "mission_name": "Za'lek Test",
+  "native_difficulty": "tier-2",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "mission",
+    "normal",
+    "space",
+    "tier-2"
+  ],
+  "tier": 2,
+  "time_limit_ticks": 18000,
+  "title": "Za'lek Test"
+}

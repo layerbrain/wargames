@@ -1,0 +1,23 @@
+{
+  "data_dir": null,
+  "difficulty": "hard",
+  "estimated_duration_ticks": 12600,
+  "game": "naev",
+  "id": "naev.mission.missions-pirate-pir-clan-cargo.hard",
+  "mission_file": "missions/pirate/pir_clan_cargo.lua",
+  "mission_name": "Pirate Clan Shipping",
+  "native_difficulty": "tier-2",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "combat",
+    "delivery",
+    "hard",
+    "mission",
+    "space",
+    "tier-2"
+  ],
+  "tier": 2,
+  "time_limit_ticks": 25200,
+  "title": "Pirate Clan Shipping"
+}

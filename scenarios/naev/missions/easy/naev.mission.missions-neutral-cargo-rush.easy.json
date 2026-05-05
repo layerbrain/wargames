@@ -1,0 +1,22 @@
+{
+  "data_dir": null,
+  "difficulty": "easy",
+  "estimated_duration_ticks": 3600,
+  "game": "naev",
+  "id": "naev.mission.missions-neutral-cargo-rush.easy",
+  "mission_file": "missions/neutral/cargo_rush.lua",
+  "mission_name": "Cargo Rush",
+  "native_difficulty": "tier-1",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "delivery",
+    "easy",
+    "mission",
+    "space",
+    "tier-1"
+  ],
+  "tier": 1,
+  "time_limit_ticks": 7200,
+  "title": "Cargo Rush"
+}

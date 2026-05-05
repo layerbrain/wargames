@@ -1,0 +1,22 @@
+{
+  "data_dir": null,
+  "difficulty": "normal",
+  "estimated_duration_ticks": 7200,
+  "game": "naev",
+  "id": "naev.mission.missions-neutral-commodity-run.normal",
+  "mission_file": "missions/neutral/commodity_run.lua",
+  "mission_name": "Commodity Run",
+  "native_difficulty": "tier-1",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "delivery",
+    "mission",
+    "normal",
+    "space",
+    "tier-1"
+  ],
+  "tier": 1,
+  "time_limit_ticks": 14400,
+  "title": "Commodity Run"
+}

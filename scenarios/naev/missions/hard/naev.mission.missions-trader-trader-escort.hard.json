@@ -1,0 +1,22 @@
+{
+  "data_dir": null,
+  "difficulty": "hard",
+  "estimated_duration_ticks": 14400,
+  "game": "naev",
+  "id": "naev.mission.missions-trader-trader-escort.hard",
+  "mission_file": "missions/trader/trader_escort.lua",
+  "mission_name": "Trader Escort",
+  "native_difficulty": "tier-3",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "hard",
+    "mission",
+    "space",
+    "tier-3",
+    "trading"
+  ],
+  "tier": 3,
+  "time_limit_ticks": 28800,
+  "title": "Trader Escort"
+}

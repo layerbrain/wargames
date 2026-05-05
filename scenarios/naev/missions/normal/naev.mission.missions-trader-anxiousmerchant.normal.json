@@ -1,0 +1,22 @@
+{
+  "data_dir": null,
+  "difficulty": "normal",
+  "estimated_duration_ticks": 9000,
+  "game": "naev",
+  "id": "naev.mission.missions-trader-anxiousmerchant.normal",
+  "mission_file": "missions/trader/anxiousmerchant.lua",
+  "mission_name": "Anxious Merchant",
+  "native_difficulty": "tier-2",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "mission",
+    "normal",
+    "space",
+    "tier-2",
+    "trading"
+  ],
+  "tier": 2,
+  "time_limit_ticks": 18000,
+  "title": "Anxious Merchant"
+}

@@ -1,0 +1,20 @@
+{
+  "data_dir": null,
+  "difficulty": "hard",
+  "estimated_duration_ticks": 10800,
+  "game": "naev",
+  "id": "naev.mission.missions-flf-dvk-flf-dvk05.hard",
+  "mission_file": "missions/flf/dvk/flf_dvk05.lua",
+  "mission_name": "Alliance of Inconvenience",
+  "native_difficulty": "scripted",
+  "native_location": "",
+  "source": "builtin",
+  "tags": [
+    "hard",
+    "mission",
+    "space"
+  ],
+  "tier": null,
+  "time_limit_ticks": 21600,
+  "title": "Alliance of Inconvenience (Save the Frontier)"
+}

@@ -17,6 +17,7 @@ from wargames.games.ikemen.reward_schema import IKEMEN_REWARD_SCHEMA
 from wargames.games.opensurge.profiles import register_profiles as register_opensurge_profiles
 from wargames.games.opensurge.reward_schema import OPENSURGE_REWARD_SCHEMA
 from wargames.games.quaver.profiles import register_profiles as register_quaver_profiles
+from wargames.games.naev.profiles import register_profiles as register_naev_profiles
 from wargames.games.quaver.reward_schema import QUAVER_REWARD_SCHEMA
 from wargames.games.redalert.profiles import profiles
 from wargames.games.redalert.reward_schema import REDALERT_REWARD_SCHEMA
@@ -133,6 +134,11 @@ class RewardProfileTests(unittest.TestCase):
 
     def test_quaver_profiles_are_loaded_from_shipped_yaml(self) -> None:
         loaded = register_quaver_profiles()
+
+        self.assertEqual(["standard"], [profile.id for profile in loaded])
+
+    def test_naev_profiles_are_loaded_from_shipped_yaml(self) -> None:
+        loaded = register_naev_profiles()
 
         self.assertEqual(["standard"], [profile.id for profile in loaded])
         QUAVER_REWARD_SCHEMA.validate_primitive("delta_hits")

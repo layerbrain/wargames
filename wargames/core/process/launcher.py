@@ -53,6 +53,8 @@ class ProcessLauncher:
         ready: ReadinessPredicate | None = None,
         timeout: float = 30.0,
         id: str = "process",
+        stdout: int | None = asyncio.subprocess.DEVNULL,
+        stderr: int | None = asyncio.subprocess.DEVNULL,
     ) -> ProcessHandle:
         merged_env = {**os.environ, **(env or {})}
         process = await asyncio.create_subprocess_exec(
@@ -60,8 +62,8 @@ class ProcessLauncher:
             cwd=cwd,
             env=merged_env,
             stdin=asyncio.subprocess.DEVNULL,
-            stdout=asyncio.subprocess.DEVNULL,
-            stderr=asyncio.subprocess.DEVNULL,
+            stdout=stdout,
+            stderr=stderr,
             start_new_session=True,
         )
         handle = ProcessHandle(id=id, process=process, command=tuple(command), env=merged_env)
