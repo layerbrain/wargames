@@ -26,11 +26,12 @@ dependencies = [
 "wargames" = "wargames_prime:load_environment"
 
 [tool.hatch.build.targets.wheel]
-only-include = ["wargames_prime.py", "configs"]
-force-include = { "../../wargames" = "wargames", "../../scenarios" = "wargames/scenarios" }
+only-include = ["wargames_prime.py", "configs", "wargames"]
+force-include = { "scenarios" = "wargames/scenarios" }
 
 [tool.hatch.build.targets.editable]
-only-include = ["wargames_prime.py", "configs"]
+only-include = ["wargames_prime.py", "configs", "wargames"]
+force-include = { "scenarios" = "wargames/scenarios" }
 
 [tool.prime.environment]
 display_name = "WarGames"

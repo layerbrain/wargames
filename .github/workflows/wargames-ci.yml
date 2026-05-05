@@ -25,16 +25,20 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e ".[server]"
-          python -m pip install "datasets>=4.6.1" "verifiers>=0.1.12"
+          python -m pip install "datasets>=4.6.1" "hatchling" "verifiers>=0.1.12"
 
       - name: Run tests
         run: |
           python -m unittest
-          python -m unittest tests.harness tests.evaluation environments.prime.tests.conformance.test_env
+          python -m unittest discover -s environments/prime/tests/conformance
+
+      - name: Check Prime source archive
+        run: |
+          python environments/prime/scripts/check_source_archive.py
 
       - name: Build Prime wheel
         run: |
-          python -m pip wheel ./environments/prime -w /tmp/wargames-prime-wheel --no-deps
+          python -m pip wheel ./environments/prime -w /tmp/wargames-prime-wheel --no-deps --no-build-isolation
 
       - name: Smoke test Prime wheel
         run: |
