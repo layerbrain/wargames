@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.10
+## 0.1.11
 
 - Published the Prime package as `wargames` so `prime env install
   layerbrain/wargames` resolves the public Hub wheel.
