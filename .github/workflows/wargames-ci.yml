@@ -1,0 +1,75 @@
+name: WarGames CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[server]"
+          python -m pip install "datasets>=4.6.1" "verifiers>=0.1.12"
+
+      - name: Run tests
+        run: |
+          python -m unittest
+          python -m unittest tests.harness tests.evaluation environments.prime.tests.conformance.test_env
+
+      - name: Build Prime wheel
+        run: |
+          python -m pip wheel ./environments/prime -w /tmp/wargames-prime-wheel --no-deps
+
+      - name: Smoke test Prime wheel
+        run: |
+          python -m pip install --no-deps --target /tmp/wargames-wheel-target /tmp/wargames-prime-wheel/wargames-*.whl
+          cd /tmp
+          PYTHONPATH=/tmp/wargames-wheel-target python - <<'PY'
+          from pathlib import Path
+          from verifiers import load_environment
+          import wargames
+
+          assert Path(wargames.__file__).as_posix().startswith("/tmp/wargames-wheel-target/")
+          missions = {
+              "redalert": "redalert.soviet-01.normal",
+              "flightgear": "flightgear.c172p.tutorial.takeoff",
+              "supertuxkart": "supertuxkart.race.lighthouse.normal",
+              "zeroad": "zeroad.scenario.arcadia.normal",
+              "freeciv": "freeciv.scenario.earth-small",
+              "doom": "doom.map.map01.easy",
+              "supertux": "supertux.level.world1.welcome-antarctica.normal",
+              "mindustry": "mindustry.survival.veins.normal",
+              "craftium": "craftium.chop-tree.normal",
+              "ikemen": "ikemen.vs.kfm.normal",
+              "opensurge": "opensurge.level.sunshine-1.normal",
+              "quaver": "quaver.chart.hyun-feat-lyuu-crossover-beginner.1159.easy",
+              "naev": "naev.mission.missions-tutorial-tutorial.easy",
+          }
+          for game, mission in missions.items():
+              env = load_environment(
+                  "wargames",
+                  game=game,
+                  mission=mission,
+                  reward_profile="standard",
+                  max_steps=1,
+              )
+              row = env.get_dataset()[0]
+              assert row["info"]["task_spec"]["game"] == game
+              assert row["info"]["task_spec"]["mission_id"] == mission
+          PY

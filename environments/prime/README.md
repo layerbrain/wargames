@@ -96,13 +96,8 @@ wait
 
 ## Publishing
 
-The environment package depends on the current WarGames `main` branch:
-
-```toml
-wargames @ https://github.com/layerbrain/wargames/archive/refs/heads/main.zip
-```
-
-Publish after `main` contains the adapter changes:
+The Prime package bundles the WarGames runtime and mission catalog into the
+published wheel. Publish after `main` contains the runtime changes:
 
 ```bash
 make -C environments/prime publish
