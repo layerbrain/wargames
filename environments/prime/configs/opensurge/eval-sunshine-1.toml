@@ -1,0 +1,5 @@
+game = "opensurge"
+mission = "opensurge.level.sunshine-1.normal"
+reward_profile = "standard"
+recorder_mode = "summary_only"
+max_steps = 512

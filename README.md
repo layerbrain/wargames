@@ -555,14 +555,16 @@ wargames run \
 
 ## Prime RL
 
-The Prime Intellect Verifiers adapter is `layerbrain/wargames`. Prime configs
-live under `environments/prime/configs/<game>/`.
+The Prime Intellect Verifiers adapter is `layerbrain/wargames`. It uses the
+same game catalog, mission IDs, reward profiles, and scoring probes as the
+local runner. Prime sends computer-control tool calls, WarGames applies them to
+the live game, and the reward profile returns the scalar reward.
 
 ```bash
 uv pip install -e ./environments/prime
 
 prime eval run wargames \
-  --config environments/prime/configs/freeciv/eval-earth-small.toml \
+  --config environments/prime/configs/doom/eval-map01.toml \
   -n 1 -r 1
 ```
 
@@ -573,11 +575,21 @@ prime eval run wargames \
 | SuperTuxKart | `environments/prime/configs/supertuxkart/eval-lighthouse.toml` | `environments/prime/configs/supertuxkart/rl-lighthouse.toml` |
 | 0 A.D. | `environments/prime/configs/zeroad/eval-arcadia.toml` | `environments/prime/configs/zeroad/rl-arcadia.toml` |
 | Freeciv | `environments/prime/configs/freeciv/eval-earth-small.toml` | `environments/prime/configs/freeciv/rl-earth-small.toml` |
+| Doom | `environments/prime/configs/doom/eval-map01.toml` | `environments/prime/configs/doom/rl-map01.toml` |
+| SuperTux | `environments/prime/configs/supertux/eval-welcome-antarctica.toml` | `environments/prime/configs/supertux/rl-welcome-antarctica.toml` |
+| Mindustry | `environments/prime/configs/mindustry/eval-veins.toml` | `environments/prime/configs/mindustry/rl-veins.toml` |
+| Craftium | `environments/prime/configs/craftium/eval-chop-tree.toml` | `environments/prime/configs/craftium/rl-chop-tree.toml` |
+| IKEMEN GO | `environments/prime/configs/ikemen/eval-kfm.toml` | `environments/prime/configs/ikemen/rl-kfm.toml` |
+| Open Surge | `environments/prime/configs/opensurge/eval-sunshine-1.toml` | `environments/prime/configs/opensurge/rl-sunshine-1.toml` |
+| Quaver | `environments/prime/configs/quaver/eval-crossover-beginner.toml` | `environments/prime/configs/quaver/rl-crossover-beginner.toml` |
+| Naev | `environments/prime/configs/naev/eval-tutorial.toml` | `environments/prime/configs/naev/rl-tutorial.toml` |
 
 The `reward_profile` TOML field is the RL behavior dial - point it at any
 profile under `scenarios/<game>/profiles/` (or a custom one). Set
 `recorder_mode = "none"` for fast rollouts and `max_steps` to bound the
 episode.
+
+Prime-specific docs: [`environments/prime/README.md`](environments/prime/README.md).
 
 ## Recording
 
